@@ -1,0 +1,16 @@
+[
+  {
+    "longname": "SPARKFUN SERIAL",
+    "keyname": "SPARKFUN KEYNAME",
+    "price": 20.42,
+    "componentUrl": "http://www.google.com",
+    "svgUrl": "img/catalog/sparkfun-serial-16x2-LCD.2D.svg"
+  },
+  {
+    "longname": "3mm LED",
+    "keyname": "3mm LED",
+    "price": 20.42,
+    "componentUrl": "http://www.google.com",
+    "svgUrl": "img/catalog/LED-3mm-blue.2D.svg"
+  }
+]

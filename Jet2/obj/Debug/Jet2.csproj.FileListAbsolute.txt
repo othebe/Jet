@@ -1,0 +1,6 @@
+C:\dev\Code\Jet2\Jet2\bin\Jet2.dll.config
+C:\dev\Code\Jet2\Jet2\bin\Jet2.dll
+C:\dev\Code\Jet2\Jet2\bin\Jet2.pdb
+C:\dev\Code\Jet2\Jet2\obj\Debug\Jet2.csprojResolveAssemblyReference.cache
+C:\dev\Code\Jet2\Jet2\obj\Debug\Jet2.dll
+C:\dev\Code\Jet2\Jet2\obj\Debug\Jet2.pdb

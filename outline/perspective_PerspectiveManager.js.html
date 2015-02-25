@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Source: perspective/PerspectiveManager.js</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html"></a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="gadgetron.app.main">
+            <span class="title">
+                <a href="gadgetron.app.main.html">gadgetron.app.main</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="gadgetron.common.AppContext">
+            <span class="title">
+                <a href="gadgetron.common.AppContext.html">gadgetron.common.AppContext</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="gadgetron.common.AppContext#catalogManager_"><a href="gadgetron.common.AppContext.html#catalogManager_">catalogManager_</a></li>
+            
+                <li data-name="gadgetron.common.AppContext#perspectiveManager_"><a href="gadgetron.common.AppContext.html#perspectiveManager_">perspectiveManager_</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="gadgetron.common.AppContext#getPerspectiveManager"><a href="gadgetron.common.AppContext.html#getPerspectiveManager">getPerspectiveManager</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="gadgetron.perspective.PerspectiveManager">
+            <span class="title">
+                <a href="gadgetron.perspective.PerspectiveManager.html">gadgetron.perspective.PerspectiveManager</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li data-name="gadgetron.perspective.PerspectiveManager#appContext_"><a href="gadgetron.perspective.PerspectiveManager.html#appContext_">appContext_</a></li>
+            
+                <li data-name="gadgetron.perspective.PerspectiveManager#container_"><a href="gadgetron.perspective.PerspectiveManager.html#container_">container_</a></li>
+            
+                <li data-name="gadgetron.perspective.PerspectiveManager#perspective_"><a href="gadgetron.perspective.PerspectiveManager.html#perspective_">perspective_</a></li>
+            
+                <li data-name="gadgetron.perspective.PerspectiveManager#perspectives_"><a href="gadgetron.perspective.PerspectiveManager.html#perspectives_">perspectives_</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="gadgetron.perspective.PerspectiveManager#getPerspective"><a href="gadgetron.perspective.PerspectiveManager.html#getPerspective">getPerspective</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="gadgetron.perspective.Perspectives">
+            <span class="title">
+                <a href="gadgetron.perspective.Perspectives.html">gadgetron.perspective.Perspectives</a>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="gadgetron.perspective.Perspectives.getPerspectives"><a href="gadgetron.perspective.Perspectives.html#.getPerspectives">getPerspectives</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="perspective_PerspectiveManager.js.html">Source: perspective/PerspectiveManager.js</h1>
+        
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source "><code>/**
+ * @fileoverview
+ * This object provides a manager for different perspectives.
+ */
+
+goog.provide('gadgetron.perspective.PerspectiveManager');
+
+goog.require('gadgetron.common.AppContext');
+goog.require('gadgetron.perspective.Perspectives');
+
+
+/**
+ * Constructor.
+ * @param {gadgetron.common.AppContext} appContext Application context.
+ * @constructor
+ */
+gadgetron.perspective.PerspectiveManager = function(appContext) {
+  /**
+   * Application context.
+   * @private
+   * @type {!gadgetron.common.AppContext}
+   */
+  this.appContext_ = appContext;
+
+  /**
+   * Map of perspective data from gadgetron.perspective.Perspectives.
+   * @private
+   * @type {Map.&lt;string, gadgetron.perspective.Perspective>}
+   */
+  this.perspectives_ = new Map();
+
+  /**
+   * Current perspective.
+   * @private
+   * @type {gadgetron.perspective.Perspective}
+   */
+  this.perspective_ = null;
+
+  /**
+   * HTML elmeent to render perspective in.
+   * @private
+   * @type {Element}
+   */
+  this.container_ = null;
+};
+
+
+/**
+ * Sets and displays a perspective.
+ * @param {!string} perspectiveName Perspective name.
+ */
+gadgetron.perspective.PerspectiveManager.prototype.getPerspective =
+    function(perspectiveName) {};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer>
+            Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta1</a> on Tue Feb 17 2015 21:10:05 GMT-0800 (PST)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/main.js"></script>
+</body>
+</html>
