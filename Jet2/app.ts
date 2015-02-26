@@ -1,4 +1,4 @@
-﻿/// <reference path="scripts/typings/angularjs/angular.d.ts" />
+﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="application/applicationcontroller.ts" />
 /// <reference path="perspectives/perspectivecontroller.ts" />
 /// <reference path="ui/catalog/catalog.ts" />

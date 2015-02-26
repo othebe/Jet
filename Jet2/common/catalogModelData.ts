@@ -1,6 +1,4 @@
-﻿/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
-
-class CatalogModelData {
+﻿class CatalogModelData {
     constructor(
         private longName: string,
         private keyName: string,

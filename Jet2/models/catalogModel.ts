@@ -1,6 +1,4 @@
-﻿ /// <reference path="../scripts/typings/angularjs/angular.d.ts" />
-
-module Jet.Model {
+﻿ module Jet.Model {
     export class CatalogModel {
         private _ComponentUrl: string = "http://localhost:5000/public/components.json";
         private _catalogModelData: Array<CatalogModelData> = [];

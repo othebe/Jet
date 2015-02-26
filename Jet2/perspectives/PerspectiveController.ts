@@ -1,5 +1,4 @@
-﻿/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
-/// <reference path="../common/appcontext.ts" />
+﻿/// <reference path="../common/appcontext.ts" />
 
 module Jet.Perspective {
     export interface IPerspectiveScope extends ng.IScope {

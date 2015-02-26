@@ -20,29 +20,39 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="index.html" />
-    <Content Include="scripts\angular-mocks.js" />
-    <Content Include="scripts\angular.js" />
-    <Content Include="scripts\angular.min.js" />
+    <Content Include="perspectives\workspacePerspective\workspacePerspective.css" />
+    <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
+    <Content Include="public\angular\angular-csp.css" />
+    <Content Include="public\angular\angular.js" />
+    <Content Include="public\angular\angular.min.js" />
+    <Content Include="public\angular\index.js" />
+    <Content Include="ui\catalogEntry\catalogEntry.html" />
+    <Content Include="ui\catalog\catalog.css" />
+    <Content Include="ui\catalog\catalog.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="application\ApplicationController.ts" />
-    <TypeScriptCompile Include="common\CatalogModelData.ts" />
-    <TypeScriptCompile Include="models\CatalogModel.ts" />
-    <TypeScriptCompile Include="perspectives\PerspectiveController.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-animate.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-cookies.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-mocks.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-resource.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-route.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular-sanitize.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\angularjs\angular.d.ts" />
-    <TypeScriptCompile Include="scripts\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="application\applicationController.ts" />
+    <TypeScriptCompile Include="common\appContext.ts" />
+    <TypeScriptCompile Include="common\catalogModelData.ts" />
+    <TypeScriptCompile Include="models\catalogModel.ts" />
+    <TypeScriptCompile Include="perspectives\IPerspective.ts" />
+    <TypeScriptCompile Include="perspectives\perspectiveController.ts" />
+    <TypeScriptCompile Include="perspectives\workspacePerspective\workspacePerspective.ts" />
+    <TypeScriptCompile Include="public\typings\angularjs\angular.d.ts" />
+    <TypeScriptCompile Include="public\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />
+    <TypeScriptCompile Include="ui\catalog\catalog.ts" />
+    <TypeScriptCompile Include="ui\directives.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="scripts\angular.min.js.map" />
-    <Content Include="packages.config" />
+    <Content Include="public\angular\angular.min.js.gzip" />
+    <Content Include="public\angular\angular.min.js.map" />
+    <Content Include="public\angular\bower.json" />
+    <Content Include="public\angular\package.json" />
+    <Content Include="public\angular\README.md" />
+    <Content Include="public\components.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -50,9 +60,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="public\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

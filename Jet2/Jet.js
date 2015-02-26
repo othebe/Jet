@@ -23,7 +23,6 @@ var AppContext = (function () {
     };
     return AppContext;
 })();
-/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
 /// <reference path="../common/appcontext.ts" />
 var Jet;
 (function (Jet) {
@@ -78,11 +77,11 @@ var Jet;
             }
             CatalogEntry.prototype.scope = function () {
                 return {
-                    myVal: '=asdf'
+                    ngModel: '='
                 };
             };
             CatalogEntry.prototype.link = function (scope, element, attrs) {
-                //console.log(scope.myVal);
+                console.log(scope);
                 //var key = attrs.key;
                 //var components = scope.catalogModel.getComponents();
                 //console.log(this);
@@ -108,7 +107,7 @@ var Jet;
         Ui.CatalogEntry = CatalogEntry;
     })(Ui = Jet.Ui || (Jet.Ui = {}));
 })(Jet || (Jet = {}));
-/// <reference path="scripts/typings/angularjs/angular.d.ts" />
+/// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="application/applicationcontroller.ts" />
 /// <reference path="perspectives/perspectivecontroller.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
@@ -126,7 +125,6 @@ var Jet;
     // Catalog entry directive.
     app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
 })();
-/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
 var CatalogModelData = (function () {
     function CatalogModelData(longName, keyName, price, componentUrl, svgUrl) {
         this.longName = longName;
@@ -152,7 +150,6 @@ var CatalogModelData = (function () {
     };
     return CatalogModelData;
 })();
-/// <reference path="../scripts/typings/angularjs/angular.d.ts" />
 var Jet;
 (function (Jet) {
     var Model;

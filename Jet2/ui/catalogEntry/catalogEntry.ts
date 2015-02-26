@@ -8,12 +8,12 @@
 
         public scope() {
             return {
-                myVal: '=asdf'
+                ngModel: '='
             }
         }
 
         public link(scope, element, attrs) {
-            //console.log(scope.myVal);
+            console.log(scope);
             //var key = attrs.key;
             //var components = scope.catalogModel.getComponents();
             //console.log(this);
