@@ -3,19 +3,27 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>TypeScript HTML App</title>
-    <link rel="stylesheet" href="app.css" type="text/css" />
+    <title>Jet</title>
 
     <!-- AngularJS -->
     <script src="public/angular/angular.min.js"></script>
 
+    <!-- Material design -->
+    <link href="public/angular-material/angular-material.min.css" rel="stylesheet" />
+    <script src="public/angular-aria/angular-aria.min.js"></script>
+    <script src="public/angular-animate/angular-animate.min.js"></script>
+    <script src="public/angular-material/angular-material.min.js"></script>
+
+    <!-- Jet -->
+    <link rel="stylesheet" href="app.css" type="text/css" />
     <script src="Jet.js"></script>
-    
 </head>
 
 <body ng-app="Jet" ng-controller="AppCtrl">
-    <h1>Jet-II</h1>
+    <!-- Application menu bar. -->
+    <menu-bar></menu-bar>
 
+    <!-- Show current perspective. -->
     <div ng-controller="PerspectiveCtrl">
         <ng-include src="perspective.getPartialSrc()" />
     </div>

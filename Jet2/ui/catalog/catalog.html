@@ -1,7 +1,17 @@
-﻿<div>
+﻿<div class="catalog">
     CATALOG
     <hr />
-    <div ng-repeat="catalogEntry in catalogModel.getComponents()">
-        <catalog-entry ng-model="catalogModel"></catalog-entry>
-    </div>
+    <md-content class="md-padding" style="min-height:500px;">
+        <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="9"
+                      md-row-height-gt-md="1:1" md-row-height="fit"
+                      md-gutter="12x" md-gutter-gt-sm="8px">
+            <div ng-repeat="catalogModelData in catalogModel.getComponents()">
+                <catalog-entry ng-model="catalogModelData"></catalog-entry>
+            </div>
+        </md-grid-list>
+    </md-content>
 </div>
+
+<style>
+    
+</style>

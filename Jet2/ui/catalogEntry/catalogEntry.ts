@@ -12,14 +12,6 @@
             }
         }
 
-        public link(scope, element, attrs) {
-            console.log(scope);
-            //var key = attrs.key;
-            //var components = scope.catalogModel.getComponents();
-            //console.log(this);
-            //this._catalogModelData = this._findCatalogModelData(components, key);
-        }
-
         public templateUrl(): string {
             return this._templateUrl;
         }

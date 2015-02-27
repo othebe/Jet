@@ -1,0 +1,65 @@
+﻿<div class="menu-bar">
+    <!-- TODO(othebe): Split menu entries and vertical containers into directives. -->
+    <ul class="bar">
+        <li class="menu-option">
+            File
+            <ul class="submenu">
+                <li class="option">New</li>
+                <li class="option">Import GSpec</li>
+            </ul>
+        </li>
+
+        <li class="menu-option">
+            View
+        </li>
+
+        <li class="menu-option" ng-click="showAbout()">
+            About
+        </li>
+
+        <div class="clear"></div>
+    </ul>
+</div>
+
+<style>
+    .menu-bar {
+        font-size: 18px;
+    }
+
+    .menu-option {
+        color: #FCFFF5;
+        cursor: default;
+        float: left;
+        padding: 8px 12px;
+    }
+
+    .menu-option:hover {
+        background-color: #91AA9D;
+    }
+
+    .menu-option:hover > .submenu {
+        display: block;
+    }
+
+    .menu-option .submenu {
+        background-color: #193441;
+        display: none;
+        margin: 8px 0 0 -12px;
+        position: absolute;
+        z-index: 99;
+    }
+
+    .menu-option .submenu .option {
+        border-bottom: 1px solid #3E606F;
+        padding: 8px 12px;
+    }
+
+    .menu-option .submenu .option:hover {
+        background-color: #91AA9D;
+    }
+
+    div.menu-bar .bar {
+        background-color: #193441;
+        margin: 0;
+    }
+</style>

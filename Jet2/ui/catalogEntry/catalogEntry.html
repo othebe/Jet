@@ -1,4 +1,31 @@
-﻿<div>
-    ENTRY
-    {{catalogEntry}}
+﻿<div class="catalog-entry">
+    <md-grid-tile md-colspan="1">
+        <md-card class="white-card">
+            <img src="http://media-cache-ak0.pinimg.com/736x/14/d6/28/14d628fa7348efe09235b90729111034.jpg" />
+
+            <!-- Catalog entry name -->
+            <md-grid-tile-footer class="footer">
+                {{catalogModelData.getLongName()}}
+            </md-grid-tile-footer>
+        </md-card>
+    </md-grid-tile>
 </div>
+
+<style>
+    div.catalog-entry md-card.white-card {
+        height: 100%;
+        margin: 8px;
+        width: 100%;
+    }
+
+    div.catalog-entry md-card.white-card:hover {
+        box-shadow: 0 2px 15px 0 rgba(0,0,0,.26);
+        cursor: pointer;
+    }
+
+    div.catalog-entry md-grid-tile-footer.footer {
+        margin: 0 8px;
+        padding: 8px;
+        text-align:center;
+    }
+</style>

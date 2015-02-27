@@ -3,12 +3,13 @@ var Jet;
     var Application;
     (function (Application) {
         var ApplicationController = (function () {
-            function ApplicationController($scope) {
+            function ApplicationController($scope, AppContext) {
                 this.$scope = $scope;
-                this._appContext = new AppContext();
-                $scope.catalogModel = this._appContext.getCatalogModel();
+                this.AppContext = AppContext;
+                $scope.catalogModel = AppContext.getCatalogModel();
+                $scope.about = "Gadgetron Jet V2.0";
             }
-            ApplicationController.$inject = ['$scope'];
+            ApplicationController.$inject = ['$scope', 'AppContext'];
             return ApplicationController;
         })();
         Application.ApplicationController = ApplicationController;
@@ -80,13 +81,6 @@ var Jet;
                     ngModel: '='
                 };
             };
-            CatalogEntry.prototype.link = function (scope, element, attrs) {
-                console.log(scope);
-                //var key = attrs.key;
-                //var components = scope.catalogModel.getComponents();
-                //console.log(this);
-                //this._catalogModelData = this._findCatalogModelData(components, key);
-            };
             CatalogEntry.prototype.templateUrl = function () {
                 return this._templateUrl;
             };
@@ -107,13 +101,42 @@ var Jet;
         Ui.CatalogEntry = CatalogEntry;
     })(Ui = Jet.Ui || (Jet.Ui = {}));
 })(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
+        var MenuBar = (function () {
+            function MenuBar(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/menu/menuBar.html";
+            }
+            MenuBar.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            MenuBar.prototype.link = function (scope) {
+                scope.showAbout = function () {
+                    console.log(scope.about);
+                };
+            };
+            MenuBar.Factory = function () {
+                var directive = function (AppContext) {
+                    return new MenuBar(AppContext);
+                };
+                return directive;
+            };
+            return MenuBar;
+        })();
+        Ui.MenuBar = MenuBar;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
 /// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="application/applicationcontroller.ts" />
 /// <reference path="perspectives/perspectivecontroller.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogentry/catalogentry.ts" />
+/// <reference path="ui/menu/menuBar.ts" />
 (function () {
-    var app = angular.module('Jet', []);
+    var app = angular.module('Jet', ['ngMaterial']);
     // Application context.
     app.service('AppContext', AppContext);
     // Application controller.
@@ -124,6 +147,8 @@ var Jet;
     app.directive('catalog', Jet.Ui.Catalog.Factory());
     // Catalog entry directive.
     app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
+    // Menu directive
+    app.directive('menuBar', Jet.Ui.MenuBar.Factory());
 })();
 var CatalogModelData = (function () {
     function CatalogModelData(longName, keyName, price, componentUrl, svgUrl) {
