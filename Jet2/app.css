@@ -17,3 +17,11 @@ ul {
 div.clear {
     clear: both;
 }
+
+div.ui-container {
+    padding: 15px;
+}
+
+.full-height {
+    height: 100%;
+}

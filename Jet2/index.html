@@ -20,12 +20,16 @@
 </head>
 
 <body ng-app="Jet" ng-controller="AppCtrl">
-    <!-- Application menu bar. -->
-    <menu-bar></menu-bar>
+    <div layout="column" class="full-height">
+        <!-- Application menu bar. -->
+        <div flex="10">
+            <menu-bar></menu-bar>
+        </div>
 
-    <!-- Show current perspective. -->
-    <div ng-controller="PerspectiveCtrl">
-        <ng-include src="perspective.getPartialSrc()" />
+        <!-- Show current perspective. -->
+        <div ng-controller="PerspectiveCtrl" flex="90" class="full-height">
+            <ng-include src="perspective.getPartialSrc()" />
+        </div>
     </div>
 </body>
 </html>

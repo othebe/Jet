@@ -50,6 +50,29 @@ var Jet;
 (function (Jet) {
     var Ui;
     (function (Ui) {
+        var Board = (function () {
+            function Board(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/board/board.html";
+            }
+            Board.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            Board.Factory = function () {
+                var directive = function (AppContext) {
+                    return new Board(AppContext);
+                };
+                return directive;
+            };
+            return Board;
+        })();
+        Ui.Board = Board;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
         var Catalog = (function () {
             function Catalog() {
                 this._templateUrl = "ui/catalog/catalog.html";
@@ -105,6 +128,29 @@ var Jet;
 (function (Jet) {
     var Ui;
     (function (Ui) {
+        var GadgetExplorer = (function () {
+            function GadgetExplorer(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/gadgetExplorer/gadgetExplorer.html";
+            }
+            GadgetExplorer.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            GadgetExplorer.Factory = function () {
+                var directive = function (AppContext) {
+                    return new GadgetExplorer(AppContext);
+                };
+                return directive;
+            };
+            return GadgetExplorer;
+        })();
+        Ui.GadgetExplorer = GadgetExplorer;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
         var MenuBar = (function () {
             function MenuBar(AppContext) {
                 this.AppContext = AppContext;
@@ -132,8 +178,10 @@ var Jet;
 /// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="application/applicationcontroller.ts" />
 /// <reference path="perspectives/perspectivecontroller.ts" />
+/// <reference path="ui/board/board.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogentry/catalogentry.ts" />
+/// <reference path="ui/gadgetexplorer/gadgetexplorer.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 (function () {
     var app = angular.module('Jet', ['ngMaterial']);
@@ -147,8 +195,12 @@ var Jet;
     app.directive('catalog', Jet.Ui.Catalog.Factory());
     // Catalog entry directive.
     app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
-    // Menu directive
+    // Menu directive.
     app.directive('menuBar', Jet.Ui.MenuBar.Factory());
+    // Gadget explorer.
+    app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
+    // Board.
+    app.directive('board', Jet.Ui.Board.Factory());
 })();
 var CatalogModelData = (function () {
     function CatalogModelData(longName, keyName, price, componentUrl, svgUrl) {
