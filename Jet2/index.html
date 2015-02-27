@@ -20,14 +20,14 @@
 </head>
 
 <body ng-app="Jet" ng-controller="AppCtrl">
-    <div layout="column" class="full-height">
+    <div layout="column" class="fill-height">
         <!-- Application menu bar. -->
         <div flex="10">
             <menu-bar></menu-bar>
         </div>
 
         <!-- Show current perspective. -->
-        <div ng-controller="PerspectiveCtrl" flex="90" class="full-height">
+        <div ng-controller="PerspectiveCtrl" flex="90" class="fill-height">
             <ng-include src="perspective.getPartialSrc()" />
         </div>
     </div>

@@ -4,6 +4,9 @@
 /// <reference path="ui/board/board.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogentry/catalogentry.ts" />
+/// <reference path="ui/componentinspector/componentinspector.ts" />
+/// <reference path="ui/componentinspector/componentnameinspector.ts" />
+/// <reference path="ui/componentinspector/componenttransformationinspector.ts" />
 /// <reference path="ui/gadgetexplorer/gadgetexplorer.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
@@ -30,5 +33,11 @@
     app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
     // Board.
     app.directive('board', Jet.Ui.Board.Factory());
+    // Component inspector.
+    app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
+    // Component name inspector.
+    app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
+    // Component transformation inspector.
+    app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
 })();
                               

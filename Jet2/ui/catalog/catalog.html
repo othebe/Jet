@@ -1,17 +1,15 @@
-﻿<div class="catalog">
-    CATALOG
-    <hr />
-    <md-content class="md-padding" style="min-height:500px;">
-        <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="9"
-                      md-row-height-gt-md="1:1" md-row-height="fit"
-                      md-gutter="12x" md-gutter-gt-sm="8px">
-            <div ng-repeat="catalogModelData in catalogModel.getComponents()">
-                <catalog-entry ng-model="catalogModelData"></catalog-entry>
-            </div>
-        </md-grid-list>
-    </md-content>
-</div>
+﻿<div class="catalog ui-container">
+    <div class="header">Component Catalog</div>
 
-<style>
-    
-</style>
+    <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
+        <md-content class="md-padding">
+            <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="9"
+                          md-row-height-gt-md="1:1" md-row-height="fit"
+                          md-gutter="12x" md-gutter-gt-sm="8px">
+                <div ng-repeat="catalogModelData in catalogModel.getComponents()">
+                    <catalog-entry ng-model="catalogModelData"></catalog-entry>
+                </div>
+            </md-grid-list>
+        </md-content>
+    </md-whiteframe>
+</div>

@@ -128,6 +128,75 @@ var Jet;
 (function (Jet) {
     var Ui;
     (function (Ui) {
+        var ComponentInspector = (function () {
+            function ComponentInspector(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/componentInspector/componentInspector.html";
+            }
+            ComponentInspector.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            ComponentInspector.Factory = function () {
+                var directive = function (AppContext) {
+                    return new ComponentInspector(AppContext);
+                };
+                return directive;
+            };
+            return ComponentInspector;
+        })();
+        Ui.ComponentInspector = ComponentInspector;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
+        var ComponentNameInspector = (function () {
+            function ComponentNameInspector(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/componentInspector/componentNameInspector.html";
+            }
+            ComponentNameInspector.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            ComponentNameInspector.Factory = function () {
+                var directive = function (AppContext) {
+                    return new ComponentNameInspector(AppContext);
+                };
+                return directive;
+            };
+            return ComponentNameInspector;
+        })();
+        Ui.ComponentNameInspector = ComponentNameInspector;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
+        var ComponentTransformationInspector = (function () {
+            function ComponentTransformationInspector(AppContext) {
+                this.AppContext = AppContext;
+                this._templateUrl = "ui/componentInspector/componentTransformationInspector.html";
+            }
+            ComponentTransformationInspector.prototype.templateUrl = function () {
+                return this._templateUrl;
+            };
+            ComponentTransformationInspector.Factory = function () {
+                var directive = function (AppContext) {
+                    return new ComponentTransformationInspector(AppContext);
+                };
+                return directive;
+            };
+            return ComponentTransformationInspector;
+        })();
+        Ui.ComponentTransformationInspector = ComponentTransformationInspector;
+    })(Ui = Jet.Ui || (Jet.Ui = {}));
+})(Jet || (Jet = {}));
+var Jet;
+(function (Jet) {
+    var Ui;
+    (function (Ui) {
         var GadgetExplorer = (function () {
             function GadgetExplorer(AppContext) {
                 this.AppContext = AppContext;
@@ -181,6 +250,9 @@ var Jet;
 /// <reference path="ui/board/board.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogentry/catalogentry.ts" />
+/// <reference path="ui/componentinspector/componentinspector.ts" />
+/// <reference path="ui/componentinspector/componentnameinspector.ts" />
+/// <reference path="ui/componentinspector/componenttransformationinspector.ts" />
 /// <reference path="ui/gadgetexplorer/gadgetexplorer.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 (function () {
@@ -201,6 +273,12 @@ var Jet;
     app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
     // Board.
     app.directive('board', Jet.Ui.Board.Factory());
+    // Component inspector.
+    app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
+    // Component name inspector.
+    app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
+    // Component transformation inspector.
+    app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
 })();
 var CatalogModelData = (function () {
     function CatalogModelData(longName, keyName, price, componentUrl, svgUrl) {
