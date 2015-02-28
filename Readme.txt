@@ -1,3 +1,8 @@
+Package dependencies:
+npm install
+
+-------------------------------------------------------------------------------
+
 Typescript dependencies:
 Typescript dependencies are handled via TSD https://www.npmjs.com/package/tsd
 
