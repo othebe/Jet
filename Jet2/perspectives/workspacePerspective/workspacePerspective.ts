@@ -1,6 +1,6 @@
 ﻿module Jet.Perspective {
     export class WorkspacePerspective {
-        private _partialSrc: string = "perspectives/WorkspacePerspective/workspacePerspective.html";
+        private _partialSrc: string = "perspectives/workspacePerspective/workspacePerspective.html";
 
         constructor() { }
 
