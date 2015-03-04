@@ -25,6 +25,14 @@ bower update
 
 -------------------------------------------------------------------------------
 
+Compile:
+Compiled code is written to Jet2/Jet.js
+
+Usage:
+compile
+
+-------------------------------------------------------------------------------
+
 Final steps:
 Application tasks are managed via Grunt.
 
