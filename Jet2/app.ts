@@ -1,13 +1,13 @@
 ﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
-/// <reference path="application/applicationcontroller.ts" />
-/// <reference path="perspectives/perspectivecontroller.ts" />
+/// <reference path="application/applicationController.ts" />
+/// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/board.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
-/// <reference path="ui/catalogentry/catalogentry.ts" />
-/// <reference path="ui/componentinspector/componentinspector.ts" />
-/// <reference path="ui/componentinspector/componentnameinspector.ts" />
-/// <reference path="ui/componentinspector/componenttransformationinspector.ts" />
-/// <reference path="ui/gadgetexplorer/gadgetexplorer.ts" />
+/// <reference path="ui/catalogentry/catalogEntry.ts" />
+/// <reference path="ui/componentinspector/componentInspector.ts" />
+/// <reference path="ui/componentinspector/componentNameInspector.ts" />
+/// <reference path="ui/componentinspector/componentTransformationInspector.ts" />
+/// <reference path="ui/gadgetexplorer/gadgetExplorer.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
 (function () {
