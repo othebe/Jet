@@ -37,11 +37,24 @@ module.exports = function(grunt) {
                     }
                 ]
             }
+        },  
+        
+        // Connect web server.
+        connect: {
+            server: {
+                options: {
+                    port: 5000,
+                    base: 'Jet2',
+                    keepalive: true
+                }
+            }
         }
     });
     
     // Enable Grunt copy.
     grunt.loadNpmTasks('grunt-contrib-copy');
+    // Enable Grunt connect webserver.
+    grunt.loadNpmTasks('grunt-contrib-connect');
     
     // Default task(s).
     grunt.registerTask('default', ['copy']);

@@ -30,3 +30,6 @@ Application tasks are managed via Grunt.
 
 Usage:
 grunt
+
+Start web server (Port 5000)
+grunt connect
