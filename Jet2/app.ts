@@ -3,11 +3,11 @@
 /// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/board.ts" />
 /// <reference path="ui/catalog/catalog.ts" />
-/// <reference path="ui/catalogentry/catalogEntry.ts" />
-/// <reference path="ui/componentinspector/componentInspector.ts" />
-/// <reference path="ui/componentinspector/componentNameInspector.ts" />
-/// <reference path="ui/componentinspector/componentTransformationInspector.ts" />
-/// <reference path="ui/gadgetexplorer/gadgetExplorer.ts" />
+/// <reference path="ui/catalogEntry/catalogEntry.ts" />
+/// <reference path="ui/componentInspector/componentInspector.ts" />
+/// <reference path="ui/componentInspector/componentNameInspector.ts" />
+/// <reference path="ui/componentInspector/componentTransformationInspector.ts" />
+/// <reference path="ui/gadgetExplorer/gadgetExplorer.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
 (function () {
