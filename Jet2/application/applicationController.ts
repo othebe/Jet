@@ -15,4 +15,4 @@
             $scope.about = "Gadgetron Jet V2.0";
         }
     }
-} 
+}
