@@ -4,6 +4,9 @@ const PROJECT_DIR   = 'Jet2';
 // This folder is the default Bower component location.
 const BOWER_DIR     = 'bower_components';
 
+// This folder is contains public libraries.
+const LIBRARY_DIR   = 'libraries';
+
 // This folder contains public components.
 const PUBLIC_DIR    = 'public';
 
@@ -25,7 +28,7 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: BOWER_DIR,
                         src: '**',
-                        dest: [PROJECT_DIR, PUBLIC_DIR].join('/') + '/'
+                        dest: [PROJECT_DIR, PUBLIC_DIR, LIBRARY_DIR].join('/') + '/'
                     },
                     
                     // Typings.
