@@ -8,6 +8,7 @@
 
         // Currently selected gadget component. Stored in map for nested
         // directives. Access under 'selected' key.
+        // http://jimhoskins.com/2012/12/14/nested-scopes-in-angularjs.html
         selectedGadgetComponent: {selected: Jet.Model.GadgetModelData};
 
         about: string;
