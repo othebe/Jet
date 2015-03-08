@@ -1,0 +1,2 @@
+Low:
+- Isolate scopes on directives.

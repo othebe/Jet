@@ -42,13 +42,6 @@
             }
         }
 
-        public scope () {
-            return {
-                ngModel: '=',
-                selectedGadgetComponent: '='
-            }
-        }
-
         public templateUrl(): string {
             return this._templateUrl;
         }

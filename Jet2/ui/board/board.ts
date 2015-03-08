@@ -11,10 +11,22 @@
             private _fabricImage: fabric.IImage,
             private _scope: IBoardScope)
         {
+            var main = this;
+
             this._catalogModelData = _scope.catalogModel.getComponent(
                 _gadgetModelData.keyname);
 
+            this._fabricImage.on('selected', function () {
+                main._scope.selectedGadgetComponent.selected = _gadgetModelData;
+                main._scope.$applyAsync();
+            });
+
             // Watch related gadget model data for changes.
+            //this._scope.$watch
+        }
+
+        public getFabricImage(): fabric.IImage {
+            return this._fabricImage;
         }
 
     }
@@ -27,6 +39,7 @@
 
         public templateUrl: () => string;
         public link: (scope: IBoardScope, instanceElement: JQuery) => void;
+        public scope: {};
 
         constructor (private AppContext: AppContext) {
             var main = this;
@@ -38,21 +51,43 @@
             }
 
             this.link = function (scope: IBoardScope, instanceElement: JQuery) {
+                main._scope = scope;
+
                 // Initialize fabric canvas.
-                var canvasElt: HTMLCanvasElement = instanceElement[0].getElementsByTagName('canvas')[0];
-                main._fabricCanvas = new fabric.Canvas(canvasElt);
-                main._fabricCanvas.setHeight(instanceElement.find('.board-container').innerHeight());
-                main._fabricCanvas.setWidth(instanceElement.find('.board-container').innerWidth());
+                main._initializeFabric(instanceElement);
 
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
                     newComponents: { [index: string]: Jet.Model.GadgetModelData },
                     oldComponents: { [index: string]: Jet.Model.GadgetModelData })
                 {
-                    main._scope = scope;
                     main._updateUi(scope.gadgetModel);
                 }, true);
+
+                // Watch the selected gadget model data.
+                scope.$watch('selectedGadgetComponent.selected', function () {
+                    main._selectComponent(scope.selectedGadgetComponent.selected);
+                }, true);
             }
+        }
+
+        // Initialize FabricJS canvas.
+        private _initializeFabric(instanceElement: JQuery) {
+            var main = this;
+
+            // Initialize fabric canvas.
+            var canvasElt: HTMLCanvasElement = instanceElement[0].getElementsByTagName('canvas')[0];
+            this._fabricCanvas = new fabric.Canvas(canvasElt);
+            this._fabricCanvas.setHeight(instanceElement.find('.board-container').innerHeight());
+            this._fabricCanvas.setWidth(instanceElement.find('.board-container').innerWidth());
+
+            // Setup canvas events.
+            this._fabricCanvas.on('mouse:down', function () {
+                if (main._fabricCanvas.getActiveObject() == null) {
+                    main._scope.selectedGadgetComponent.selected = null;
+                    main._scope.$applyAsync();
+                }
+            });
         }
 
         // Update components displayed on the board.
@@ -72,17 +107,26 @@
             var main = this;
             var catalogModelData = this.AppContext.getCatalogModel().getComponent(gadgetModelData.keyname);
             var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(), function (img) {
-                main._fabricCanvas.add(img);
-
                 var boardComponent = new BoardComponent(gadgetModelData, img, main._scope);
                 main._gDataFabricMap.set(gadgetModelData, boardComponent);
+                main._fabricCanvas.add(img);
             });            
+        }
+
+        // Select a board component.
+        private _selectComponent(gadgetModelData: Jet.Model.GadgetModelData) {
+            var selectedComponent = this._gDataFabricMap.get(gadgetModelData);
+            if (selectedComponent != null) {
+                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
+            } else {
+                this._fabricCanvas.discardActiveObject();
+            }
         }
 
         public static Factory() {
             var directive = (AppContext: AppContext) => {
                 return new Board(AppContext);
-            }
+            };
 
             return directive;
         }

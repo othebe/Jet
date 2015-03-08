@@ -11,12 +11,14 @@ module Jet.Perspective {
 
         // Allowed perspectives.
         // TODO: Generate this array dynamically.
-        private _perspectives: Array<IPerspective> = [
-            new Jet.Perspective.WorkspacePerspective()
+        private _perspectives: Array<(scope: IPerspectiveScope, appContext: AppContext) => IPerspective> = [
+            function (scope, appContext) {
+                return new Jet.Perspective.WorkspacePerspective(scope, appContext);
+            },
         ];
 
         constructor(private $scope: IPerspectiveScope, private appContext: AppContext) {
-            $scope.perspective = this._perspectives[0];
+            $scope.perspective = this._perspectives[0]($scope, appContext);
         }
     }
 }
