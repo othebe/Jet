@@ -10,7 +10,7 @@
         // directives. Access under 'selected' key.
         selectedGadgetComponent: {selected: Jet.Model.GadgetModelData};
 
-        test: boolean;
+        about: string;
     }
 
     export class ApplicationController {
