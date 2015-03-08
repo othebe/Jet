@@ -1,4 +1,5 @@
 ﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
+/// <reference path="public/typings/fabricjs/fabricjs.d.ts" />
 /// <reference path="application/applicationController.ts" />
 /// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/board.ts" />
@@ -8,6 +9,7 @@
 /// <reference path="ui/componentInspector/componentNameInspector.ts" />
 /// <reference path="ui/componentInspector/componentTransformationInspector.ts" />
 /// <reference path="ui/gadgetExplorer/gadgetExplorer.ts" />
+/// <reference path="ui/gadgetExplorer/gadgetExplorerEntry.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
 (function () {
@@ -31,6 +33,8 @@
     app.directive('menuBar', Jet.Ui.MenuBar.Factory());
     // Gadget explorer.
     app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
+    // Gadget explorer entry.
+    app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
     // Board.
     app.directive('board', Jet.Ui.Board.Factory());
     // Component inspector.

@@ -1,108 +1,17 @@
-﻿<div class="gadget-explorer fill-height ui-container">
+﻿<div class="gadget-explorer fill-height ui-container" ng-click="setT()">
     <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
         <div class="header">Gadget Explorer</div>
         <md-content class="fill-height">
             <md-list>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
-
-                <md-item>
-                    <div>SPARKFUN SERIAL</div>
-                </md-item>
+                <div ng-repeat="gadgetModelData in gadgetModel.components">
+                    <gadget-explorer-entry ng-model="gadgetModelData" selected-gadget-model="selectedGadgetComponent"></gadget-explorer-entry>
+                </div>
             </md-list>
         </md-content>
     </md-whiteframe>
 
     <style>
-        .header {
-            background-color: #D1DBBD;
-            padding: 8px 12px;
+        .gadget-explorer .entry {
+            cursor: pointer;
         }
     </style>

@@ -1,7 +1,9 @@
-﻿<div class="catalog-entry">
+﻿<div class="catalog-entry" ng-dblclick="addComponentToGadget()">
     <md-grid-tile md-colspan="1">
         <md-card class="white-card">
-            <img src="http://media-cache-ak0.pinimg.com/736x/14/d6/28/14d628fa7348efe09235b90729111034.jpg" />
+            <div class="image">
+                <img ng-src="{{catalogModelData.getSvgUrl()}}" />
+            </div>
 
             <!-- Catalog entry name -->
             <md-grid-tile-footer class="footer">
@@ -21,6 +23,10 @@
     div.catalog-entry md-card.white-card:hover {
         box-shadow: 0 2px 15px 0 rgba(0,0,0,.26);
         cursor: pointer;
+    }
+
+    div.catalog-entry md-card.white-card div.image {
+        padding: 5px;
     }
 
     div.catalog-entry md-grid-tile-footer.footer {

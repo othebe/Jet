@@ -1,0 +1,15 @@
+﻿<div class="gadget-explorer-entry">
+    <md-item ng-click="toggleSelected()">
+        <div ng-class="{selected: isSelected}" ng-bind="gadgetModelData.name" ></div>
+    </md-item>
+</div>
+
+<style>
+    .gadget-explorer-entry {
+        cursor: pointer;
+    }
+
+    .gadget-explorer-entry .selected {
+        background-color: lightblue;
+    }
+</style>
