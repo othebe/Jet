@@ -1,4 +1,6 @@
-﻿module Jet.Ui {
+﻿/// <reference path="../directives.ts" />
+
+module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
     }
@@ -31,17 +33,15 @@
 
     }
 
-    export class Board implements Jet.Ui.Directive {
+    export class Board extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Jet.Model.GadgetModelData, BoardComponent>;
 
-        public templateUrl: () => string;
-        public link: (scope: IBoardScope, instanceElement: JQuery) => void;
-        public scope: {};
+        constructor(private AppContext: AppContext) {
+            super(AppContext);
 
-        constructor (private AppContext: AppContext) {
             var main = this;
             
             this._gDataFabricMap = new Map<Jet.Model.GadgetModelData, BoardComponent>();

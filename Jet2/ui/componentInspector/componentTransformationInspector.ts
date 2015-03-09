@@ -1,8 +1,15 @@
-﻿module Jet.Ui {
-    export class ComponentTransformationInspector implements Jet.Ui.Directive {
+﻿/// <reference path="../directives.ts" />
+
+module Jet.Ui {
+    export class ComponentTransformationInspector extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/componentInspector/componentTransformationInspector.html";
 
-        constructor(private AppContext: AppContext) { }
+        constructor(private AppContext: AppContext) {
+            super(AppContext);
+
+            this.link = function (scope: Jet.Application.IApplicationScope) {
+            }
+        }
 
         public templateUrl(): string {
             return this._templateUrl;

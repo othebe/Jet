@@ -1,4 +1,6 @@
-﻿module Jet.Ui {
+﻿/// <reference path="../directives.ts" />
+
+module Jet.Ui {
     interface IGadgetExplorerEntryScope extends Jet.Application.IApplicationScope {
         // Gadget model data.
         gadgetModelData: Jet.Model.GadgetModelData;
@@ -10,13 +12,13 @@
         toggleSelected();
     }
 
-    export class GadgetExplorerEntry implements Jet.Ui.Directive {
+    export class GadgetExplorerEntry extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/gadgetExplorer/gadgetExplorerEntry.html";
         private _scope: IGadgetExplorerEntryScope;
 
-        public link: (scope: IGadgetExplorerEntryScope) => void;
-
         constructor(private AppContext: AppContext) {
+            super(AppContext);
+
             var main = this;
 
             this.link = function (scope: IGadgetExplorerEntryScope) {
