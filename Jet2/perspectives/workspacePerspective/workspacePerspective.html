@@ -4,7 +4,11 @@
             <div layout="row" layout-align="space-between center" class="fill-height">
                 <gadget-explorer class="fill-height" flex="20" ng-model="gadgetModelData"></gadget-explorer>
                 <board class="fill-height" flex="50"></board>
-                <component-inspector class="fill-height" flex="30"></component-inspector>
+                <component-inspector class="fill-height" flex="30"
+                                     gadget-model="gadgetModel"
+                                     catalog-model="catalogModel"
+                                     selected-gadget-component="selectedGadgetComponent">
+                </component-inspector>
             </div>
         </div>
         <div flex="33" class="fill-height">

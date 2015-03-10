@@ -1,11 +1,37 @@
 ﻿/// <reference path="../directives.ts" />
 
 module Jet.Ui {
+    interface IComponentInspectorScope extends Jet.Application.IApplicationScope {
+        gadgetModelData: Jet.Model.GadgetModelData;
+        catalogModelData: Jet.Model.CatalogModelData;
+    }
+
     export class ComponentInspector extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/componentInspector/componentInspector.html";
 
         constructor(private AppContext: AppContext) {
             super(AppContext);
+
+            var main = this;
+
+            this.link = function (scope: IComponentInspectorScope) {
+                scope.$watch('selectedGadgetComponent.selected',
+                    function (gadgetModelData: Jet.Model.GadgetModelData) {
+                        scope.gadgetModelData = gadgetModelData;
+
+                        if (gadgetModelData == null) {
+                            scope.catalogModelData = null;
+                        } else {
+                            scope.catalogModelData = scope.catalogModel.getComponent(gadgetModelData.keyname);
+                        }
+                    }, true);
+            };
+
+            this.scope = {
+                catalogModel: '=',
+                gadgetModel: '=',
+                selectedGadgetComponent: '='
+            };
         }
 
         public templateUrl(): string {
