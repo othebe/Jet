@@ -1,12 +1,10 @@
+
 module Jet.Model {
 
     export class GadgetModel {
         // This is the component dictionary
         // You can use this to iterate over if you have too
-        components: { [index: string]: GadgetModelData; } = {};
-	
-        // This is the component catalog. It has the prototypes for all the kinds of components
-        private catalog: any;
+        components: { [index: string]: ComponentInstance; } = {};
 	
         // Testing constructor. It adds three of the first kind of part in the catalog.
         //constructor(catalog: any) {
@@ -18,20 +16,21 @@ module Jet.Model {
         //    this.add_component("part3", kind, 10, 20);
         //}
 
-        constructor() { }
+        constructor() {}
 	
         // Add component. This adds a component of the keyname type. The name must be a unique ID.
-        add_component(name: string,
+        add_component(
+			name: string,
             keyname: string,
-            xpos: number = 0.0,
-            ypos: number = 0.0,
-            rot: number = 0.0) {
+			placed_parts: { [index: string]: PlacedPart; } = {}
+			
+		) {
             if (Object.keys(this.components).indexOf(name) > -1) {
                 throw new Error("Adding component with duplicate name: " + name);
             }
 
             Object.keys(this.components).push(name);
-            this.components[name] = new GadgetModelData(name, keyname, xpos, ypos, rot);
+            this.components[name] = new ComponentInstance(name, keyname, placed_parts);
         }
 	
         // Gets the info of a component by name.
@@ -41,11 +40,11 @@ module Jet.Model {
         }
 	
         // Move a component.
-        move_component(name: string, xpos: number, ypos: number, rot?: number) {
-            this.components[name].xpos = xpos;
-            this.components[name].ypos = ypos;
+        move_placed_part(name: string, ref: string, xpos: number, ypos: number, rot?: number) {
+            this.components[name].placed_parts[ref].xpos = xpos;
+            this.components[name].placed_parts[ref].ypos = ypos;
             if (rot) {
-                this.components[name].rot = rot;
+                this.components[name].placed_parts[ref].rot = rot;
             }
         }
 	
@@ -53,29 +52,80 @@ module Jet.Model {
         component_names(): string[] {
             return Object.keys(this.components);
         }
+		
+		get_gspec () {
+			var XML = document.createElement("div");
+			var Node = document.createElement("gadgetlayout");
+            Node.setAttribute("version", "1.1");
+            
+            var name = document.createElement("name")
+            name.innerText = "Gadget Name"
+			Node.appendChild( name );
+			
+			var board = document.createElement("board")
+            //name.innerText = "Gadget Name"
+			board.setAttribute("x", "-50");
+			board.setAttribute("y", "-50");
+			board.setAttribute("h", "100");
+			board.setAttribute("w", "100");
+			Node.appendChild( board );
+            
+            for (var key in this.components) {
+                if (this.components.hasOwnProperty(key)) {
+                    var comp = document.createElement("component");
+					comp.setAttribute("name", this.components[key].name);
+					comp.setAttribute("type", this.components[key].keyname);
+                	Node.appendChild(comp);
+				}
+            }
+            
+			XML.appendChild(Node);
+			
+			alert(XML.innerHTML);
+		}
     }
 	
 	// Basic component info class
-    export class GadgetModelData {
+    export class ComponentInstance {
 		name: string;
 		keyname: string;
-		xpos: number;
-		ypos: number;
-		rot: number;
+        placed_parts: { [index: string]: PlacedPart; } = {};
 		
 		// Basic constructor
-
-		constructor (name: string, 
-					 keyname: string,
-					 xpos: number = 0.0,
-					 ypos: number = 0.0,
-					 rot:  number = 0.0) {
+		constructor (
+            name: string, 
+			keyname: string,
+            placed_parts: { [index: string]: PlacedPart; } 
+        ) {
 			this.name = name;
 			this.keyname = keyname;
+			this.placed_parts = placed_parts;
+		} 
+	}
+    
+    // Placed part class
+    export class PlacedPart {
+        ref: string;
+        xpos: number;
+        ypos: number;
+        rot: number;
+        
+        constructor (
+            ref: string,
+            xpos: number,
+            ypos: number,
+            rot: number
+        ) {
+			this.ref = ref;
 			this.xpos = xpos;
 			this.ypos = ypos;
 			this.rot = rot;
-						 
-		} 
-	}
+		}
+    }
 }
+
+
+
+//var test = new Jet.Model.GadgetModel();
+//test.add_component("name1", "RGB_LED", 10, -10, 90);
+//test.get_gspec();

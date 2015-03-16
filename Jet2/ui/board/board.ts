@@ -1,5 +1,5 @@
 ﻿/// <reference path="../directives.ts" />
-
+var test;
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
@@ -53,8 +53,14 @@ module Jet.Ui {
         private _setupFabricListeners() {
             var main = this;
 
+            // Set origin point for image to center.
             this._fabricImage.originX = 'center';
             this._fabricImage.originY = 'center';
+
+            // Lock scaling.
+            this._fabricImage.lockUniScaling = true;
+            this._fabricImage.lockScalingX = true;
+            this._fabricImage.lockScalingY = true;
 
             // Handle image selection.
             this._fabricImage.on('selected', function () {
@@ -220,12 +226,31 @@ module Jet.Ui {
         // Add a component to the board.
         private _addComponent(gadgetModelData: Jet.Model.GadgetModelData) {
             var main = this;
+
             var catalogModelData = this.AppContext.getCatalogModel().getComponent(gadgetModelData.keyname);
             var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(), function (img) {
                 var boardComponent = new BoardComponent(gadgetModelData, img, main._fabricCanvas, main._scope);
                 main._gDataFabricMap.set(gadgetModelData, boardComponent);
                 main._fabricCanvas.add(img);
-            });            
+            });  
+            
+            this._extractImg(catalogModelData.getSvgUrl());          
+        }
+
+        private _extractImg(src: string) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', src, true);
+            xhr.onload = function () {
+                if (xhr.readyState == 4) {
+                    var xml = xhr.responseXML;
+                    console.log(xml.rootElement);
+                    test = xml;
+                    var e = document.getElementById('test');
+                    test = xml.rootElement;
+                    e.appendChild(test);
+                }
+            };
+            xhr.send();
         }
 
         // Select a board component.
