@@ -4,7 +4,8 @@
     }
 
     export class CatalogModel {
-        private _ComponentUrl: string = "http://localhost:5000/public/components.json";
+        private _catalogUrl: string = "public/components.xml";
+        private _imgDir: string = "public/catalog/";
         private _componentMap: ComponentMap = {};
         private _catalogModelData: Array<CatalogModelData> = [];
 
@@ -16,26 +17,87 @@
         private _readComponents() {
             this._catalogModelData = [];
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", this._ComponentUrl, true);
+
+            xhr.open("GET", this._catalogUrl, true);
             xhr.onreadystatechange = (e: Event) => {
-                var target : any = e.target;
+                var target: any = e.target;
                 if (target.readyState == 4) {
-                    var components: Array<JSON> = JSON.parse(target.response);
+                    var xml = xhr.responseXML;
+
+                    var components = xml.getElementsByTagName('component');
+
                     for (var i = 0; i < components.length; i++) {
-                        // TODO (othebe): Wrap data in an interface.
-                        var data : any = components[i];
-                        var component: CatalogModelData = new CatalogModelData(
-                            data.longname,
-                            data.keyname,
-                            data.price,
-                            data.componentUrl,
-                            data.svgUrl
+                        var component = components[i];
+
+                        // Keyname.
+                        var keyname = component.getAttribute('keyname');
+                        // Longname.
+                        var name = component.getElementsByTagName('name')[0].innerHTML;
+                        // Price.
+                        var price = 0;
+                        if (component.getElementsByTagName('supplier').length > 0) {
+                            price = parseFloat(
+                                component.getElementsByTagName('supplier')[0].getAttribute('price'));
+                        }
+                        // Documentation URL.
+                        var docUrl = "";
+                        if (component.getElementsByTagName('documentationURL').length > 0) {
+                            docUrl = component.getElementsByTagName('documentationURL')[0].innerHTML;
+                        }
+                        // Placed parts.
+                        var placedParts = component.getElementsByTagName('placedparts');
+
+                        if (placedParts.length == 0) continue;
+
+                        placedParts = placedParts[0].getElementsByTagName('placedpart');
+
+                        var placedPartArr: Array<CatalogPlacedPart> = [];
+                        for (var j = 0; j < placedParts.length; j++) {
+                            var placedPart = placedParts[j];
+                            var modelPath = placedPart.getAttribute('model2D').split('/');
+                            var svgUrl = this._imgDir + modelPath[modelPath.length - 1];
+
+                            placedPartArr.push(new CatalogPlacedPart(svgUrl));
+                        }
+
+                        // TODO(othebe): Different img when more than one placed
+                        // part is present?
+                        var imgUrl = placedPartArr[0].getSvgUrl();
+
+                        var c: CatalogModelData = new CatalogModelData(
+                            name,           /** longname */
+                            keyname,        /** keyname */
+                            price,          /** price */
+                            docUrl,         /** documentationUrl */
+                            imgUrl,         /** svgUrl */
+                            placedPartArr   /** placedParts */
                             );
-                        this._catalogModelData.push(component);
-                        this._componentMap[data.keyname] = component;
+                        this._catalogModelData.push(c);
+                        this._componentMap[keyname] = c;
                     }
                 }
             };
+
+            //xhr.open("GET", this._ComponentUrl, true);
+            //xhr.onreadystatechange = (e: Event) => {
+            //    var target : any = e.target;
+            //    if (target.readyState == 4) {
+            //        var components: Array<JSON> = JSON.parse(target.response);
+            //        for (var i = 0; i < components.length; i++) {
+            //            // TODO (othebe): Wrap data in an interface.
+            //            var data : any = components[i];
+            //            var component: CatalogModelData = new CatalogModelData(
+            //                data.longname,
+            //                data.keyname,
+            //                data.price,
+            //                data.componentUrl,
+            //                data.svgUrl
+            //                );
+            //            this._catalogModelData.push(component);
+            //            this._componentMap[data.keyname] = component;
+            //        }
+            //    }
+            //};
             xhr.send();
         }
 

@@ -2,8 +2,20 @@
     <div layout="column" style="height:100%">
         <div flex="66" class="fill-height">
             <div layout="row" layout-align="space-between center" class="fill-height">
-                <gadget-explorer class="fill-height" flex="20" ng-model="gadgetModelData"></gadget-explorer>
-                <board class="fill-height" flex="50"></board>
+                <!-- Gadget explorer. -->
+                <gadget-explorer class="fill-height" flex="20"
+                                 gadget-model="gadgetModelData"
+                                 selected-gadget-component="selectedGadgetComponent">
+                </gadget-explorer>
+
+                <!-- Board. -->
+                <board class="fill-height" flex="50"
+                       catalog-model="catalogModel"
+                       gadget-model="gadgetModel"
+                       selected-gadget-component="selectedGadgetComponent">
+                </board>
+
+                <!-- Component inspector. -->
                 <component-inspector class="fill-height" flex="30"
                                      gadget-model="gadgetModel"
                                      catalog-model="catalogModel"

@@ -86,7 +86,7 @@ module Jet.Model {
     }
 	
 	// Basic component info class
-    export class ComponentInstance {
+    export class ComponentInstance implements Jet.Application.ISelectable {
 		name: string;
 		keyname: string;
         placed_parts: { [index: string]: PlacedPart; } = {};
@@ -100,11 +100,22 @@ module Jet.Model {
 			this.name = name;
 			this.keyname = keyname;
 			this.placed_parts = placed_parts;
-		} 
+        }
+
+        // Returns an array of placed parts.
+        public getPlacedParts(): Array<PlacedPart> {
+            var placedParts = [];
+
+            for (var key in this.placed_parts) {
+                placedParts.push(this.placed_parts[key]);
+            }
+
+            return placedParts;
+        }
 	}
     
     // Placed part class
-    export class PlacedPart {
+    export class PlacedPart implements Jet.Application.ISelectable {
         ref: string;
         xpos: number;
         ypos: number;

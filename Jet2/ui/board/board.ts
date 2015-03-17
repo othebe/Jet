@@ -1,12 +1,12 @@
 ﻿/// <reference path="../directives.ts" />
-var test;
+
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
     }
 
     interface IBoardComponentScope extends ng.IScope {
-        gadgetModelData?: Jet.Model.GadgetModelData;
+        placedPartData?: Jet.Model.PlacedPart;
     }
 
     class BoardComponent {
@@ -17,7 +17,8 @@ module Jet.Ui {
         private _ENABLE_RESTRAINTS: boolean = false;
 
         constructor(
-            private _gadgetModelData: Jet.Model.GadgetModelData,
+            private _componentData: Jet.Model.ComponentInstance,
+            private _placedPartData: Jet.Model.PlacedPart,
             private _fabricImage: fabric.IImage,
             private _fabricCanvas: fabric.ICanvas,
             private _scope: IBoardScope)
@@ -25,17 +26,17 @@ module Jet.Ui {
             var main = this;
 
             this._catalogModelData = _scope.catalogModel.getComponent(
-                _gadgetModelData.keyname);
+                _componentData.keyname);
 
-            this._position = { x: this._gadgetModelData.xpos, y: this._gadgetModelData.ypos };
+            this._position = { x: this._placedPartData.xpos, y: this._placedPartData.ypos };
 
             this._boardComponentScope = this._scope.$new(true);
-            this._boardComponentScope.gadgetModelData = this._gadgetModelData;
+            this._boardComponentScope.placedPartData = this._placedPartData;
 
             this._setupFabricListeners();
 
             // Watch related gadget model data for changes.
-            this._boardComponentScope.$watch('gadgetModelData', function (gadgetModelData: Jet.Model.GadgetModelData) {
+            this._boardComponentScope.$watch('placedPartData', function (gadgetModelData: Jet.Model.PlacedPart) {
                 var x = gadgetModelData.xpos;
                 var y = gadgetModelData.ypos;
                 var rot = gadgetModelData.rot;
@@ -64,7 +65,7 @@ module Jet.Ui {
 
             // Handle image selection.
             this._fabricImage.on('selected', function () {
-                main._scope.selectedGadgetComponent.selected = main._gadgetModelData;
+                main._scope.selectedGadgetComponent.selected = main._componentData;
                 main._scope.$applyAsync();
             });
 
@@ -98,14 +99,14 @@ module Jet.Ui {
                     main._position.y = center.y;
                 }
 
-                main._gadgetModelData.xpos = main._position.x;
-                main._gadgetModelData.ypos = main._position.y;
+                main._placedPartData.xpos = main._position.x;
+                main._placedPartData.ypos = main._position.y;
                 main._scope.$applyAsync();
             });
 
             // Handle image rotation.
             this._fabricImage.on('rotating', function () {
-                main._gadgetModelData.rot = main._fabricImage.getAngle();
+                main._placedPartData.rot = main._fabricImage.getAngle();
                 main._scope.$applyAsync();
 
                 // TODO (othebe): Enable restriction checking.
@@ -158,18 +159,24 @@ module Jet.Ui {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
         private _fabricCanvas: fabric.ICanvas;
-        private _gDataFabricMap: Map<Jet.Model.GadgetModelData, BoardComponent>;
+        private _gDataFabricMap: Map<Jet.Model.PlacedPart, BoardComponent>;
 
         constructor(private AppContext: AppContext) {
             super(AppContext);
 
             var main = this;
             
-            this._gDataFabricMap = new Map<Jet.Model.GadgetModelData, BoardComponent>();
+            this._gDataFabricMap = new Map<Jet.Model.PlacedPart, BoardComponent>();
 
             this.templateUrl = function () {
                 return this._templateUrl;
             }
+
+            this.scope = {
+                catalogModel: '=',
+                gadgetModel: '=',
+                selectedGadgetComponent: '='
+            };
 
             this.link = function (scope: IBoardScope, instanceElement: JQuery) {
                 main._scope = scope;
@@ -179,8 +186,8 @@ module Jet.Ui {
 
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
-                    newComponents: { [index: string]: Jet.Model.GadgetModelData },
-                    oldComponents: { [index: string]: Jet.Model.GadgetModelData })
+                    newComponents: { [index: string]: Jet.Model.ComponentInstance },
+                    oldComponents: { [index: string]: Jet.Model.ComponentInstance })
                 {
                     main._updateUi(scope.gadgetModel);
                 }, true);
@@ -215,22 +222,26 @@ module Jet.Ui {
         private _updateUi(gadgetModel: Jet.Model.GadgetModel) {
             // Check for new components.
             for (var key in gadgetModel.components) {
-                var gadgetModelData = gadgetModel.components[key];
-                if (!this._gDataFabricMap.has(gadgetModelData)) {
-                    this._addComponent(gadgetModelData);
+                var componentData = gadgetModel.components[key];
+                var placedParts = componentData.getPlacedParts();
+
+                for (var placedPartData in placedParts) {
+                    if (!this._gDataFabricMap.has(placedPartData)) {
+                        this._addComponent(componentData, placedPartData);
+                    }
                 }
             }
             // TODO (othebe): Check for deleted components.
         }
 
         // Add a component to the board.
-        private _addComponent(gadgetModelData: Jet.Model.GadgetModelData) {
+        private _addComponent(componentData: Jet.Model.ComponentInstance, placedPartData: Jet.Model.PlacedPart) {
             var main = this;
-
-            var catalogModelData = this.AppContext.getCatalogModel().getComponent(gadgetModelData.keyname);
+            
+            var catalogModelData = this.AppContext.getCatalogModel().getComponent(componentData.keyname);
             var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(), function (img) {
-                var boardComponent = new BoardComponent(gadgetModelData, img, main._fabricCanvas, main._scope);
-                main._gDataFabricMap.set(gadgetModelData, boardComponent);
+                var boardComponent = new BoardComponent(componentData, placedPartData, img, main._fabricCanvas, main._scope);
+                main._gDataFabricMap.set(placedPartData, boardComponent);
                 main._fabricCanvas.add(img);
             });  
             
@@ -243,24 +254,19 @@ module Jet.Ui {
             xhr.onload = function () {
                 if (xhr.readyState == 4) {
                     var xml = xhr.responseXML;
-                    console.log(xml.rootElement);
-                    test = xml;
-                    var e = document.getElementById('test');
-                    test = xml.rootElement;
-                    e.appendChild(test);
                 }
             };
             xhr.send();
         }
 
         // Select a board component.
-        private _selectComponent(gadgetModelData: Jet.Model.GadgetModelData) {
-            var selectedComponent = this._gDataFabricMap.get(gadgetModelData);
-            if (selectedComponent != null) {
-                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
-            } else {
-                this._fabricCanvas.discardActiveObject();
-            }
+        private _selectComponent(selected: Jet.Application.ISelectable) {
+            //var selectedComponent = this._gDataFabricMap.get(selected);
+            //if (selectedComponent != null) {
+            //    this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
+            //} else {
+            //    this._fabricCanvas.discardActiveObject();
+            //}
         }
 
         public static Factory() {

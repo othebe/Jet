@@ -17,14 +17,16 @@ module Jet.Ui {
 
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
-                    newComponents: { [index: string]: Jet.Model.GadgetModelData },
-                    oldComponents: { [index: string]: Jet.Model.GadgetModelData })
+                    newComponents: { [index: string]: Jet.Model.ComponentInstance },
+                    oldComponents: { [index: string]: Jet.Model.ComponentInstance })
                 {
                 }, true);
-
-                // Watch selected gadget model data for changes.
-                // scope.$watch('selectedGadgetComponent', function
             }
+
+            this.scope = {
+                gadgetModel: '=',
+                selectedGadgetComponent: '='
+            };
         }
 
         public templateUrl(): string {

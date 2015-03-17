@@ -2,7 +2,7 @@
 
 module Jet.Ui {
     interface IComponentInspectorScope extends Jet.Application.IApplicationScope {
-        gadgetModelData: Jet.Model.GadgetModelData;
+        componentData: Jet.Application.ISelectable;
         catalogModelData: Jet.Model.CatalogModelData;
     }
 
@@ -16,14 +16,14 @@ module Jet.Ui {
 
             this.link = function (scope: IComponentInspectorScope) {
                 scope.$watch('selectedGadgetComponent.selected',
-                    function (gadgetModelData: Jet.Model.GadgetModelData) {
-                        scope.gadgetModelData = gadgetModelData;
+                    function (gadgetModelData: Jet.Application.ISelectable) {
+                        scope.componentData = gadgetModelData;
 
-                        if (gadgetModelData == null) {
-                            scope.catalogModelData = null;
-                        } else {
-                            scope.catalogModelData = scope.catalogModel.getComponent(gadgetModelData.keyname);
-                        }
+                        //if (gadgetModelData == null) {
+                        //    scope.catalogModelData = null;
+                        //} else {
+                        //    scope.catalogModelData = scope.catalogModel.getComponent(gadgetModelData.keyname);
+                        //}
                     }, true);
             };
 

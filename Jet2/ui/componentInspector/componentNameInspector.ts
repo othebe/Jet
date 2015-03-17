@@ -3,7 +3,7 @@
 module Jet.Ui {
     // This scope points to the component inspector's scope.
     interface IComponentNameInspectorScope extends Jet.Application.IApplicationScope {
-        gadgetModelData: Jet.Model.GadgetModelData;
+        componentData: Jet.Application.ISelectable;
     }
 
     export class ComponentNameInspector extends Jet.Ui.Directive {
