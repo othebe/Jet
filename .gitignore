@@ -4,11 +4,6 @@ typings
 bin
 obj
 angular
-/compile.bat
 /ts-files.txt
-/Jet2/Jet2.csproj
 /Jet2/Jet.js
 /Jet2/Jet.js.map
-/Jet2/web.config
-/Jet2/web.Debug.config
-/Jet2/web.Release.config
