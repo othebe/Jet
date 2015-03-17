@@ -3,7 +3,7 @@
 module Jet.Ui {
     interface IGadgetExplorerEntryScope extends Jet.Application.IApplicationScope {
         // Gadget model data.
-        gadgetModelData: Jet.Application.ISelectable;
+        placedPart: Jet.Application.ISelectable;
 
         // Is selected.
         isSelected: boolean;
@@ -25,9 +25,9 @@ module Jet.Ui {
                 main._scope = scope;
 
                 // Watch for changes to selected gadget component.
-                scope.$watch('selectedGadgetComponent', function () {
+                scope.$watch('selectedGadgetComponent.selected', function () {
                     var selected = scope.selectedGadgetComponent.selected;
-                    var isSelected = (selected != null && selected == scope.gadgetModelData);
+                    var isSelected = (selected != null && selected == scope.placedPart);
                     scope.isSelected = isSelected;
                 }, true);
 
@@ -35,10 +35,10 @@ module Jet.Ui {
                 scope.toggleSelected = function () {
                     var selected = scope.selectedGadgetComponent.selected;
                     
-                    if (selected == scope.gadgetModelData) {
+                    if (selected == scope.placedPart) {
                         scope.selectedGadgetComponent.selected = null;
                     } else {
-                        scope.selectedGadgetComponent.selected = scope.gadgetModelData;
+                        scope.selectedGadgetComponent.selected = scope.placedPart;
                     }
                 }
             }

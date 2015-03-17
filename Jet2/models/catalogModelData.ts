@@ -21,7 +21,7 @@
             return this._price;
         }
 
-        public getComponentUrl(): string {
+        public getDocumentationUrl(): string {
             return this._documentationUrl;
         }
 
@@ -35,7 +35,11 @@
     }
 
     export class CatalogPlacedPart {
-        constructor(private _svgUrl: string) { }
+        constructor(private _ref: string, private _svgUrl: string) { }
+
+        public getRef(): string {
+            return this._ref;
+        }
 
         public getSvgUrl(): string {
             return this._svgUrl;

@@ -1,18 +1,18 @@
-﻿<div class="component-transformation-inspector">
+﻿<div class="component-transformation-inspector" ng-if="componentData != null">
     <div layout="row">
         <md-input-container flex>
             <label>Translate-x</label>
-            <input type="number" ng-model="gadgetModelData.xpos" />
+            <input type="number" ng-model="componentData.xpos" />
         </md-input-container>
 
         <md-input-container flex>
             <label>Translate-y</label>
-            <input type="number" ng-model="gadgetModelData.ypos" />
+            <input type="number" ng-model="componentData.ypos" />
         </md-input-container>
 
         <md-input-container flex>
             <label>Rotation</label>
-            <input type="number" ng-model="gadgetModelData.rot" />
+            <input type="number" ng-model="componentData.rot" />
         </md-input-container>
     </div>
 </div>

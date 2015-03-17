@@ -30,7 +30,15 @@ module Jet.Model {
             }
 
             Object.keys(this.components).push(name);
-            this.components[name] = new ComponentInstance(name, keyname, placed_parts);
+            var component = new ComponentInstance(name, keyname, placed_parts);
+
+            // Set a parent reference in all placed parts. Remember to update
+            // this when updating the name.
+            for (var key in component.placed_parts) {
+                component.placed_parts[key].componentInstanceName = name;
+            }
+
+            this.components[name] = component;
         }
 	
         // Gets the info of a component by name.
@@ -99,7 +107,7 @@ module Jet.Model {
         ) {
 			this.name = name;
 			this.keyname = keyname;
-			this.placed_parts = placed_parts;
+            this.placed_parts = placed_parts;
         }
 
         // Returns an array of placed parts.
@@ -112,6 +120,17 @@ module Jet.Model {
 
             return placedParts;
         }
+
+        // Determines if this component instance has a placed part.
+        // TODO(othebe): Replace placed_parts with array, or hash by placedpart.
+        public hasPlacedPart(placedPart: PlacedPart): boolean {
+            for (var key in this.placed_parts) {
+                if (this.placed_parts[key] == placedPart) {
+                    return true;
+                }
+            }
+            return false;
+        }
 	}
     
     // Placed part class
@@ -120,6 +139,7 @@ module Jet.Model {
         xpos: number;
         ypos: number;
         rot: number;
+        componentInstanceName: string;
         
         constructor (
             ref: string,
@@ -131,7 +151,7 @@ module Jet.Model {
 			this.xpos = xpos;
 			this.ypos = ypos;
 			this.rot = rot;
-		}
+        }
     }
 }
 

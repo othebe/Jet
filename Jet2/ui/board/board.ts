@@ -65,7 +65,7 @@ module Jet.Ui {
 
             // Handle image selection.
             this._fabricImage.on('selected', function () {
-                main._scope.selectedGadgetComponent.selected = main._componentData;
+                main._scope.selectedGadgetComponent.selected = main._placedPartData;
                 main._scope.$applyAsync();
             });
 
@@ -159,14 +159,14 @@ module Jet.Ui {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
         private _fabricCanvas: fabric.ICanvas;
-        private _gDataFabricMap: Map<Jet.Model.PlacedPart, BoardComponent>;
+        private _gDataFabricMap: Map<Jet.Application.ISelectable, BoardComponent>;
 
         constructor(private AppContext: AppContext) {
             super(AppContext);
 
             var main = this;
             
-            this._gDataFabricMap = new Map<Jet.Model.PlacedPart, BoardComponent>();
+            this._gDataFabricMap = new Map<Jet.Application.ISelectable, BoardComponent>();
 
             this.templateUrl = function () {
                 return this._templateUrl;
@@ -223,9 +223,10 @@ module Jet.Ui {
             // Check for new components.
             for (var key in gadgetModel.components) {
                 var componentData = gadgetModel.components[key];
-                var placedParts = componentData.getPlacedParts();
 
-                for (var placedPartData in placedParts) {
+                var placedParts = componentData.getPlacedParts();
+                for (var ndx = 0; ndx < placedParts.length; ndx++) {
+                    var placedPartData = placedParts[ndx];
                     if (!this._gDataFabricMap.has(placedPartData)) {
                         this._addComponent(componentData, placedPartData);
                     }
@@ -261,12 +262,12 @@ module Jet.Ui {
 
         // Select a board component.
         private _selectComponent(selected: Jet.Application.ISelectable) {
-            //var selectedComponent = this._gDataFabricMap.get(selected);
-            //if (selectedComponent != null) {
-            //    this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
-            //} else {
-            //    this._fabricCanvas.discardActiveObject();
-            //}
+            var selectedComponent = this._gDataFabricMap.get(selected);
+            if (selectedComponent != null) {
+                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
+            } else {
+                this._fabricCanvas.discardActiveObject();
+            }
         }
 
         public static Factory() {

@@ -4,7 +4,12 @@
         <md-content class="fill-height">
             <md-list>
                 <div ng-repeat="gadgetModelData in gadgetModel.components">
-                    <gadget-explorer-entry></gadget-explorer-entry>
+                    <!-- Component entry. -->
+                    <div ng-bind="gadgetModelData.name"></div>
+                    <!-- Placed part. -->
+                    <div ng-repeat="placedPart in gadgetModelData.getPlacedParts()">
+                        <gadget-explorer-entry></gadget-explorer-entry>
+                    </div>
                 </div>
             </md-list>
         </md-content>

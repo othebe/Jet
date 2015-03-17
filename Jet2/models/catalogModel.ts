@@ -54,10 +54,15 @@
                         var placedPartArr: Array<CatalogPlacedPart> = [];
                         for (var j = 0; j < placedParts.length; j++) {
                             var placedPart = placedParts[j];
+
+                            // SVG Url.
                             var modelPath = placedPart.getAttribute('model2D').split('/');
                             var svgUrl = this._imgDir + modelPath[modelPath.length - 1];
 
-                            placedPartArr.push(new CatalogPlacedPart(svgUrl));
+                            // Ref.
+                            var ref = placedPart.getAttribute('refdes');
+
+                            placedPartArr.push(new CatalogPlacedPart(ref, svgUrl));
                         }
 
                         // TODO(othebe): Different img when more than one placed

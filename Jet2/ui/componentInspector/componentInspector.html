@@ -1,15 +1,23 @@
 ﻿<div class="component-inspector fill-height ui-container">
     <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
         <div class="header">Component Explorer</div>
-        <md-content class="fill-height">
+        <md-content class="fill-height" ng-if="selected != null">
             <!-- Data editors. -->
-            <component-name-inspector></component-name-inspector>
-            <component-transformation-inspector></component-transformation-inspector>
+            <component-name-inspector catalog-model="catalogModel"
+                                      gadget-model="gadgetModel"
+                                      selected="selected">
+            </component-name-inspector>
+
+            <component-transformation-inspector catalog-model="catalogModel"
+                                                gadget-model="gadgetModel"
+                                                selected="selected">
+                >
+            </component-transformation-inspector>
 
             <md-divider></md-divider>
 
             <!-- Component Information. -->
-            <md-card ng-show="gadgetModelData != null">
+            <md-card ng-show="catalogModelData != null">
                 <div layout="row">
                     <!-- Component image. -->
                     <div>
@@ -19,17 +27,17 @@
                     <!-- Other information. -->
                     <div layout="column">
                         <b>
-                            <span ng-bind="gadgetModelData.keyname"></span>
-                            <a href="#">
+                            <span ng-bind="catalogModelData.getKeyName()"></span>
+                            <a href="{{catalogModelData.getDocumentationUrl()}}" target="_blank">
                                 <!-- TODO (othebe): Get link icon. -->
-                                <img src="http://1.bp.blogspot.com/-z0Q8pd7Ifhs/UOwtIDT86II/AAAAAAAAAAY/6hDoGHfu8YA/s1600/link-icon.png" style="width:15px;"/>
+                                <img src="http://1.bp.blogspot.com/-z0Q8pd7Ifhs/UOwtIDT86II/AAAAAAAAAAY/6hDoGHfu8YA/s1600/link-icon.png" style="width:15px;" />
                             </a>
                         </b>
                         <md-divider></md-divider>
-                        <span>Price: $20.42</span>
+                        <span>Price: $<span ng-bind="catalogModelData.getPrice()"></span></span>
                     </div>
                 </div>
             </md-card>
-         </md-content>
+        </md-content>
     </md-whiteframe>
 </div>

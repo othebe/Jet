@@ -1,6 +1,8 @@
 ﻿<div class="gadget-explorer-entry">
     <md-item ng-click="toggleSelected()">
-        <div ng-class="{selected: isSelected}" ng-bind="gadgetModelData.name" ></div>
+        <div class="placed-part" ng-repeat="placedPart in gadgetModelData.getPlacedParts()">
+            <div ng-class="{selected: isSelected}">NEEDS NAME</div>
+        </div>
     </md-item>
 </div>
 
@@ -11,5 +13,9 @@
 
     .gadget-explorer-entry .selected {
         background-color: lightblue;
+    }
+
+    .gadget-explorer-entry .placed-part .selected {
+        background-color: lightcyan;
     }
 </style>
