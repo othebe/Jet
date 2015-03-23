@@ -12,36 +12,37 @@
 /// <reference path="ui/gadgetExplorer/gadgetExplorerEntry.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
-(function () {
-    var app = angular.module('Jet', ['ngMaterial']);
-
-    // Application context.
-    app.service('AppContext', AppContext);
-
-
-    // Application controller.
-    app.controller('AppCtrl', Jet.Application.ApplicationController);
-    // Perspective controller.
-    app.controller('PerspectiveCtrl', Jet.Perspective.PerspectiveController);
+(
+    function () {
+	var app = angular.module('Jet', ['ngMaterial']);
+	
+	// Application context.
+	app.service('AppContext', AppContext);
 
 
-    // Catalog directive.
-    app.directive('catalog', Jet.Ui.Catalog.Factory());
-    // Catalog entry directive.
-    app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
-    // Menu directive.
-    app.directive('menuBar', Jet.Ui.MenuBar.Factory());
-    // Gadget explorer.
-    app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
-    // Gadget explorer entry.
-    app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
-    // Board.
-    app.directive('board', Jet.Ui.Board.Factory());
-    // Component inspector.
-    app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
-    // Component name inspector.
-    app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
-    // Component transformation inspector.
-    app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
-})();
-                              
+	// Application controller.
+	app.controller('AppCtrl', Jet.Application.ApplicationController);
+	// Perspective controller.
+	app.controller('PerspectiveCtrl', Jet.Perspective.PerspectiveController);
+
+
+	// Catalog directive.
+	app.directive('catalog', Jet.Ui.Catalog.Factory());
+	// Catalog entry directive.
+	app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
+	// Menu directive.
+	app.directive('menuBar', Jet.Ui.MenuBar.Factory());
+	// Gadget explorer.
+	app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
+	// Gadget explorer entry.
+	app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
+	// Board.
+	app.directive('board', Jet.Ui.Board.Factory());
+	// Component inspector.
+	app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
+	// Component name inspector.
+	app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
+	// Component transformation inspector.
+	app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
+    }
+)();

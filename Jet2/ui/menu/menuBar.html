@@ -10,7 +10,11 @@
         </li>
 
         <li class="menu-option">
-            View
+          View
+	  <ul class="submenu">
+	    <li class="option" ng-click="selectPerspective(0)">Build</li>
+	    <li class="option" ng-click="selectPerspective(1)">Debug</li>
+	  </ul>
         </li>
 
         <li class="menu-option" ng-click="showAbout()">

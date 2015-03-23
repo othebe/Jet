@@ -3,7 +3,10 @@
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
+	zoomFactor : Number;
+	Math: any;
     }
+    
 
     interface IBoardComponentScope extends ng.IScope {
         placedPartData?: Jet.Model.PlacedPart;
@@ -36,19 +39,20 @@ module Jet.Ui {
             this._setupFabricListeners();
 
             // Watch related gadget model data for changes.
-            this._boardComponentScope.$watch('placedPartData', function (gadgetModelData: Jet.Model.PlacedPart) {
-                var x = gadgetModelData.xpos;
-                var y = gadgetModelData.ypos;
-                var rot = gadgetModelData.rot;
-
-                if (main._ENABLE_RESTRAINTS) {
-                    // TODO (othebe): Enable restrains once the positioning
-                    // is confirmed.
-                } else {
-                    main._setTranslation(x, y);
-                    main._setRotation(rot);
-                }
-            }, true); 
+            this._boardComponentScope.$watch('placedPartData',
+					     function (gadgetModelData: Jet.Model.PlacedPart) {
+						 var x = gadgetModelData.xpos;
+						 var y = gadgetModelData.ypos;
+						 var rot = gadgetModelData.rot;
+						 
+						 if (main._ENABLE_RESTRAINTS) {
+						     // TODO (othebe): Enable restrains once the positioning
+						     // is confirmed.
+						 } else {
+						     main._setTranslation(x, y);
+						     main._setRotation(rot);
+						 }
+					     }, true); 
         }
 
         private _setupFabricListeners() {
@@ -74,41 +78,14 @@ module Jet.Ui {
 
             // Handle image translation.
             this._fabricImage.on('moving', function () {
-                var center = main._getCenter();
-
-                // Restrain if enabling boundary checking.
-                if (main._ENABLE_RESTRAINTS) {
-                    // Check valid horizontal movement.
-                    if (main._isValidXPosition()) {
-                        main._position.x = center.x;
-                    }
-
-                    // Check valid vertical movement.
-                    if (main._isValidYPosition()) {
-                        main._position.y = center.y;
-                    }
-
-                    // Restrain movement if necessary.
-                    var restrainMovement = main._position.x != center.x ||
-                        main._position.y != center.y;
-                    if (restrainMovement) {
-                        main._setTranslation(main._position.x, main._position.y);
-                    }
-                } else {
-                    main._position.x = center.x;
-                    main._position.y = center.y;
-                }
-
-                main._placedPartData.xpos = main._position.x;
-                main._placedPartData.ypos = main._position.y;
-                main._scope.$applyAsync();
+		//console.log("Moving " + this);
+		main._updateLocation();
             });
 
             // Handle image rotation.
             this._fabricImage.on('rotating', function () {
-                main._placedPartData.rot = main._fabricImage.getAngle();
-                main._scope.$applyAsync();
-
+		//console.log("Rotating " + this);
+                main._updateRotation();
                 // TODO (othebe): Enable restriction checking.
             });
         }
@@ -117,6 +94,49 @@ module Jet.Ui {
             return this._fabricImage;
         }
 
+	private _updateLocation() {
+            var center = this._getCenter();
+
+            // Restrain if enabling boundary checking.
+            if (this._ENABLE_RESTRAINTS) {
+                // Check valid horizontal movement.
+                if (this._isValidXPosition()) {
+                    this._position.x = center.x;
+                }
+
+                // Check valid vertical movement.
+                if (this._isValidYPosition()) {
+                    this._position.y = center.y;
+                }
+
+                // Restrain movement if necessary.
+                var restrainMovement = this._position.x != center.x ||
+                    this._position.y != center.y;
+                if (restrainMovement) {
+                    this._setTranslation(this._position.x, this._position.y);
+                }
+            } else {
+                this._position.x = center.x;
+                this._position.y = center.y;
+            }
+
+	    //console.log("Setting location of " + this + " to " + this._position.x + ", " + this._position.y)
+            this._placedPartData.xpos = this._position.x;
+            this._placedPartData.ypos = this._position.y;
+            this._scope.$applyAsync();
+	}
+
+	private _updateRotation() {
+	    //console.log("Setting rotation of " + this + " to " + this._fabricImage.getAngle())
+	    this._placedPartData.rot = this._fabricImage.getAngle() - Math.floor(this._fabricImage.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
+            this._scope.$applyAsync();
+	}
+
+	public updateGeometry() {
+	    this._updateRotation();
+	    this._updateLocation();
+	}
+	
         // Returns the center co-ordinates of the image.
         private _getCenter(): { x: number; y: number } {
             return {
@@ -160,13 +180,18 @@ module Jet.Ui {
         private _scope: IBoardScope;
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Jet.Application.ISelectable, BoardComponent>;
-
+	private _imgToComponentMap: Map<fabric.IObject, BoardComponent>;
+	private _checkResize: boolean;
+	private _boardContainer;
+	private _previouslySelected: fabric.IObject [];
+	
         constructor(private AppContext: AppContext) {
             super(AppContext);
 
             var main = this;
             
             this._gDataFabricMap = new Map<Jet.Application.ISelectable, BoardComponent>();
+            this._imgToComponentMap = new Map<fabric.IObject, BoardComponent>();
 
             this.templateUrl = function () {
                 return this._templateUrl;
@@ -191,14 +216,32 @@ module Jet.Ui {
                 {
                     main._updateUi(scope.gadgetModel);
                 }, true);
+		
+		scope.$watch('zoomFactor', function (oldValue :number,
+						     newValue :number) {
+		    main._fabricCanvas.setZoom(newValue);
+                }, true);
+
+		scope.$on("change:perspective", function(name: ng.IAngularEvent,
+							 newPerspective: number) {
+		    main._clearUi();
+		    main._updateUi(scope.gadgetModel);
+		});
 
                 // Watch the selected gadget model data.
                 scope.$watch('selectedGadgetComponent.selected', function () {
                     main._selectComponent(scope.selectedGadgetComponent.selected);
                 }, true);
+
             }
         }
 
+	private _updateBoardSize(){
+	    //console.log("Setting size to " +  $(this._boardContainer).innerWidth() + " x " + $(this._boardContainer).innerHeight());
+	    this._fabricCanvas.setHeight($(this._boardContainer).innerHeight());
+	    this._fabricCanvas.setWidth($(this._boardContainer).innerWidth());
+	}
+	
         // Initialize FabricJS canvas.
         private _initializeFabric(instanceElement: JQuery) {
             var main = this;
@@ -206,9 +249,11 @@ module Jet.Ui {
             // Initialize fabric canvas.
             var canvasElt: HTMLCanvasElement = instanceElement[0].getElementsByTagName('canvas')[0];
             this._fabricCanvas = new fabric.Canvas(canvasElt);
-            this._fabricCanvas.setHeight(instanceElement.find('.board-container').innerHeight());
-            this._fabricCanvas.setWidth(instanceElement.find('.board-container').innerWidth());
-
+	    this._boardContainer = instanceElement.find('.board-container')[0];
+	    this._updateBoardSize();
+	    main._scope.zoomFactor = 1;
+	    main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
+		
             // Setup canvas events.
             this._fabricCanvas.on('mouse:down', function () {
                 if (main._fabricCanvas.getActiveObject() == null) {
@@ -216,8 +261,65 @@ module Jet.Ui {
                     main._scope.$applyAsync();
                 }
             });
+
+	    // Handle group rotation and movement. First, just before the
+	    // selection cleared, grab the list of canvas objects that were
+	    // selected.
+	    this._fabricCanvas.on('before:selection:cleared',
+				  function() {
+				      //console.log("Before selection cleared");
+				      if (main._fabricCanvas.getActiveGroup() != null) {
+					  main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
+				      } else {
+					  main._previouslySelected = null;
+				      }
+				  });
+
+	    // Then, after the selection is destroyed, propogate the location
+	    // back to the BoardObject.  We have to do it in two stages,
+	    // because when the object is selected, it's in a group and its
+	    // coordinates are relative to the group's origin.
+	    this._fabricCanvas.on('selection:cleared',
+				  function() {
+				      //console.log("Selection cleared");
+				      if (main._previouslySelected != null) {
+					  for (var i = 0; i < main._previouslySelected.length; i++) {
+					      main._imgToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+					  }
+				      }
+				      main._previouslySelected = null;
+				  });
+
+	    // this._fabricCanvas.on('selection:created',
+	    // 			  function() {
+	    // 			      console.log("Selection created");
+	    // 			  });
+	    
+	    // Watch for resize events and adjust canvas size accordingly.  Use
+	    // a timer to keep from doing it over and over as the user drags
+	    // around the corner of the window.
+	    main._checkResize = true;
+	    $(window).on("resize",function(){
+		if(main._checkResize){
+		    main._updateBoardSize();
+		    main._checkResize = false;
+		    setTimeout(function(){
+			main._checkResize = true;
+			main._updateBoardSize();
+		    },500)
+		}
+	    });
+
         }
 
+	private _clearUi() {
+	    this._fabricCanvas.clear();
+	    this._imgToComponentMap.clear();
+	    this._gDataFabricMap.clear();
+	}
+
+
+	
         // Update components displayed on the board.
         private _updateUi(gadgetModel: Jet.Model.GadgetModel) {
             // Check for new components.
@@ -235,16 +337,22 @@ module Jet.Ui {
             // TODO (othebe): Check for deleted components.
         }
 
-        // Add a component to the board.
+	// Add a component to the board.
         private _addComponent(componentData: Jet.Model.ComponentInstance, placedPartData: Jet.Model.PlacedPart) {
             var main = this;
             
             var catalogModelData = this.AppContext.getCatalogModel().getComponent(componentData.keyname);
-            var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(), function (img) {
-                var boardComponent = new BoardComponent(componentData, placedPartData, img, main._fabricCanvas, main._scope);
-                main._gDataFabricMap.set(placedPartData, boardComponent);
-                main._fabricCanvas.add(img);
-            });  
+
+            var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(),
+						   function (img) {
+						       var boardComponent = new BoardComponent(componentData, placedPartData, img, main._fabricCanvas, main._scope);
+						       main._gDataFabricMap.set(placedPartData, boardComponent);
+						       main._imgToComponentMap.set(img, boardComponent);
+						       img.setTop(placedPartData.ypos);
+						       img.setLeft(placedPartData.xpos);
+						       img.setAngle(placedPartData.rot);
+						       main._fabricCanvas.add(img);
+						   });  
             
             this._extractImg(catalogModelData.getSvgUrl());          
         }

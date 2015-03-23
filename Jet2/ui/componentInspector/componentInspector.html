@@ -11,8 +11,9 @@
             <component-transformation-inspector catalog-model="catalogModel"
                                                 gadget-model="gadgetModel"
                                                 selected="selected">
-                >
+              >
             </component-transformation-inspector>
+	    <span ng-bind="myvariable"></span>
 
             <md-divider></md-divider>
 
@@ -28,6 +29,7 @@
                     <div layout="column">
                         <b>
                             <span ng-bind="catalogModelData.getKeyName()"></span>
+                            <span ng-bind="about"></span>
                             <a href="{{catalogModelData.getDocumentationUrl()}}" target="_blank">
                                 <!-- TODO (othebe): Get link icon. -->
                                 <img src="http://1.bp.blogspot.com/-z0Q8pd7Ifhs/UOwtIDT86II/AAAAAAAAAAY/6hDoGHfu8YA/s1600/link-icon.png" style="width:15px;" />

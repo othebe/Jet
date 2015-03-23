@@ -76,7 +76,7 @@
                             docUrl,         /** documentationUrl */
                             imgUrl,         /** svgUrl */
                             placedPartArr   /** placedParts */
-                            );
+                        );
                         this._catalogModelData.push(c);
                         this._componentMap[keyname] = c;
                     }

@@ -14,19 +14,28 @@
         // directives. Access under 'selected' key.
         // http://jimhoskins.com/2012/12/14/nested-scopes-in-angularjs.html
         selectedGadgetComponent: {selected: Jet.Application.ISelectable};
-
         about: string;
+	selectPerspective(id: number): void;
+
     }
 
     export class ApplicationController {
-        static $inject = ['$scope', 'AppContext'];
+        static $inject = ['$rootScope', '$scope', 'AppContext'];
 
-        constructor(private $scope: IApplicationScope, private AppContext: AppContext) {
+        constructor(private $rootScope: ng.IRootScopeService,
+		    private $scope: IApplicationScope,
+		    private AppContext: AppContext) {
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
             $scope.selectedGadgetComponent = { selected: null };
             
             $scope.about = "Gadgetron Jet V2.0";
+
+	    $scope.selectPerspective = function(id:number) {
+		//console.log("sending change persective to " + id)
+		$rootScope.$broadcast("change:perspective", id);
+	    }
+
         }
     }
 }

@@ -37,7 +37,8 @@ module Jet.Ui {
             this.scope = {
                 catalogModel: '=',
                 gadgetModel: '=',
-                selectedGadgetComponent: '='
+                selectedGadgetComponent: '=',
+		myvariable: '='
             };
         }
 
