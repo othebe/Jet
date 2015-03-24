@@ -26,7 +26,6 @@ window.onload = function() {
                         var svgUrl = SVG_BASE + modelPath[modelPath.length - 1];
                         
                         insert_svg(svgUrl);
-                        //return;
                     }
                 }
             }
@@ -64,24 +63,69 @@ window.onload = function() {
         var svg_elt = container.children[0];
         
         var s = Snap(svg_elt);
-        var bbox = s.getBBox();
         
-        var width = bbox.width;
-        var height = bbox.height;
+        // Board layer bounding box. Consider a union of the largest bbox.
+        var board_layer_above_board = s.select('g.gtron-above-board');
+        var board_layer_above_fplate = s.select('g.gtron-above-faceplate');
+        var board_bbox = {
+            x:      Math.min(   board_layer_above_board.getBBox().x,
+                                board_layer_above_fplate.getBBox().x),
+            y:      Math.min(   board_layer_above_board.getBBox().y,
+                                board_layer_above_fplate.getBBox().y),
+            width:  Math.max(   board_layer_above_board.getBBox().width,
+                                board_layer_above_fplate.getBBox().width),
+            height: Math.max(   board_layer_above_board.getBBox().height,
+                                board_layer_above_fplate.getBBox().height)
+        };
         
+        // Origin layer bounding box.
+        var orig_layer = s.select('g.gtron-origin-layer');
+        var orig_bbox = orig_layer.getBBox();
+        
+        // Fixed dimensions should equal the board layer.
+        var width = board_bbox.width;
+        var height = board_bbox.height;
+
+        // The viewbox origins should include the entire board layer.
+        var orig_x = board_bbox.x - orig_bbox.cx;
+        var orig_y = board_bbox.y - orig_bbox.cy;
+
         svg_elt.setAttribute('width', width);
         svg_elt.setAttribute('height', height);
-        svg_elt.setAttribute('viewBox', [-0.5 * width, -0.5 * height, width, height].join(' '));
+        svg_elt.setAttribute('viewBox', [orig_x, orig_y, width, height].join(' '));
         
         post_svg_data(container, svg_fname);
     };
     
+    // Fix source XML.
+    var fix = function(data) {
+        /* *********************************************
+         * Fix for incorrect inkscape XML with 4 newlines
+         * followed by incorrect nodes.
+         * TODO (othebe): Remove once source XML is fixed.
+         */
+        var err_str = "\n\n\n\n";
+        var error_ndx = data.indexOf(err_str);
+        if (error_ndx >= 0) {
+            // Find closing tags </g>.
+            var rest = data.substr(error_ndx);
+            rest = rest.substr(rest.indexOf("</g>"));
+            data = data.substr(0, error_ndx) + rest;
+        }
+        
+        return data;
+    };
+    
     // Send SVG data to server.
     var post_svg_data = function(container, svg_fname) {
+        var data = container.innerHTML;
         var xhr = new XMLHttpRequest();
         xhr.open('POST', POST_URL, true);
-
-        var params = "svgName=" + svg_fname + "&svgXml=" + container.innerHTML;
+        
+        // TODO (othebe): Remove once source XML is fixed.
+        data = fix(data);
+        
+        var params = "svgName=" + svg_fname + "&svgXml=" + data;
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         
         xhr.onreadystatechange = function(e) {
