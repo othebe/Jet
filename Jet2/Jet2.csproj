@@ -20,6 +20,8 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="index.html" />
+    <Content Include="perspectives\debugPerspective\debugPerspective.css" />
+    <Content Include="perspectives\debugPerspective\debugPerspective.html" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.css" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
     <Content Include="public\libraries\angular-animate\angular-animate.js" />
@@ -297,6 +299,9 @@
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.js" />
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.min.css" />
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.min.js" />
+    <Content Include="public\libraries\angular-route\angular-route.js" />
+    <Content Include="public\libraries\angular-route\angular-route.min.js" />
+    <Content Include="public\libraries\angular-route\index.js" />
     <Content Include="public\libraries\angular\angular-csp.css" />
     <Content Include="public\libraries\angular\angular.js" />
     <Content Include="public\libraries\angular\angular.min.js" />
@@ -409,9 +414,11 @@
     <TypeScriptCompile Include="models\catalogModelData.ts" />
     <TypeScriptCompile Include="models\catalogModel.ts" />
     <TypeScriptCompile Include="models\gadgetModel.ts" />
+    <TypeScriptCompile Include="perspectives\debugPerspective\debugPerspective.ts" />
     <TypeScriptCompile Include="perspectives\IPerspective.ts" />
     <TypeScriptCompile Include="perspectives\perspectiveController.ts" />
     <TypeScriptCompile Include="perspectives\workspacePerspective\workspacePerspective.ts" />
+    <TypeScriptCompile Include="public\typings\angularjs\angular-route.d.ts" />
     <TypeScriptCompile Include="public\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="public\typings\fabricjs\fabricjs.d.ts" />
     <TypeScriptCompile Include="public\typings\jquery\jquery.d.ts" />
@@ -489,6 +496,10 @@
     <Content Include="public\libraries\jquery\bower.json" />
     <Content Include="public\libraries\jquery\dist\jquery.min.map" />
     <Content Include="public\libraries\jquery\src\sizzle\dist\sizzle.min.map" />
+    <Content Include="public\libraries\angular-route\angular-route.min.js.map" />
+    <Content Include="public\libraries\angular-route\bower.json" />
+    <Content Include="public\libraries\angular-route\package.json" />
+    <Content Include="public\libraries\angular-route\README.md" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

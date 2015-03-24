@@ -219,7 +219,7 @@ module Jet.Ui {
 		
 		scope.$watch('zoomFactor', function (oldValue :number,
 						     newValue :number) {
-		    main._fabricCanvas.setZoom(newValue);
+		    //main._fabricCanvas.setZoom(newValue);
                 }, true);
 
 		scope.$on("change:perspective", function(name: ng.IAngularEvent,
