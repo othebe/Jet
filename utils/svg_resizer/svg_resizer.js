@@ -63,36 +63,9 @@ window.onload = function() {
         var svg_elt = container.children[0];
         
         var s = Snap(svg_elt);
-
-        if (false) {
-            // Board layer bounding box. Consider a union of the largest bbox.
-            var board_layer_above_board = s.select('g.gtron-above-board');
-            var board_layer_above_fplate = s.select('g.gtron-above-faceplate');
-            var board_bbox = {
-		x:      Math.min(   board_layer_above_board.getBBox().x,
-                                    board_layer_above_fplate.getBBox().x),
-		y:      Math.min(   board_layer_above_board.getBBox().y,
-                                    board_layer_above_fplate.getBBox().y),
-		width:  Math.max(   board_layer_above_board.getBBox().width,
-                                    board_layer_above_fplate.getBBox().width),
-		height: Math.max(   board_layer_above_board.getBBox().height,
-                                    board_layer_above_fplate.getBBox().height)
-            };
-            
-            // Origin layer bounding box.
-            var orig_layer = s.select('g.gtron-origin-layer');
-            var orig_bbox = orig_layer.getBBox();
-            
-            // Fixed dimensions should equal the board layer.
-            var width = board_bbox.width;
-            var height = board_bbox.height;
-
-            // The viewbox origins should include the entire board layer.
-            var orig_x = board_bbox.x - orig_bbox.cx;
-            var orig_y = board_bbox.y - orig_bbox.cy;
-	}
-	
-	bb = s.getBBox();//select("g.gtron-component");
+        var component  = s.select('g.gtron-component');
+        
+        var bb = component.getBBox();//select("g.gtron-component");
         svg_elt.setAttribute('width', bb.width + "mm");
         svg_elt.setAttribute('height', bb.height + "mm");
         svg_elt.setAttribute('viewBox', [bb.x, bb.y, bb.width, bb.height].join(' '));
@@ -119,8 +92,30 @@ window.onload = function() {
         return data;
     };
     
+    // Clean up source XML.
+    var clean = function(container) {
+        var layers = [];
+        
+        // Remove origin layer.
+        layers = container.getElementsByClassName('gtron-origin-layer');
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].remove();
+        }
+        
+        // Remove name layer.
+        layers = container.getElementsByClassName('gtron-name-layer');
+        for (var i = 0; i < layers.length; i++) {
+            layers[i].remove();
+        }
+        
+        return container;
+    };
+    
     // Send SVG data to server.
     var post_svg_data = function(container, svg_fname) {
+        // Clean up source XML.
+        container = clean(container);
+        
         var data = container.innerHTML;
         var xhr = new XMLHttpRequest();
         xhr.open('POST', POST_URL, true);
@@ -133,7 +128,7 @@ window.onload = function() {
         
         xhr.onreadystatechange = function(e) {
             if (e.target.readyState == 4) {
-                console.log("DONE");
+                console.log("DONE - " + svg_fname);
             }
         };
         xhr.send(params);
