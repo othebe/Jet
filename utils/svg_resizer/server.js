@@ -1,7 +1,6 @@
 var http = require('http');
 var fs = require('fs');
 var connect = require('connect');
-var serve_index = require('serve-index');
 var serveStatic = require('serve-static');
 var body_parser = require('body-parser');
 var finalhandler = require('finalhandler');

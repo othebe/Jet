@@ -63,36 +63,39 @@ window.onload = function() {
         var svg_elt = container.children[0];
         
         var s = Snap(svg_elt);
-        
-        // Board layer bounding box. Consider a union of the largest bbox.
-        var board_layer_above_board = s.select('g.gtron-above-board');
-        var board_layer_above_fplate = s.select('g.gtron-above-faceplate');
-        var board_bbox = {
-            x:      Math.min(   board_layer_above_board.getBBox().x,
-                                board_layer_above_fplate.getBBox().x),
-            y:      Math.min(   board_layer_above_board.getBBox().y,
-                                board_layer_above_fplate.getBBox().y),
-            width:  Math.max(   board_layer_above_board.getBBox().width,
-                                board_layer_above_fplate.getBBox().width),
-            height: Math.max(   board_layer_above_board.getBBox().height,
-                                board_layer_above_fplate.getBBox().height)
-        };
-        
-        // Origin layer bounding box.
-        var orig_layer = s.select('g.gtron-origin-layer');
-        var orig_bbox = orig_layer.getBBox();
-        
-        // Fixed dimensions should equal the board layer.
-        var width = board_bbox.width;
-        var height = board_bbox.height;
 
-        // The viewbox origins should include the entire board layer.
-        var orig_x = board_bbox.x - orig_bbox.cx;
-        var orig_y = board_bbox.y - orig_bbox.cy;
+        if (false) {
+            // Board layer bounding box. Consider a union of the largest bbox.
+            var board_layer_above_board = s.select('g.gtron-above-board');
+            var board_layer_above_fplate = s.select('g.gtron-above-faceplate');
+            var board_bbox = {
+		x:      Math.min(   board_layer_above_board.getBBox().x,
+                                    board_layer_above_fplate.getBBox().x),
+		y:      Math.min(   board_layer_above_board.getBBox().y,
+                                    board_layer_above_fplate.getBBox().y),
+		width:  Math.max(   board_layer_above_board.getBBox().width,
+                                    board_layer_above_fplate.getBBox().width),
+		height: Math.max(   board_layer_above_board.getBBox().height,
+                                    board_layer_above_fplate.getBBox().height)
+            };
+            
+            // Origin layer bounding box.
+            var orig_layer = s.select('g.gtron-origin-layer');
+            var orig_bbox = orig_layer.getBBox();
+            
+            // Fixed dimensions should equal the board layer.
+            var width = board_bbox.width;
+            var height = board_bbox.height;
 
-        svg_elt.setAttribute('width', width);
-        svg_elt.setAttribute('height', height);
-        svg_elt.setAttribute('viewBox', [orig_x, orig_y, width, height].join(' '));
+            // The viewbox origins should include the entire board layer.
+            var orig_x = board_bbox.x - orig_bbox.cx;
+            var orig_y = board_bbox.y - orig_bbox.cy;
+	}
+	
+	bb = s.getBBox();//select("g.gtron-component");
+        svg_elt.setAttribute('width', bb.width + "mm");
+        svg_elt.setAttribute('height', bb.height + "mm");
+        svg_elt.setAttribute('viewBox', [bb.x, bb.y, bb.width, bb.height].join(' '));
         
         post_svg_data(container, svg_fname);
     };

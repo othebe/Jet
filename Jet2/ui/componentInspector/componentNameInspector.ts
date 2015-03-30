@@ -21,7 +21,7 @@ module Jet.Ui {
                     else if (scope.selected instanceof Jet.Model.PlacedPart) {
                         var placedPart = <Jet.Model.PlacedPart> scope.selected;
                         scope.componentData = <Jet.Model.ComponentInstance>
-                            scope.gadgetModel.components[placedPart.componentInstanceName];
+                            scope.gadgetModel.components[placedPart.component_name];
                     }
                 });
             };

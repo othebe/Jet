@@ -1,2 +1,25 @@
+
+High:
+
+- too much precision for translations and rotations
+
+- Some kind of material design alterative to the menus.
+
+- Why does changing perspectives take so long?  Is it re-loading the catalog?
+
+- Why does reading the catalog take so long?  Could we do it in the background?
+
+- Zooming should be centered on the center of the gadget.
+
+- Geometry for rotations need to consider REAL center x and y's.
+  . Have real X and Y that is passed to GSPEC.
+
+- Gadget explorer needs to have board selectable to set board dimensions.
+
+- Replace SVG name w/Fabric image.
+
 Low:
-- Isolate scopes on directives.
+- Isolate scopes on directives. (DONE)
+
+- Add SVG resizer to Grunt/Makefile (PhantomJS)
+

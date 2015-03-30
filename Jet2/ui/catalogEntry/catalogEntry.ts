@@ -29,14 +29,20 @@ module Jet.Ui {
                     //  objects since we have their reference already.
                     var placedPartMap: { [index: string]: Jet.Model.PlacedPart; } = {}
                     var placedParts = component.getPlacedParts();
+                    
+                    var new_component_name = component.getKeyName();
+                    
                     for (var i = 0; i < placedParts.length; i++) {
                         var placedPart = placedParts[i];
                         placedPartMap[placedPart.getRef()] = new Jet.Model.PlacedPart(
-                            placedPart.getRef(), 100, 100, 0);
+                            placedPart.getRef(), 100, 100, 0, new_component_name);
                     }
                     
                     scope.gadgetModel.add_component(
-                        Math.random() + "", component.getKeyName(), placedPartMap);
+                        new_component_name, 
+                        component.getKeyName(), 
+                        placedPartMap
+                    );
                 }
             };
         }

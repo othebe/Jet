@@ -3,22 +3,24 @@
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
-	zoomFactor : Number;
+	zoomFactor : number;
 	Math: any;
     }
     
 
     interface IBoardComponentScope extends ng.IScope {
         placedPartData?: Jet.Model.PlacedPart;
+        componentData?: Jet.Model.ComponentInstance;
     }
 
     class BoardComponent {
         private _catalogModelData: Jet.Model.CatalogModelData;
         private _position: { x: number; y: number };
         private _boardComponentScope: IBoardComponentScope;
-
+	private _nameText: fabric.IText;
         private _ENABLE_RESTRAINTS: boolean = false;
-
+	private _displayGroup : fabric.IGroup;
+	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
             private _placedPartData: Jet.Model.PlacedPart,
@@ -28,15 +30,45 @@ module Jet.Ui {
         {
             var main = this;
 
-            this._catalogModelData = _scope.catalogModel.getComponent(
-                _componentData.keyname);
+            this._catalogModelData = _scope.catalogModel.getComponent(_componentData.keyname);
 
             this._position = { x: this._placedPartData.xpos, y: this._placedPartData.ypos };
 
             this._boardComponentScope = this._scope.$new(true);
             this._boardComponentScope.placedPartData = this._placedPartData;
+	    this._boardComponentScope.componentData = this._componentData;
+	 
+	    this._fabricImage.originX = 'center';
+            this._fabricImage.originY = 'center';
+	    this._fabricImage.setTop(0);
+	    this._fabricImage.setLeft(0);
+	    
+	    this._nameText = new fabric.Text(this._getDisplayName(), {left : 0,
+								     top : 0,
+								     fill : 'red',
+								     fontSize : 20,
+								     fontWeight: 'bold',
+								     fontFamily : "Arial, Helvetica, sans-serif"});
+	    this._nameText.originX = 'center';
+	    this._nameText.originY = 'center';
 
+	    //this._displayGroup = this._fabricImage;
+	    
+	    this._displayGroup = new fabric.Group([this._fabricImage, this._nameText]);
+
+	    // Set origin point for image to center.
+            this._displayGroup.originX = 'center';
+            this._displayGroup.originY = 'center';
+
+            // Lock scaling.
+            this._displayGroup.lockUniScaling = true;
+            this._displayGroup.lockScalingX = true;
+            this._displayGroup.lockScalingY = true;
+	    
             this._setupFabricListeners();
+
+	    this._fabricCanvas.add(this._displayGroup);
+	 
 
             // Watch related gadget model data for changes.
             this._boardComponentScope.$watch('placedPartData',
@@ -52,46 +84,66 @@ module Jet.Ui {
 						     main._setTranslation(x, y);
 						     main._setRotation(rot);
 						 }
-					     }, true); 
+					     }, true);
+	    
+            // Watch related gadget model data for changes.
+            this._boardComponentScope.$watch('componentData',
+					     function (component: Jet.Model.ComponentInstance) {
+						 main._nameText.setText(main._getDisplayName());
+						 main._fabricCanvas.renderAll();
+					     }, true);
+	    
         }
-
+	private _getDisplayName() {
+	    var cname = this._componentData.get_name();
+	    if (cname == "") {
+		cname = "<no name>";
+	    }
+	    if (this._componentData.get_placed_part_count() > 1) {
+		return cname + "." + this._placedPartData.get_ref();
+	    } else {
+		return cname;
+	    }
+	}
+	public setLeft(x:number) {
+	    this._displayGroup.setLeft(x);
+	}
+	public setTop(x:number) {
+	    this._displayGroup.setTop(x);
+	}
+	public setAngle(x:number) {
+	    this._displayGroup.setAngle(x);
+	}
+	
         private _setupFabricListeners() {
             var main = this;
 
-            // Set origin point for image to center.
-            this._fabricImage.originX = 'center';
-            this._fabricImage.originY = 'center';
-
-            // Lock scaling.
-            this._fabricImage.lockUniScaling = true;
-            this._fabricImage.lockScalingX = true;
-            this._fabricImage.lockScalingY = true;
-
             // Handle image selection.
-            this._fabricImage.on('selected', function () {
+            this._displayGroup.on('selected', function () {
+		console.log("selected " + this);
                 main._scope.selectedGadgetComponent.selected = main._placedPartData;
                 main._scope.$applyAsync();
             });
 
-            this._fabricImage.on('modified', function () {
+            this._displayGroup.on('modified', function () {
             });
 
             // Handle image translation.
-            this._fabricImage.on('moving', function () {
-		//console.log("Moving " + this);
+            this._displayGroup.on('moving', function () {
+		console.log("Moving " + this);
 		main._updateLocation();
             });
 
             // Handle image rotation.
-            this._fabricImage.on('rotating', function () {
-		//console.log("Rotating " + this);
+            this._displayGroup.on('rotating', function () {
+		console.log("Rotating " + this);
                 main._updateRotation();
                 // TODO (othebe): Enable restriction checking.
             });
         }
 
-        public getFabricImage(): fabric.IImage {
-            return this._fabricImage;
+        public getDisplayGroup(): fabric.IGroup {
+            return this._displayGroup;
         }
 
 	private _updateLocation() {
@@ -128,7 +180,8 @@ module Jet.Ui {
 
 	private _updateRotation() {
 	    //console.log("Setting rotation of " + this + " to " + this._fabricImage.getAngle())
-	    this._placedPartData.rot = this._fabricImage.getAngle() - Math.floor(this._fabricImage.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
+	    this._placedPartData.rot = this._displayGroup.getAngle() - Math.floor(this._displayGroup.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
+	    this._nameText.setAngle(-this._displayGroup.getAngle());
             this._scope.$applyAsync();
 	}
 
@@ -140,15 +193,15 @@ module Jet.Ui {
         // Returns the center co-ordinates of the image.
         private _getCenter(): { x: number; y: number } {
             return {
-                x: this._fabricImage.getLeft(),
-                y: this._fabricImage.getTop()
+                x: this._displayGroup.getLeft(),
+                y: this._displayGroup.getTop()
             };
         }
 
         // Check valid x position for image.
         // TODO (othebe): Might be incomplete.
         private _isValidXPosition(): boolean {
-            var bbox = this._fabricImage.getBoundingRect();
+            var bbox = this._displayGroup.getBoundingRect();
             var canvasWidth = this._fabricCanvas.getWidth();
 
             return !(bbox.left < 0 || bbox.left + bbox.width > canvasWidth);
@@ -157,7 +210,7 @@ module Jet.Ui {
         // Check valid y position for image.
         // TODO (othebe): Might be incomplete.
         private _isValidYPosition(): boolean {
-            var bbox = this._fabricImage.getBoundingRect();
+            var bbox = this._displayGroup.getBoundingRect();
             var canvasHeight = this._fabricCanvas.getHeight();
 
             return !(bbox.top < 0 || bbox.top + bbox.height > canvasHeight);
@@ -165,13 +218,13 @@ module Jet.Ui {
 
         // Set translation of image on canvas.
         private _setTranslation(x: number, y: number) {
-            this._fabricImage.setLeft(x);
-            this._fabricImage.setTop(y);
+            this.setLeft(x);
+            this.setTop(y);
         }
 
         // Set rotation of image on canvas.
         private _setRotation(angle: number) {
-            this._fabricImage.setAngle(angle);
+            this.setAngle(angle);
         }
     }
 
@@ -180,7 +233,7 @@ module Jet.Ui {
         private _scope: IBoardScope;
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Jet.Application.ISelectable, BoardComponent>;
-	private _imgToComponentMap: Map<fabric.IObject, BoardComponent>;
+	private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
 	private _checkResize: boolean;
 	private _boardContainer;
 	private _previouslySelected: fabric.IObject [];
@@ -191,7 +244,7 @@ module Jet.Ui {
             var main = this;
             
             this._gDataFabricMap = new Map<Jet.Application.ISelectable, BoardComponent>();
-            this._imgToComponentMap = new Map<fabric.IObject, BoardComponent>();
+            this._displayGroupToComponentMap = new Map<fabric.IObject, BoardComponent>();
 
             this.templateUrl = function () {
                 return this._templateUrl;
@@ -219,7 +272,10 @@ module Jet.Ui {
 		
 		scope.$watch('zoomFactor', function (oldValue :number,
 						     newValue :number) {
+		    main._updateBoardSize();
 		    //main._fabricCanvas.setZoom(newValue);
+		    //main._fabricCanvas.zoomToPoint(new fabric.Point(0,0), newValue);
+		    //console.log("here " + newValue +  " " + main._fabricCanvas)
                 }, true);
 
 		scope.$on("change:perspective", function(name: ng.IAngularEvent,
@@ -237,10 +293,20 @@ module Jet.Ui {
         }
 
 	private _updateBoardSize(){
-	    //console.log("Setting size to " +  $(this._boardContainer).innerWidth() + " x " + $(this._boardContainer).innerHeight());
-	    this._fabricCanvas.setHeight($(this._boardContainer).innerHeight());
-	    this._fabricCanvas.setWidth($(this._boardContainer).innerWidth());
+	    //console.log("Setting size to " +  $(this._boardContainer).innerWidth() + " x " + $(this._boardContainer).innerHeight())
+	    var effZoom : number = 1.0;
+	    if (this._scope.zoomFactor >= 1.0) {
+		effZoom = this._scope.zoomFactor;
+	    }
+	    // subtracting 20 leaves a boarder around the board and ensures
+	    // that the scroll bars disappear when we scroll over 100% and then
+	    // come down back below 100%
+	    this._fabricCanvas.setHeight(($(this._boardContainer).innerHeight()-20) * effZoom); 
+	    this._fabricCanvas.setWidth(($(this._boardContainer).innerWidth()-20) * effZoom);
+	    this._fabricCanvas.setZoom(this._scope.zoomFactor);
+	    //this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
 	}
+
 	
         // Initialize FabricJS canvas.
         private _initializeFabric(instanceElement: JQuery) {
@@ -250,8 +316,9 @@ module Jet.Ui {
             var canvasElt: HTMLCanvasElement = instanceElement[0].getElementsByTagName('canvas')[0];
             this._fabricCanvas = new fabric.Canvas(canvasElt);
 	    this._boardContainer = instanceElement.find('.board-container')[0];
-	    this._updateBoardSize();
 	    main._scope.zoomFactor = 1;
+	    this._updateBoardSize();
+
 	    main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
 		
             // Setup canvas events.
@@ -284,7 +351,7 @@ module Jet.Ui {
 				      //console.log("Selection cleared");
 				      if (main._previouslySelected != null) {
 					  for (var i = 0; i < main._previouslySelected.length; i++) {
-					      main._imgToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+					      main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
 					  }
 				      }
 				      main._previouslySelected = null;
@@ -314,19 +381,17 @@ module Jet.Ui {
 
 	private _clearUi() {
 	    this._fabricCanvas.clear();
-	    this._imgToComponentMap.clear();
+	    this._displayGroupToComponentMap.clear();
 	    this._gDataFabricMap.clear();
 	}
 
-
-	
         // Update components displayed on the board.
         private _updateUi(gadgetModel: Jet.Model.GadgetModel) {
             // Check for new components.
             for (var key in gadgetModel.components) {
                 var componentData = gadgetModel.components[key];
 
-                var placedParts = componentData.getPlacedParts();
+                var placedParts = componentData.get_placed_parts();
                 for (var ndx = 0; ndx < placedParts.length; ndx++) {
                     var placedPartData = placedParts[ndx];
                     if (!this._gDataFabricMap.has(placedPartData)) {
@@ -347,11 +412,11 @@ module Jet.Ui {
 						   function (img) {
 						       var boardComponent = new BoardComponent(componentData, placedPartData, img, main._fabricCanvas, main._scope);
 						       main._gDataFabricMap.set(placedPartData, boardComponent);
-						       main._imgToComponentMap.set(img, boardComponent);
-						       img.setTop(placedPartData.ypos);
-						       img.setLeft(placedPartData.xpos);
-						       img.setAngle(placedPartData.rot);
-						       main._fabricCanvas.add(img);
+						       main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
+						       boardComponent.setTop(placedPartData.xpos);
+						       boardComponent.setLeft(placedPartData.ypos);
+						       boardComponent.setAngle(placedPartData.rot);
+						       main._updateBoardSize();
 						   });  
             
             this._extractImg(catalogModelData.getSvgUrl());          
@@ -372,7 +437,7 @@ module Jet.Ui {
         private _selectComponent(selected: Jet.Application.ISelectable) {
             var selectedComponent = this._gDataFabricMap.get(selected);
             if (selectedComponent != null) {
-                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
+                this._fabricCanvas.setActiveObject(selectedComponent.getDisplayGroup());
             } else {
                 this._fabricCanvas.discardActiveObject();
             }

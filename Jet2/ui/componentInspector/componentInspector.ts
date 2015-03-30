@@ -26,7 +26,7 @@ module Jet.Ui {
                             scope.catalogModelData = scope.catalogModel.getComponent(selected.keyname);
                         }
                         else if (selected instanceof Jet.Model.PlacedPart) {
-                            var componentInstance = scope.gadgetModel.components[selected.componentInstanceName];
+                            var componentInstance = scope.gadgetModel.components[selected.component_name];
                             scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
                         }
                         scope.selected = selected;

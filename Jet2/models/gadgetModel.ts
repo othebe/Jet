@@ -8,39 +8,69 @@ module Jet.Model {
 		
 		// This is how you can access the board outline
 		// For now it will get degraded to a bounding box when the gspec is exported
-		corners: Vertex[] = [];
+		corners: Vertex[] = [new Vertex(-30.0, -30.0), new Vertex(-30.0, 30.0), new Vertex(30.0, -30.0), new Vertex(30.0, 30.0)];
 	
-        // Testing constructor. It adds three of the first kind of part in the catalog.
-        //constructor(catalog: any) {
-        //    this.catalog = catalog;
-        //    var kind = Object.keys(this.catalog.components())[0];
-
-        //    this.add_component("part1", kind, 5, 5);
-        //    this.add_component("part2", kind, 10, 10);
-        //    this.add_component("part3", kind, 10, 20);
-        //}
+        // Other options
+		faceplate_color: string = "clear-nocolor";
+		backplate_color: string = "clear-nocolor";
+		faceplate_etch: string = "etch-front";
+		backplate_etch: string = "etch-back";
+		front_standoff_height: number = 8.0;
+		back_standoff_height: number = 8.0;
+		pcb_thickness: number = 1.57;
+		faceplate_thickness: number = 3.175;
+		backplate_thickness: number = 3.175;
+		
+		// Options
+		options: string[] = [
+			"faceplate_color", 
+			"backplate_color", 
+			"faceplate_etch", 
+			"backplate_etch",
+			"front_standoff_height",
+			"back_standoff_height",
+			"pcb_thickness",
+			"faceplate_thickness",
+			"backplate_thickness"
+		];
 
         constructor() {}
+		
+		set_option (name:string, value:any) {
+			if (this.options.indexOf(name) > -1) {
+				this[name] = value;
+			} else {
+				throw new Error("Unsupported option "+name+". Supported options are: "+this.options.toString());
+			}
+		}
+		
+		get_option (name:string):any {
+			if (this.options.indexOf(name) > -1) {
+				return this[name];
+			} else {
+				throw new Error("Unsupported option "+name+". Supported options are: "+this.options.toString());
+			}
+		}
 	
         // Add component. This adds a component of the keyname type. The name must be a unique ID.
         add_component(
-	    name: string,
+			name: string,
             keyname: string,
-	    placed_parts: { [index: string]: PlacedPart; } = {}
-	    
-	) {
+			placed_parts: { [index: string]: PlacedPart; } = {}
+			
+		) {
             if (Object.keys(this.components).indexOf(name) > -1) {
                 throw new Error("Adding component with duplicate name: " + name);
             }
-
-            Object.keys(this.components).push(name);
+			
             var component = new ComponentInstance(name, keyname, placed_parts);
 
             // Set a parent reference in all placed parts. Remember to update
             // this when updating the name.
-            for (var key in component.placed_parts) {
-                component.placed_parts[key].componentInstanceName = name;
-            }
+            //for (var key in component.placed_parts) {
+            //    component.placed_parts[key].componentInstanceName = name;
+            //
+			
 
             this.components[name] = component;
         }
@@ -53,6 +83,10 @@ module Jet.Model {
 			}
 			
 			this.corners = corners;
+		}
+		
+		get_corners ():Vertex[] {
+			return this.corners;
 		}
 		
 		bounding_box (): BoardSize {
@@ -73,7 +107,7 @@ module Jet.Model {
 					min_y = corners[i].y;
 				}
 				if (corners[i].y > max_y) {
-					max_y = corners[i].y;
+					max_y = corners[i].y;  
 				}
 			}
 			
@@ -94,6 +128,38 @@ module Jet.Model {
                 this.components[name].placed_parts[ref].rot = rot;
             }
         }
+		
+		get_parts (): PlacedPart[] {
+			var parts: PlacedPart[] = [];
+						
+			var c;
+			for (c in this.components) {
+				var p;
+				for (p in this.components[c].placed_parts) {
+					var part: PlacedPart = this.components[c].placed_parts[p];
+					parts.push(part);
+				}
+			}
+			
+			return parts;
+		}
+		
+		rename_component (old_name:string, new_name:string) {
+			if (Object.keys(this.components).indexOf(new_name) > -1) {
+                throw new Error("Another component already has this name: " + new_name);
+            }
+			if (Object.keys(this.components).indexOf(old_name) == -1) {
+                throw new Error("Cannot rename. Component does not exist: " + old_name);
+            }
+			
+			this.components[old_name] = this.components[new_name];
+			delete this.components[old_name];
+			
+			var p;
+			for (p in this.components[new_name]) {
+				this.components[new_name].placed_parts[p].component_name = new_name;
+			}
+		}
 	
         // Returns list of component names
         component_names(): string[] {
@@ -118,6 +184,13 @@ module Jet.Model {
 			board.setAttribute("w", (bounding_box.max_x - bounding_box.min_x).toString());
 			board.setAttribute("h", (bounding_box.max_y - bounding_box.min_y).toString());
 			Node.appendChild( board );
+			
+			var option:string;
+			for (option in this.options)
+			{
+				var opt_name:string = this.options[option];
+				Node.appendChild( this.make_option(opt_name, this[opt_name]) );
+			}
             
             for (var key in this.components) {
                 if (this.components.hasOwnProperty(key)) {
@@ -130,10 +203,15 @@ module Jet.Model {
             
 			XML.appendChild(Node);
 			
-			alert(XML.innerHTML);
-			
 			return XML.innerHTML;
 		}
+		
+		make_option (name:string, value:any):HTMLElement {
+			var option = document.createElement("option");
+			option.setAttribute(name, value.toString())
+			return option;	
+		}
+
     }
 	
 	// Basic component info class
@@ -151,29 +229,41 @@ module Jet.Model {
 			this.name = name;
 			this.keyname = keyname;
             this.placed_parts = placed_parts;
+			
+			for (var p in this.placed_parts) {
+				this.placed_parts[p].component_name = this.name;
+			}
         }
 
         // Returns an array of placed parts.
-        public getPlacedParts(): Array<PlacedPart> {
-            var placedParts = [];
+        public get_placed_parts(): PlacedPart[] {
+            var placed_parts = [];
 
             for (var key in this.placed_parts) {
-                placedParts.push(this.placed_parts[key]);
+                placed_parts.push(this.placed_parts[key]);
             }
 
-            return placedParts;
+            return placed_parts;
         }
 
         // Determines if this component instance has a placed part.
         // TODO(othebe): Replace placed_parts with array, or hash by placedpart.
-        public hasPlacedPart(placedPart: PlacedPart): boolean {
+        public has_placed_part(placed_part: PlacedPart): boolean {
             for (var key in this.placed_parts) {
-                if (this.placed_parts[key] == placedPart) {
+                if (this.placed_parts[key] == placed_part) {
                     return true;
                 }
             }
             return false;
         }
+
+	public get_name() : string {
+	    return this.name;
+	}
+	public get_placed_part_count(): number {
+            return Object.keys(this.placed_parts).length
+	}
+
 	}
     
     // Placed part class
@@ -182,19 +272,24 @@ module Jet.Model {
         xpos: number;
         ypos: number;
         rot: number;
-        componentInstanceName: string;
+		component_name: string;
         
         constructor (
             ref: string,
             xpos: number,
             ypos: number,
-            rot: number
+            rot: number,
+			component_name: string
         ) {
 			this.ref = ref;
 			this.xpos = xpos;
 			this.ypos = ypos;
 			this.rot = rot;
+			this.component_name = component_name;
         }
+	public get_ref() : string {
+	    return this.ref;
+	}
     }
 	
 	export class BoardSize {
@@ -218,8 +313,6 @@ module Jet.Model {
 	}
 }
 
-
-
 //var test = new Jet.Model.GadgetModel();
-//test.add_component("name1", "RGB_LED", 10, -10, 90);
-//test.get_gspec();
+//test.add_component("name1", "RGB_LED", {"u1": new Jet.Model.PlacedPart("u1", 0.0, 1.0, 90.0, "name1")});
+//alert( test.get_gspec() );
