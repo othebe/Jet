@@ -10,6 +10,10 @@ module Jet.Ui {
 
         // Toggle selected gadget model data.
         toggleSelected();
+
+        // Part name (Over-ride for components with one part).
+        // TODO (othebe): Use default when partName not provided.
+        partName: string;
     }
 
     export class GadgetExplorerEntry extends Jet.Ui.Directive {
@@ -26,22 +30,32 @@ module Jet.Ui {
 
                 // Watch for changes to selected gadget component.
                 scope.$watch('selectedGadgetComponent.selected', function () {
-                    var selected = scope.selectedGadgetComponent.selected;
-                    var isSelected = (selected != null && selected == scope.placedPart);
-                    scope.isSelected = isSelected;
+                    if (scope.selectedGadgetComponent == null) {
+                        scope.isSelected = false;
+                    } else {
+                        var selected = scope.selectedGadgetComponent.selected;
+                        var isSelected = (selected != null && selected == scope.placedPart);
+                        scope.isSelected = isSelected;
+                    }
                 }, true);
 
                 // Toggle selected gadget model data.
                 scope.toggleSelected = function () {
                     var selected = scope.selectedGadgetComponent.selected;
-                    
+
                     if (selected == scope.placedPart) {
                         scope.selectedGadgetComponent.selected = null;
                     } else {
                         scope.selectedGadgetComponent.selected = scope.placedPart;
                     }
                 }
-            }
+            };
+
+            this.scope = {
+                partName: '=',
+                placedPart: '=',
+                selectedGadgetComponent: '='
+            };
         }
 
         public templateUrl(): string {

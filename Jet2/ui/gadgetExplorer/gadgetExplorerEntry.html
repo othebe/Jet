@@ -1,8 +1,6 @@
 ﻿<div class="gadget-explorer-entry">
     <md-item ng-click="toggleSelected()">
-        <div class="placed-part" ng-repeat="placedPart in gadgetModelData.getPlacedParts()">
-            <div ng-class="{selected: isSelected}">NEEDS NAME</div>
-        </div>
+        <div ng-class="{selected: isSelected}" ng-bind="partName"></div>
     </md-item>
 </div>
 
