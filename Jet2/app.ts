@@ -1,5 +1,8 @@
 ﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="public/typings/fabricjs/fabricjs.d.ts" />
+/// <reference path="public/typings/snapsvg/snapsvg.d.ts" />
+/// <reference path="public/libraries/snabric/snabric.d.ts" />
+/// <reference path="common/fabric.d.ts" />
 /// <reference path="application/applicationController.ts" />
 /// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/board.ts" />
@@ -12,9 +15,8 @@
 /// <reference path="ui/gadgetExplorer/gadgetExplorerEntry.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
-(
-    function () {
-	var app = angular.module('Jet', ['ngMaterial']);
+(function () {
+    var app = angular.module('Jet', ['ngMaterial']);
 	
 	// Application context.
 	app.service('AppContext', AppContext);
@@ -44,5 +46,4 @@
 	app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
 	// Component transformation inspector.
 	app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
-    }
-)();
+})();

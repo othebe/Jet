@@ -12,6 +12,10 @@ module Jet.Ui {
     export class CatalogEntry extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/catalogEntry/catalogEntry.html";
 
+        // TODO (othebe): Add dynamically to center.
+        private _DEFAULT_X = 100;
+        private _DEFAULT_Y = 100;
+
         private _catalogModelData: Jet.Model.CatalogModelData;
 
         constructor(AppContext: AppContext) {
@@ -35,7 +39,7 @@ module Jet.Ui {
                     for (var i = 0; i < placedParts.length; i++) {
                         var placedPart = placedParts[i];
                         placedPartMap[placedPart.getRef()] = new Jet.Model.PlacedPart(
-                            placedPart.getRef(), 100, 100, 0, new_component_name);
+                            placedPart.getRef(), main._DEFAULT_X, main._DEFAULT_Y, 0, new_component_name);
                     }
                     
                     scope.gadgetModel.add_component(

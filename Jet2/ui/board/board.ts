@@ -16,47 +16,82 @@ module Jet.Ui {
     class BoardComponent {
         private _catalogModelData: Jet.Model.CatalogModelData;
         private _position: { x: number; y: number };
+        private _rotation: number;
+        private _fabricImage: fabric.IImage;
+        private _fabricCanvas: fabric.ICanvas;
         private _boardComponentScope: IBoardComponentScope;
-	private _nameText: fabric.IText;
+	    private _nameText: fabric.IText;
         private _ENABLE_RESTRAINTS: boolean = false;
-	private _displayGroup : fabric.IGroup;
+	    private _displayGroup : fabric.IGroup;
 	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
             private _placedPartData: Jet.Model.PlacedPart,
-            private _fabricImage: fabric.IImage,
-            private _fabricCanvas: fabric.ICanvas,
+            private _snabricImage: Snabric.IImage,
+            private _snabric: Snabric.ISnabric,
             private _scope: IBoardScope)
         {
             var main = this;
 
             this._catalogModelData = _scope.catalogModel.getComponent(_componentData.keyname);
 
-            this._position = { x: this._placedPartData.xpos, y: this._placedPartData.ypos };
+            this._fabricCanvas = this._snabric.getCanvas();
+            this._fabricImage = this._snabric.getFImg(this._snabricImage);
+
+            // Default transformations.
+            var x = 0;
+            var y = 0;
+            var rot = 0;
+
+            if (this._placedPartData != null) {
+                x = x || this._placedPartData.xpos;
+                y = y || this._placedPartData.ypos;
+                rot = rot || this._placedPartData.rot;
+            }
+            this._position = { x: x, y: y };
+
+            this._initializeGraphics();
 
             this._boardComponentScope = this._scope.$new(true);
             this._boardComponentScope.placedPartData = this._placedPartData;
-	    this._boardComponentScope.componentData = this._componentData;
-	 
-	    this._fabricImage.originX = 'center';
+            this._boardComponentScope.componentData = this._componentData;	 
+
+            // Watch related gadget model data for changes.
+            this._boardComponentScope.$watch('placedPartData', function (gadgetModelData: Jet.Model.PlacedPart) {
+			    var x = gadgetModelData.xpos;
+			    var y = gadgetModelData.ypos;
+			    var rot = gadgetModelData.rot;
+						 
+			    if (main._ENABLE_RESTRAINTS) {
+				    // TODO (othebe): Enable restrains once the positioning
+				    // is confirmed.
+			    } else {
+				    main._setTranslation(x, y);
+				    main._setRotation(rot);
+			    }
+			}, true);
+	    
+            // Watch related gadget model data for changes.
+            this._boardComponentScope.$watch('componentData', function (component: Jet.Model.ComponentInstance) {
+                main._nameText.setText(main._getDisplayName());
+                main._fabricCanvas.renderAll();
+            }, true);
+        }
+
+        // Initialize graphics.
+        private _initializeGraphics() {
+            // Snabric has already rendered the image at this point, so remove
+            // it so we can re-add it as part of a group.
+            this._fabricImage.remove();
+
+            this._fabricImage.originX = 'center';
             this._fabricImage.originY = 'center';
-	    this._fabricImage.setTop(0);
-	    this._fabricImage.setLeft(0);
-	    
-	    this._nameText = new fabric.Text(this._getDisplayName(), {left : 0,
-								     top : 0,
-								     fill : 'red',
-								     fontSize : 20,
-								     fontWeight: 'bold',
-								     fontFamily : "Arial, Helvetica, sans-serif"});
-	    this._nameText.originX = 'center';
-	    this._nameText.originY = 'center';
 
-	    //this._displayGroup = this._fabricImage;
-	    
-	    this._displayGroup = new fabric.Group([this._fabricImage, this._nameText]);
+            this.setText(this._getDisplayName());
 
-	    // Set origin point for image to center.
+            this._displayGroup = new fabric.Group([this._fabricImage, this._nameText]);
+
+            // Set origin point for image to center.
             this._displayGroup.originX = 'center';
             this._displayGroup.originY = 'center';
 
@@ -64,63 +99,78 @@ module Jet.Ui {
             this._displayGroup.lockUniScaling = true;
             this._displayGroup.lockScalingX = true;
             this._displayGroup.lockScalingY = true;
-	    
+
+            // Set initial transformations.
+            this._setTranslation(this._position.x, this._position.y);
+            this._setRotation(this._rotation);
+
             this._setupFabricListeners();
 
-	    this._fabricCanvas.add(this._displayGroup);
-	 
-
-            // Watch related gadget model data for changes.
-            this._boardComponentScope.$watch('placedPartData',
-					     function (gadgetModelData: Jet.Model.PlacedPart) {
-						 var x = gadgetModelData.xpos;
-						 var y = gadgetModelData.ypos;
-						 var rot = gadgetModelData.rot;
-						 
-						 if (main._ENABLE_RESTRAINTS) {
-						     // TODO (othebe): Enable restrains once the positioning
-						     // is confirmed.
-						 } else {
-						     main._setTranslation(x, y);
-						     main._setRotation(rot);
-						 }
-					     }, true);
-	    
-            // Watch related gadget model data for changes.
-            this._boardComponentScope.$watch('componentData',
-					     function (component: Jet.Model.ComponentInstance) {
-						 main._nameText.setText(main._getDisplayName());
-						 main._fabricCanvas.renderAll();
-					     }, true);
-	    
+            this._fabricCanvas.add(this._displayGroup);
         }
-	private _getDisplayName() {
-	    var cname = this._componentData.get_name();
-	    if (cname == "") {
-		cname = "<no name>";
+
+        // Gets text for component.
+	    private _getDisplayName() {
+	        var cname = this._componentData.get_name();
+	        if (cname == "") {
+		        cname = "<no name>";
+	        }
+	        if (this._componentData.get_placed_part_count() > 1) {
+		        return cname + "." + this._placedPartData.get_ref();
+	        } else {
+		        return cname;
+	        }
+        }
+
+        // Sets the display text.
+        public setText(text: string, options?) {
+            // Set text content.
+            if (this._nameText != null) {
+                this._nameText.setText(text);
+            } else {
+                var nameText = new fabric.Text(text, {
+                    fill: 'red',
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    fontFamily: "Arial, Helvetica, sans-serif"
+                });
+                nameText.originX = 'center';
+                nameText.originY = 'center';
+                this._nameText = nameText;
+            }
+
+            this._updateTextTransformation();
+        }
+
+        // Update transformation for the text.
+        private _updateTextTransformation() {
+            var offsetX = 0;
+            var offsetY = 0;
+
+            // Set text offset.
+            this._nameText.setTop(offsetY + this._fabricImage.getTop());
+            this._nameText.setLeft(offsetX + this._fabricImage.getLeft());
+
+            // TODO (othebe): Rotate relative to fImg;
+        }
+
+	    public setLeft(x:number) {
+	        this._displayGroup.setLeft(x);
+        }
+
+	    public setTop(x:number) {
+	        this._displayGroup.setTop(x);
+        }
+
+	    public setAngle(x:number) {
+	        this._displayGroup.setAngle(x);
 	    }
-	    if (this._componentData.get_placed_part_count() > 1) {
-		return cname + "." + this._placedPartData.get_ref();
-	    } else {
-		return cname;
-	    }
-	}
-	public setLeft(x:number) {
-	    this._displayGroup.setLeft(x);
-	}
-	public setTop(x:number) {
-	    this._displayGroup.setTop(x);
-	}
-	public setAngle(x:number) {
-	    this._displayGroup.setAngle(x);
-	}
 	
         private _setupFabricListeners() {
             var main = this;
 
             // Handle image selection.
             this._displayGroup.on('selected', function () {
-		console.log("selected " + this);
                 main._scope.selectedGadgetComponent.selected = main._placedPartData;
                 main._scope.$applyAsync();
             });
@@ -130,13 +180,11 @@ module Jet.Ui {
 
             // Handle image translation.
             this._displayGroup.on('moving', function () {
-		console.log("Moving " + this);
-		main._updateLocation();
+		        main._updateLocation();
             });
 
             // Handle image rotation.
             this._displayGroup.on('rotating', function () {
-		console.log("Rotating " + this);
                 main._updateRotation();
                 // TODO (othebe): Enable restriction checking.
             });
@@ -146,7 +194,7 @@ module Jet.Ui {
             return this._displayGroup;
         }
 
-	private _updateLocation() {
+	    private _updateLocation() {
             var center = this._getCenter();
 
             // Restrain if enabling boundary checking.
@@ -172,23 +220,21 @@ module Jet.Ui {
                 this._position.y = center.y;
             }
 
-	    //console.log("Setting location of " + this + " to " + this._position.x + ", " + this._position.y)
             this._placedPartData.xpos = this._position.x;
             this._placedPartData.ypos = this._position.y;
             this._scope.$applyAsync();
-	}
+	    }
 
-	private _updateRotation() {
-	    //console.log("Setting rotation of " + this + " to " + this._fabricImage.getAngle())
-	    this._placedPartData.rot = this._displayGroup.getAngle() - Math.floor(this._displayGroup.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
-	    this._nameText.setAngle(-this._displayGroup.getAngle());
+	    private _updateRotation() {
+	        this._placedPartData.rot = this._displayGroup.getAngle() - Math.floor(this._displayGroup.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
+	        this._nameText.setAngle(-this._displayGroup.getAngle());
             this._scope.$applyAsync();
-	}
+	    }
 
-	public updateGeometry() {
-	    this._updateRotation();
-	    this._updateLocation();
-	}
+	    public updateGeometry() {
+	        this._updateRotation();
+	        this._updateLocation();
+	    }
 	
         // Returns the center co-ordinates of the image.
         private _getCenter(): { x: number; y: number } {
@@ -231,12 +277,13 @@ module Jet.Ui {
     export class Board extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
+        private _snabric: Snabric.ISnabric;
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Jet.Application.ISelectable, BoardComponent>;
-	private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
-	private _checkResize: boolean;
-	private _boardContainer;
-	private _previouslySelected: fabric.IObject [];
+	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
+	    private _checkResize: boolean;
+	    private _boardContainer;
+	    private _previouslySelected: fabric.IObject [];
 	
         constructor(private AppContext: AppContext) {
             super(AppContext);
@@ -270,19 +317,18 @@ module Jet.Ui {
                     main._updateUi(scope.gadgetModel);
                 }, true);
 		
-		scope.$watch('zoomFactor', function (oldValue :number,
-						     newValue :number) {
-		    main._updateBoardSize();
-		    //main._fabricCanvas.setZoom(newValue);
-		    //main._fabricCanvas.zoomToPoint(new fabric.Point(0,0), newValue);
-		    //console.log("here " + newValue +  " " + main._fabricCanvas)
+                scope.$watch('zoomFactor', function (
+                    oldValue: number,
+                    newValue: number)
+                {
+		            main._updateBoardSize();
                 }, true);
 
-		scope.$on("change:perspective", function(name: ng.IAngularEvent,
-							 newPerspective: number) {
-		    main._clearUi();
-		    main._updateUi(scope.gadgetModel);
-		});
+		        scope.$on("change:perspective", function(name: ng.IAngularEvent,
+							            newPerspective: number) {
+		            main._clearUi();
+		            main._updateUi(scope.gadgetModel);
+		        });
 
                 // Watch the selected gadget model data.
                 scope.$watch('selectedGadgetComponent.selected', function () {
@@ -292,34 +338,40 @@ module Jet.Ui {
             }
         }
 
-	private _updateBoardSize(){
-	    //console.log("Setting size to " +  $(this._boardContainer).innerWidth() + " x " + $(this._boardContainer).innerHeight())
-	    var effZoom : number = 1.0;
-	    if (this._scope.zoomFactor >= 1.0) {
-		effZoom = this._scope.zoomFactor;
+	    private _updateBoardSize() {
+	        var effZoom : number = 1.0;
+	        if (this._scope.zoomFactor >= 1.0) {
+		        effZoom = this._scope.zoomFactor;
+	        }
+	        // subtracting 20 leaves a boarder around the board and ensures
+	        // that the scroll bars disappear when we scroll over 100% and then
+	        // come down back below 100%
+	        this._fabricCanvas.setHeight(($(this._boardContainer).innerHeight()-20) * effZoom); 
+	        this._fabricCanvas.setWidth(($(this._boardContainer).innerWidth()-20) * effZoom);
+	        this._fabricCanvas.setZoom(this._scope.zoomFactor);
+	        this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
 	    }
-	    // subtracting 20 leaves a boarder around the board and ensures
-	    // that the scroll bars disappear when we scroll over 100% and then
-	    // come down back below 100%
-	    this._fabricCanvas.setHeight(($(this._boardContainer).innerHeight()-20) * effZoom); 
-	    this._fabricCanvas.setWidth(($(this._boardContainer).innerWidth()-20) * effZoom);
-	    this._fabricCanvas.setZoom(this._scope.zoomFactor);
-	    //this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
-	}
 
 	
         // Initialize FabricJS canvas.
         private _initializeFabric(instanceElement: JQuery) {
             var main = this;
 
-            // Initialize fabric canvas.
+            // Setup Snabric.
             var canvasElt: HTMLCanvasElement = instanceElement[0].getElementsByTagName('canvas')[0];
-            this._fabricCanvas = new fabric.Canvas(canvasElt);
-	    this._boardContainer = instanceElement.find('.board-container')[0];
-	    main._scope.zoomFactor = 1;
-	    this._updateBoardSize();
+            this._snabric = new Snabric(canvasElt);
 
-	    main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
+            // Initialize fabric canvas.
+            this._fabricCanvas = this._snabric.getCanvas();
+	        this._boardContainer = instanceElement.find('.board-container')[0];
+	        main._scope.zoomFactor = 1;
+            this._updateBoardSize();
+
+            // Set background color.
+            this._fabricCanvas.setBackgroundColor('rgba(255, 255, 255, 1.0)',
+                this._fabricCanvas.renderAll.bind(this._fabricCanvas));
+
+	        main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
 		
             // Setup canvas events.
             this._fabricCanvas.on('mouse:down', function () {
@@ -329,61 +381,51 @@ module Jet.Ui {
                 }
             });
 
-	    // Handle group rotation and movement. First, just before the
-	    // selection cleared, grab the list of canvas objects that were
-	    // selected.
-	    this._fabricCanvas.on('before:selection:cleared',
-				  function() {
-				      //console.log("Before selection cleared");
-				      if (main._fabricCanvas.getActiveGroup() != null) {
-					  main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
-				      } else {
-					  main._previouslySelected = null;
-				      }
-				  });
+	        // Handle group rotation and movement. First, just before the
+	        // selection cleared, grab the list of canvas objects that were
+	        // selected.
+	        this._fabricCanvas.on('before:selection:cleared', function() {
+				if (main._fabricCanvas.getActiveGroup() != null) {
+				    main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
+				} else {
+				    main._previouslySelected = null;
+				}
+			});
 
-	    // Then, after the selection is destroyed, propogate the location
-	    // back to the BoardObject.  We have to do it in two stages,
-	    // because when the object is selected, it's in a group and its
-	    // coordinates are relative to the group's origin.
-	    this._fabricCanvas.on('selection:cleared',
-				  function() {
-				      //console.log("Selection cleared");
-				      if (main._previouslySelected != null) {
-					  for (var i = 0; i < main._previouslySelected.length; i++) {
-					      main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
-					  }
-				      }
-				      main._previouslySelected = null;
-				  });
-
-	    // this._fabricCanvas.on('selection:created',
-	    // 			  function() {
-	    // 			      console.log("Selection created");
-	    // 			  });
+	        // Then, after the selection is destroyed, propogate the location
+	        // back to the BoardObject.  We have to do it in two stages,
+	        // because when the object is selected, it's in a group and its
+	        // coordinates are relative to the group's origin.
+	        this._fabricCanvas.on('selection:cleared', function() {
+				if (main._previouslySelected != null) {
+					for (var i = 0; i < main._previouslySelected.length; i++) {
+					    main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+					}
+				}
+				main._previouslySelected = null;
+			});
 	    
-	    // Watch for resize events and adjust canvas size accordingly.  Use
-	    // a timer to keep from doing it over and over as the user drags
-	    // around the corner of the window.
-	    main._checkResize = true;
-	    $(window).on("resize",function(){
-		if(main._checkResize){
-		    main._updateBoardSize();
-		    main._checkResize = false;
-		    setTimeout(function(){
-			main._checkResize = true;
-			main._updateBoardSize();
-		    },500)
-		}
-	    });
-
+	        // Watch for resize events and adjust canvas size accordingly.  Use
+	        // a timer to keep from doing it over and over as the user drags
+	        // around the corner of the window.
+	        main._checkResize = true;
+	        $(window).on("resize",function(){
+		        if(main._checkResize){
+		            main._updateBoardSize();
+		            main._checkResize = false;
+		            setTimeout(function(){
+			        main._checkResize = true;
+			        main._updateBoardSize();
+		            },500)
+		        }
+	        });
         }
 
-	private _clearUi() {
-	    this._fabricCanvas.clear();
-	    this._displayGroupToComponentMap.clear();
-	    this._gDataFabricMap.clear();
-	}
+	    private _clearUi() {
+	        this._fabricCanvas.clear();
+	        this._displayGroupToComponentMap.clear();
+	        this._gDataFabricMap.clear();
+	    }
 
         // Update components displayed on the board.
         private _updateUi(gadgetModel: Jet.Model.GadgetModel) {
@@ -402,35 +444,21 @@ module Jet.Ui {
             // TODO (othebe): Check for deleted components.
         }
 
-	// Add a component to the board.
+	    // Add a component to the board.
         private _addComponent(componentData: Jet.Model.ComponentInstance, placedPartData: Jet.Model.PlacedPart) {
             var main = this;
             
             var catalogModelData = this.AppContext.getCatalogModel().getComponent(componentData.keyname);
 
-            var fabricImage = fabric.Image.fromURL(catalogModelData.getSvgUrl(),
-						   function (img) {
-						       var boardComponent = new BoardComponent(componentData, placedPartData, img, main._fabricCanvas, main._scope);
-						       main._gDataFabricMap.set(placedPartData, boardComponent);
-						       main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
-						       boardComponent.setTop(placedPartData.xpos);
-						       boardComponent.setLeft(placedPartData.ypos);
-						       boardComponent.setAngle(placedPartData.rot);
-						       main._updateBoardSize();
-						   });  
-            
-            this._extractImg(catalogModelData.getSvgUrl());          
-        }
-
-        private _extractImg(src: string) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', src, true);
-            xhr.onload = function () {
-                if (xhr.readyState == 4) {
-                    var xml = xhr.responseXML;
-                }
-            };
-            xhr.send();
+            this._snabric.loadFromUrl(catalogModelData.getSvgUrl(), (sImg) => {
+                var boardComponent = new BoardComponent(componentData, placedPartData, sImg, main._snabric, main._scope);
+                main._gDataFabricMap.set(placedPartData, boardComponent);
+                main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
+                boardComponent.setTop(placedPartData.xpos);
+                boardComponent.setLeft(placedPartData.ypos);
+                boardComponent.setAngle(placedPartData.rot);
+                main._updateBoardSize();
+            }); 
         }
 
         // Select a board component.

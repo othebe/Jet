@@ -87,6 +87,16 @@ module.exports = function(grunt) {
             }
         },
         
+        // Clone required Git repos.
+        gitclone: {
+            snabric: {
+                options: {
+                    repository: 'https://github.com/othebe/Snabric.js',
+                    directory: 'Jet2/public/libraries/snabric'
+                }
+            }
+        },
+        
         // Connect web server.
         connect: {
             server: {
@@ -105,7 +115,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     // Enable Grunt connect webserver.
     grunt.loadNpmTasks('grunt-contrib-connect');
+    // Enable Grunt Git.
+    grunt.loadNpmTasks('grunt-git');
     
     // Default task(s).
-    grunt.registerTask('default', ['copy', 'rename']);
+    grunt.registerTask('default', ['copy', 'rename', 'gitclone']);
 }

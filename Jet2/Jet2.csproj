@@ -411,6 +411,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="application\applicationController.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
+    <TypeScriptCompile Include="common\fabric.d.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />
     <TypeScriptCompile Include="models\catalogModel.ts" />
     <TypeScriptCompile Include="models\gadgetModel.ts" />
@@ -422,6 +423,7 @@
     <TypeScriptCompile Include="public\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="public\typings\fabricjs\fabricjs.d.ts" />
     <TypeScriptCompile Include="public\typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="public\typings\snapsvg\snapsvg.d.ts" />
     <TypeScriptCompile Include="public\typings\tsd.d.ts" />
     <TypeScriptCompile Include="ui\board\board.ts" />
     <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />

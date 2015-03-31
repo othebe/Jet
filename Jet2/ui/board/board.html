@@ -6,8 +6,12 @@
     <div layout="row" >
       <div flex="5" layout layout-align="center center" layout-margin="1" ><span>{{Math.round(zoomFactor*100)}}%</span></div>
       <md-slider flex="20" min="0.1" max="4" class="md-primary" layout-margin="1"  discrete="false" step="0.01" ng-model="zoomFactor" aria-label="zoom"></md-slider>
-      
     </div>
-    <div id="test" style="position:absolute; z-index:99"></div>
   </div>
 </div>
+
+<style>
+    .board-container {
+        background-color: lightgray;
+    }
+</style>
