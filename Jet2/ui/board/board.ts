@@ -4,7 +4,12 @@ module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
 	    zoomFactor : number;
-	    Math: any;
+        Math: any;
+
+        // Board options.
+        // TODO (othebe): These should be moved into their own directive since
+        // they are not technically part of the board.
+        editGadget(): void;
     }
     
 
@@ -49,6 +54,7 @@ module Jet.Ui {
                 rot = rot || this._placedPartData.rot;
             }
             this._position = { x: x, y: y };
+            this._rotation = rot;
 
             this._initializeGraphics();
 
@@ -74,7 +80,7 @@ module Jet.Ui {
             // Watch related gadget model data for changes.
             this._boardComponentScope.$watch('componentData', function (component: Jet.Model.ComponentInstance) {
                 main._nameText.setText(main._getDisplayName());
-                main._fabricCanvas.renderAll();
+                main._updateGraphics();
             }, true);
         }
 
@@ -107,6 +113,8 @@ module Jet.Ui {
             this._setupFabricListeners();
 
             this._fabricCanvas.add(this._displayGroup);
+
+            this._updateGraphics();
         }
 
         // Gets text for component.
@@ -272,6 +280,24 @@ module Jet.Ui {
         private _setRotation(angle: number) {
             this.setAngle(angle);
         }
+
+        // Updates the graphics for this board component.
+        private _updateGraphics() {
+            if (this._fabricCanvas == null) return;
+
+            var graphics = this._displayGroup || this._fabricImage;
+            graphics.render(this._fabricCanvas.getContext(), false);
+        }
+    }
+
+    // This represents a selectable board instance.
+    class BoardSelectable implements Selectable.ISelectable {
+        /** @override */
+        public getType = function () {
+            return Selectable.Type.BOARD;
+        };
+
+        constructor() { }
     }
 
     export class Board extends Jet.Ui.Directive {
@@ -281,7 +307,8 @@ module Jet.Ui {
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Selectable.ISelectable, BoardComponent>;
 	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
-	    private _checkResize: boolean;
+        private _checkResize: boolean;
+        private _dimensions: { width: number; height: number };
 	    private _boardContainer;
 	    private _previouslySelected: fabric.IObject [];
 	
@@ -309,6 +336,11 @@ module Jet.Ui {
                 // Initialize fabric canvas.
                 main._initializeFabric(instanceElement);
 
+                // Initialize dimensions.
+                var bbox = scope.gadgetModel.bounding_box();
+                main._dimensions = { width: 0, height: 0 };
+                main.setDimensions(bbox.max_x - bbox.min_x, bbox.max_y - bbox.min_y);
+
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
                     newComponents: { [index: string]: Jet.Model.ComponentInstance },
@@ -324,6 +356,14 @@ module Jet.Ui {
 		            main._updateBoardSize();
                 }, true);
 
+                // Update board dimensions.
+                scope.$watch('gadgetModel.corners', function () {
+                    var bbox = scope.gadgetModel.bounding_box();
+                    var width = bbox.max_x - bbox.min_x;
+                    var height = bbox.max_y - bbox.min_y;
+                    main.setDimensions(width, height);
+                }, true);
+
 		        scope.$on("change:perspective", function(name: ng.IAngularEvent,
 							            newPerspective: number) {
 		            main._clearUi();
@@ -335,19 +375,33 @@ module Jet.Ui {
                     main._selectComponent(scope.selectedGadgetComponent.selected);
                 }, true);
 
+                // Board options.
+                // TODO (othebe): See earlier TODO about moving them into a
+                // separate directive.
+                scope.editGadget = function () {
+                    var selectable = new BoardSelectable();
+                    scope.selectedGadgetComponent.selected = selectable;
+                };
             }
         }
 
-	    private _updateBoardSize() {
+        // Set dimensions of the board based on the width and height. The values
+        // passed to the function are in mm units.
+        public setDimensions(width: number, height: number) {
+            this._dimensions.width = fabric.util.parseUnit(width + 'mm');
+            this._dimensions.height = fabric.util.parseUnit(height + 'mm');
+
+            this._updateBoardSize();
+        }
+
+        private _updateBoardSize() {
 	        var effZoom : number = 1.0;
 	        if (this._scope.zoomFactor >= 1.0) {
 		        effZoom = this._scope.zoomFactor;
-	        }
-	        // subtracting 20 leaves a boarder around the board and ensures
-	        // that the scroll bars disappear when we scroll over 100% and then
-	        // come down back below 100%
-	        this._fabricCanvas.setHeight(($(this._boardContainer).innerHeight()-20) * effZoom); 
-	        this._fabricCanvas.setWidth(($(this._boardContainer).innerWidth()-20) * effZoom);
+            }
+    
+            this._fabricCanvas.setHeight(this._dimensions.height * effZoom); 
+	        this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
 	        this._fabricCanvas.setZoom(this._scope.zoomFactor);
 	        this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
 	    }
@@ -365,7 +419,6 @@ module Jet.Ui {
             this._fabricCanvas = this._snabric.getCanvas();
 	        this._boardContainer = instanceElement.find('.board-container')[0];
 	        main._scope.zoomFactor = 1;
-            this._updateBoardSize();
 
             // Set background color.
             this._fabricCanvas.setBackgroundColor('rgba(255, 255, 255, 1.0)',
@@ -409,14 +462,12 @@ module Jet.Ui {
 	        // a timer to keep from doing it over and over as the user drags
 	        // around the corner of the window.
 	        main._checkResize = true;
-	        $(window).on("resize",function(){
-		        if(main._checkResize){
-		            main._updateBoardSize();
+	        $(window).on("resize",function() {
+		        if(main._checkResize) {
 		            main._checkResize = false;
-		            setTimeout(function(){
-			        main._checkResize = true;
-			        main._updateBoardSize();
-		            },500)
+		            setTimeout(function() {
+			            main._checkResize = true;
+		            }, 500)
 		        }
 	        });
         }
@@ -457,7 +508,6 @@ module Jet.Ui {
                 boardComponent.setTop(placedPartData.xpos);
                 boardComponent.setLeft(placedPartData.ypos);
                 boardComponent.setAngle(placedPartData.rot);
-                main._updateBoardSize();
             }); 
         }
 

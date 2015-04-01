@@ -411,6 +411,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="application\applicationController.ts" />
+    <TypeScriptCompile Include="common\InitialData.ts" />
     <TypeScriptCompile Include="common\ISelectable.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
     <TypeScriptCompile Include="common\fabric.d.ts" />

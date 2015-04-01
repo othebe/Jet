@@ -1,9 +1,30 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
+﻿<div class="gadget-inspector fill-height ui-container">
+    <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
+        <div class="header">Gadget Inspector</div>
+        <md-content class="fill-height">
+            <div layout="column">
+                <!-- Gadget name -->
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Gadget name</label>
+                        <input type="text" />
+                    </md-input-container>
+                </div>
 
-</body>
-</html>
+                <!-- Board dimensions. -->
+                <div layout="row">
+                    <md-input-container flex>
+                        <label>Board width</label>
+                        <input type="number" ng-model="board.width" />
+                    </md-input-container>
+
+                    <md-input-container flex>
+                        <label>Board height</label>
+                        <input type="number" ng-model="board.height" />
+                    </md-input-container>
+                </div>
+            </div>
+            
+        </md-content>
+    </md-whiteframe>
+</div>

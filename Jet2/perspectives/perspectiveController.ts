@@ -1,9 +1,13 @@
 ﻿/// <reference path="../common/appContext.ts" />
+/// <reference path="../common/ISelectable.ts" />
 
 module Jet.Perspective {
     export interface IPerspectiveScope extends ng.IScope {
         // Current perspective.
         perspective: IPerspective;
+        
+        // Expose Selectable.
+        Selectable: any;
     }
 
     export class PerspectiveController {
@@ -20,18 +24,17 @@ module Jet.Perspective {
             },
         ];
 
-        constructor(private $scope: IPerspectiveScope,
-		    private appContext: AppContext) {
-	    var scope=$scope;
-	    var main = this;
+        constructor(private $scope: IPerspectiveScope, private appContext: AppContext) {
+            var main = this;
+
+            var scope = $scope;
+
+            $scope.Selectable = Selectable;
+
             $scope.perspective = this._perspectives[0]($scope, appContext);
-	    $scope.$on("change:perspective", function(name: ng.IAngularEvent,
-						      newPerspective: number) {
-		
-		//console.log("received change persective " + newPerspective);
-		//console.log(main._perspectives);
-		scope.perspective = main._perspectives[newPerspective](scope, appContext);
-	    });
-	}
+	        $scope.$on("change:perspective", function(name: ng.IAngularEvent, newPerspective: number) {
+		        scope.perspective = main._perspectives[newPerspective](scope, appContext);
+	        });
+	    }
     }
 }

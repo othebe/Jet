@@ -20,15 +20,18 @@
                 <component-inspector class="fill-height" flex="30"
                                      gadget-model="gadgetModel"
                                      catalog-model="catalogModel"
-                                     selected-gadget-component="selectedGadgetComponent">
+                                     selected-gadget-component="selectedGadgetComponent"
+                                     ng-if="selectedGadgetComponent.selected != null && selectedGadgetComponent.selected.getType() != Selectable.Type.BOARD">
                 </component-inspector>
 
                 <!-- Gadget inspector. -->
                 <gadget-inspector class="fill-height" flex="30"
-                                  gadget-model="gadgetModel">
+                                  gadget-model="gadgetModel"
+                                  ng-if="selectedGadgetComponent.selected == null || selectedGadgetComponent.selected.getType() == Selectable.Type.BOARD">
                 </gadget-inspector>
             </div>
         </div>
+
         <div flex="33" class="fill-height">
             <catalog></catalog>
         </div>

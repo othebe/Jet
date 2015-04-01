@@ -13,6 +13,7 @@
 /// <reference path="ui/componentInspector/componentTransformationInspector.ts" />
 /// <reference path="ui/gadgetExplorer/gadgetExplorer.ts" />
 /// <reference path="ui/gadgetExplorer/gadgetExplorerEntry.ts" />
+/// <reference path="ui/gadgetInspector/gadgetInspector.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
 
 (function () {
@@ -37,7 +38,9 @@
 	// Gadget explorer.
 	app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
 	// Gadget explorer entry.
-	app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
+    app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
+    // Gadget inspector entry.
+    app.directive('gadgetInspector', Jet.Ui.GadgetInspector.Factory());
 	// Board.
 	app.directive('board', Jet.Ui.Board.Factory());
 	// Component inspector.
