@@ -283,10 +283,8 @@ module Jet.Ui {
 
         // Updates the graphics for this board component.
         private _updateGraphics() {
-            if (this._fabricCanvas == null) return;
+            this._fabricCanvas.renderAll();
 
-            var graphics = this._displayGroup || this._fabricImage;
-            graphics.render(this._fabricCanvas.getContext(), false);
         }
     }
 
