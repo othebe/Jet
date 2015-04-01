@@ -3,8 +3,8 @@
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
-	zoomFactor : number;
-	Math: any;
+	    zoomFactor : number;
+	    Math: any;
     }
     
 
