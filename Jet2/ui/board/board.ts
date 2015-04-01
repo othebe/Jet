@@ -279,7 +279,7 @@ module Jet.Ui {
         private _scope: IBoardScope;
         private _snabric: Snabric.ISnabric;
         private _fabricCanvas: fabric.ICanvas;
-        private _gDataFabricMap: Map<Jet.Application.ISelectable, BoardComponent>;
+        private _gDataFabricMap: Map<Selectable.ISelectable, BoardComponent>;
 	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
 	    private _checkResize: boolean;
 	    private _boardContainer;
@@ -290,7 +290,7 @@ module Jet.Ui {
 
             var main = this;
             
-            this._gDataFabricMap = new Map<Jet.Application.ISelectable, BoardComponent>();
+            this._gDataFabricMap = new Map<Selectable.ISelectable, BoardComponent>();
             this._displayGroupToComponentMap = new Map<fabric.IObject, BoardComponent>();
 
             this.templateUrl = function () {
@@ -462,7 +462,7 @@ module Jet.Ui {
         }
 
         // Select a board component.
-        private _selectComponent(selected: Jet.Application.ISelectable) {
+        private _selectComponent(selected: Selectable.ISelectable) {
             var selectedComponent = this._gDataFabricMap.get(selected);
             if (selectedComponent != null) {
                 this._fabricCanvas.setActiveObject(selectedComponent.getDisplayGroup());

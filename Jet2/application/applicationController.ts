@@ -1,8 +1,4 @@
 ﻿module Jet.Application {
-    // This represents a selectable object.
-    export interface ISelectable {
-    }
-
     export interface IApplicationScope extends ng.IScope {
         // Get catalog model.
         catalogModel: Jet.Model.CatalogModel;
@@ -13,9 +9,14 @@
         // Currently selected gadget component. Stored in map for nested
         // directives. Access under 'selected' key.
         // http://jimhoskins.com/2012/12/14/nested-scopes-in-angularjs.html
-        selectedGadgetComponent: {selected: Jet.Application.ISelectable};
+        selectedGadgetComponent: { selected: Selectable.ISelectable };
+
         about: string;
-	    selectPerspective(id: number): void;
+
+        selectPerspective(id: number): void;
+
+        // Determines whether board information is showing.
+        showBoardInfo: boolean;
     }
 
     export class ApplicationController {

@@ -2,7 +2,7 @@
 
 module Jet.Ui {
     interface IComponentInspectorScope extends Jet.Application.IApplicationScope {
-        selected: Jet.Application.ISelectable;
+        selected: Selectable.ISelectable;
         catalogModelData: Jet.Model.CatalogModelData;
     }
 
@@ -22,11 +22,13 @@ module Jet.Ui {
                         scope.catalogModelData = null;
                         scope.selected = null;
                     } else {
-                        if (selected instanceof Jet.Model.ComponentInstance) {
-                            scope.catalogModelData = scope.catalogModel.getComponent(selected.keyname);
+                        if (selected.getType() == Selectable.Type.COMPONENT_INSTANCE) {
+                            var componentInstance = <Jet.Model.ComponentInstance> selected;
+                            scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
                         }
-                        else if (selected instanceof Jet.Model.PlacedPart) {
-                            var componentInstance = scope.gadgetModel.components[selected.component_name];
+                        else if (selected.getType() == Selectable.Type.PLACED_PART) {
+                            var placedPart = <Jet.Model.PlacedPart> selected;
+                            var componentInstance = scope.gadgetModel.components[placedPart.component_name];
                             scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
                         }
                         scope.selected = selected;
@@ -37,8 +39,7 @@ module Jet.Ui {
             this.scope = {
                 catalogModel: '=',
                 gadgetModel: '=',
-                selectedGadgetComponent: '=',
-		myvariable: '='
+                selectedGadgetComponent: '='
             };
         }
 

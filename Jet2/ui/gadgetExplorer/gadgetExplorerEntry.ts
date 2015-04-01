@@ -3,7 +3,7 @@
 module Jet.Ui {
     interface IGadgetExplorerEntryScope extends Jet.Application.IApplicationScope {
         // Gadget model data.
-        placedPart: Jet.Application.ISelectable;
+        placedPart: Selectable.ISelectable;
 
         // Is selected.
         isSelected: boolean;

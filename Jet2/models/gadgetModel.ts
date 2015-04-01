@@ -1,4 +1,3 @@
-
 module Jet.Model {
 
     export class GadgetModel {
@@ -215,7 +214,7 @@ module Jet.Model {
     }
 	
 	// Basic component info class
-    export class ComponentInstance implements Jet.Application.ISelectable {
+    export class ComponentInstance implements Selectable.ISelectable {
 		name: string;
 		keyname: string;
         placed_parts: { [index: string]: PlacedPart; } = {};
@@ -257,17 +256,22 @@ module Jet.Model {
             return false;
         }
 
-	public get_name() : string {
-	    return this.name;
-	}
-	public get_placed_part_count(): number {
-            return Object.keys(this.placed_parts).length
-	}
+	    public get_name() : string {
+	        return this.name;
+        }
 
+	    public get_placed_part_count(): number {
+                return Object.keys(this.placed_parts).length
+	    }
+
+        /** @override */
+        public getType(): Selectable.Type {
+            return Selectable.Type.COMPONENT_INSTANCE;
+        }
 	}
     
     // Placed part class
-    export class PlacedPart implements Jet.Application.ISelectable {
+    export class PlacedPart implements Selectable.ISelectable {
         ref: string;
         xpos: number;
         ypos: number;
@@ -287,9 +291,15 @@ module Jet.Model {
 			this.rot = rot;
 			this.component_name = component_name;
         }
-	public get_ref() : string {
-	    return this.ref;
-	}
+
+	    public get_ref() : string {
+	        return this.ref;
+        }
+
+        /** @override */
+        public getType(): Selectable.Type {
+            return Selectable.Type.PLACED_PART;
+        }
     }
 	
 	export class BoardSize {

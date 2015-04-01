@@ -404,12 +404,14 @@
     <Content Include="ui\componentInspector\componentTransformationInspector.html" />
     <Content Include="ui\gadgetExplorer\gadgetExplorer.html" />
     <Content Include="ui\gadgetExplorer\gadgetExplorerEntry.html" />
+    <Content Include="ui\gadgetInspector\gadgetInspector.html" />
     <Content Include="ui\menu\menuBar.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="application\applicationController.ts" />
+    <TypeScriptCompile Include="common\ISelectable.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
     <TypeScriptCompile Include="common\fabric.d.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />
@@ -434,6 +436,7 @@
     <TypeScriptCompile Include="ui\directives.ts" />
     <TypeScriptCompile Include="ui\gadgetExplorer\gadgetExplorer.ts" />
     <TypeScriptCompile Include="ui\gadgetExplorer\gadgetExplorerEntry.ts" />
+    <TypeScriptCompile Include="ui\gadgetInspector\gadgetInspector.ts" />
     <TypeScriptCompile Include="ui\menu\menuBar.ts" />
   </ItemGroup>
   <ItemGroup>

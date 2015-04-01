@@ -3,7 +3,7 @@
 module Jet.Ui {
     // This scope points to the component inspector's scope.
     interface IComponentTransformationInspectorScope extends Jet.Application.IApplicationScope {
-        selected: Jet.Application.ISelectable;
+        selected: Selectable.ISelectable;
         componentData: Jet.Model.PlacedPart;
     }
 
@@ -15,10 +15,13 @@ module Jet.Ui {
 
             this.link = function (scope: IComponentTransformationInspectorScope) {
                 scope.$watch('selected', function () {
-                    if (scope.selected instanceof Jet.Model.ComponentInstance) {
+                    if (scope.selected == null) {
+                        return;
+                    }
+                    else if (scope.selected.getType() == Selectable.Type.COMPONENT_INSTANCE) {
                         scope.componentData = null;
                     }
-                    else if (scope.selected instanceof Jet.Model.PlacedPart) {
+                    else if (scope.selected.getType() == Selectable.Type.PLACED_PART) {
                         scope.componentData = <Jet.Model.PlacedPart> scope.selected;
                     }
                 });

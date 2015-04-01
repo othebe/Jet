@@ -16,11 +16,17 @@
                 </board>
 
                 <!-- Component inspector. -->
+                <!-- Only shown when there is a component selected. -->
                 <component-inspector class="fill-height" flex="30"
                                      gadget-model="gadgetModel"
                                      catalog-model="catalogModel"
                                      selected-gadget-component="selectedGadgetComponent">
                 </component-inspector>
+
+                <!-- Gadget inspector. -->
+                <gadget-inspector class="fill-height" flex="30"
+                                  gadget-model="gadgetModel">
+                </gadget-inspector>
             </div>
         </div>
         <div flex="33" class="fill-height">
