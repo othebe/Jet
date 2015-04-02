@@ -1,6 +1,22 @@
 
 High:
 
+*- LEDs need to be the correct color.
+
+*- It needs to be possible to delete items
+
+*- Only one of each component is allowed.
+
+*- components with multiple placed parts are not yet tested.
+
+*- Components cannot exend off the edge of the board.
+
+*- Zoom only affects components, not board.
+
+*- WHen zoomed in, some portions of the board are not reachable.
+
+*- The catalog doesn't look very good. it needs to be formatted better.
+
 - too much precision for translations and rotations
 
 - Some kind of material design alterative to the menus.
@@ -9,7 +25,7 @@ High:
 
 - Why does reading the catalog take so long?  Could we do it in the background?
 
-- Zooming should be centered on the center of the gadget.
+*- Zooming should be centered on the center of the gadget.
 
 - Geometry for rotations need to consider REAL center x and y's.
   . Have real X and Y that is passed to GSPEC.
@@ -17,6 +33,8 @@ High:
 - Gadget explorer needs to have board selectable to set board dimensions.
 
 - Replace SVG name w/Fabric image.
+
+- Snap to grid doesn't work.
 
 Low:
 - Isolate scopes on directives. (DONE)
