@@ -386,8 +386,9 @@ module Jet.Ui {
         // Set dimensions of the board based on the width and height. The values
         // passed to the function are in mm units.
         public setDimensions(width: number, height: number) {
-            this._dimensions.width = fabric.util.parseUnit(width + 'mm');
-            this._dimensions.height = fabric.util.parseUnit(height + 'mm');
+            var util: any = fabric.util;
+            this._dimensions.width = util.parseUnit(width + 'mm');
+            this._dimensions.height = util.parseUnit(height + 'mm');
 
             this._updateBoardSize();
         }
@@ -431,43 +432,49 @@ module Jet.Ui {
                     main._scope.$applyAsync();
                 }
             });
-
-	        // Handle group rotation and movement. First, just before the
-	        // selection cleared, grab the list of canvas objects that were
-	        // selected.
-	        this._fabricCanvas.on('before:selection:cleared', function() {
-				if (main._fabricCanvas.getActiveGroup() != null) {
-				    main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
-				} else {
-				    main._previouslySelected = null;
-				}
-			});
-
-	        // Then, after the selection is destroyed, propogate the location
-	        // back to the BoardObject.  We have to do it in two stages,
-	        // because when the object is selected, it's in a group and its
-	        // coordinates are relative to the group's origin.
-	        this._fabricCanvas.on('selection:cleared', function() {
-				if (main._previouslySelected != null) {
-					for (var i = 0; i < main._previouslySelected.length; i++) {
-					    main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
-					}
-				}
-				main._previouslySelected = null;
-			});
+	    this._fabricCanvas.on('selection:created', function() {
+		if (main._fabricCanvas.getActiveGroup() != null) {
+		    main._fabricCanvas.getActiveGroup().perPixelTargetFind = true;
+		    console.log("here")
+		}
+	    });
 	    
-	        // Watch for resize events and adjust canvas size accordingly.  Use
-	        // a timer to keep from doing it over and over as the user drags
-	        // around the corner of the window.
-	        main._checkResize = true;
-	        $(window).on("resize",function() {
-		        if(main._checkResize) {
-		            main._checkResize = false;
-		            setTimeout(function() {
-			            main._checkResize = true;
-		            }, 500)
-		        }
-	        });
+	    // Handle group rotation and movement. First, just before the
+	    // selection cleared, grab the list of canvas objects that were
+	    // selected.
+	    this._fabricCanvas.on('before:selection:cleared', function() {
+		if (main._fabricCanvas.getActiveGroup() != null) {
+		    main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
+		} else {
+		    main._previouslySelected = null;
+		}
+	    });
+	    
+	    // Then, after the selection is destroyed, propogate the location
+	    // back to the BoardObject.  We have to do it in two stages,
+	    // because when the object is selected, it's in a group and its
+	    // coordinates are relative to the group's origin.
+	    this._fabricCanvas.on('selection:cleared', function() {
+		if (main._previouslySelected != null) {
+		    for (var i = 0; i < main._previouslySelected.length; i++) {
+			main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+		    }
+		}
+		main._previouslySelected = null;
+	    });
+	    
+	    // Watch for resize events and adjust canvas size accordingly.  Use
+	    // a timer to keep from doing it over and over as the user drags
+	    // around the corner of the window.
+	    main._checkResize = true;
+	    $(window).on("resize",function() {
+		if(main._checkResize) {
+		    main._checkResize = false;
+		    setTimeout(function() {
+			main._checkResize = true;
+		    }, 500)
+		}
+	    });
         }
 
 	    private _clearUi() {
