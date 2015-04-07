@@ -73,6 +73,13 @@ module Jet.Model {
 
             this.components[name] = component;
         }
+
+        // Delete a component.
+        delete_component(name: string) {
+            if (this.components[name] != null) {
+                delete this.components[name];
+            }
+        }
 		
 		// Set the corners of the board
 		set_corners (corners: Vertex[]) {

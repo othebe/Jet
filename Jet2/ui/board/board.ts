@@ -207,6 +207,16 @@ module Jet.Ui {
             return this._displayGroup;
         }
 
+        // Gets the component instance.
+        public getComponentInstance(): Jet.Model.ComponentInstance {
+            return this._componentData;
+        }
+
+        // Compares a fabric object with the graphic representation of this object.
+        public compareFabricObject(fObj: fabric.IObject): boolean {
+            return fObj == this._fabricImage || fObj == this._displayGroup;
+        }
+
 	    private _updateLocation() {
             var center = this._getCenter();
 
@@ -399,30 +409,12 @@ module Jet.Ui {
         }
 
         private _updateBoardSize() {
-	        var effZoom : number = 1.0;
-	        //if (this._scope.zoomFactor >= 1.0) {
-		        effZoom = this._scope.zoomFactor;
-            //}
-
-            var fabricCenter = this._fabricCanvas.getCenter();
-            var zoomCenter = new fabric.Point(
-                fabricCenter.top,
-                fabricCenter.left);
-
-            this._fabricCanvas.setHeight(this._dimensions.height); 
-            this._fabricCanvas.setWidth(this._dimensions.width);
+	        var effZoom = this._scope.zoomFactor;
     
             this._fabricCanvas.setHeight(this._dimensions.height * effZoom); 
             this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
 
-            //this._gDataFabricMap.forEach((boardComponent) => {
-            //    var origHeight = 
-            //    boardComponent.getDisplayGroup().setHeight(
-            //    console.log(boardComponent);
-            //});
 	        this._fabricCanvas.setZoom(this._scope.zoomFactor);
-	        //this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
-            //this._fabricCanvas.zoomToPoint(zoomCenter, this._scope.zoomFactor);
 	    }
 
 	
@@ -452,49 +444,69 @@ module Jet.Ui {
                     main._scope.$applyAsync();
                 }
             });
-	    this._fabricCanvas.on('selection:created', function() {
-		if (main._fabricCanvas.getActiveGroup() != null) {
-		    main._fabricCanvas.getActiveGroup().perPixelTargetFind = true;
-		    console.log("here")
-		}
-	    });
+
+	        this._fabricCanvas.on('selection:created', function() {
+		        if (main._fabricCanvas.getActiveGroup() != null) {
+		            main._fabricCanvas.getActiveGroup().perPixelTargetFind = true;
+		        }
+	        });
 	    
-	    // Handle group rotation and movement. First, just before the
-	    // selection cleared, grab the list of canvas objects that were
-	    // selected.
-	    this._fabricCanvas.on('before:selection:cleared', function() {
-		if (main._fabricCanvas.getActiveGroup() != null) {
-		    main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
-		} else {
-		    main._previouslySelected = null;
-		}
-	    });
+	        // Handle group rotation and movement. First, just before the
+	        // selection cleared, grab the list of canvas objects that were
+	        // selected.
+	        this._fabricCanvas.on('before:selection:cleared', function() {
+		        if (main._fabricCanvas.getActiveGroup() != null) {
+		            main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
+		        } else {
+		            main._previouslySelected = null;
+		        }
+	        });
 	    
-	    // Then, after the selection is destroyed, propogate the location
-	    // back to the BoardObject.  We have to do it in two stages,
-	    // because when the object is selected, it's in a group and its
-	    // coordinates are relative to the group's origin.
-	    this._fabricCanvas.on('selection:cleared', function() {
-		if (main._previouslySelected != null) {
-		    for (var i = 0; i < main._previouslySelected.length; i++) {
-			main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
-		    }
-		}
-		main._previouslySelected = null;
-	    });
+	        // Then, after the selection is destroyed, propogate the location
+	        // back to the BoardObject.  We have to do it in two stages,
+	        // because when the object is selected, it's in a group and its
+	        // coordinates are relative to the group's origin.
+	        this._fabricCanvas.on('selection:cleared', function() {
+		        if (main._previouslySelected != null) {
+		            for (var i = 0; i < main._previouslySelected.length; i++) {
+			        main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+		            }
+		        }
+		        main._previouslySelected = null;
+	        });
 	    
-	    // Watch for resize events and adjust canvas size accordingly.  Use
-	    // a timer to keep from doing it over and over as the user drags
-	    // around the corner of the window.
-	    main._checkResize = true;
-	    $(window).on("resize",function() {
-		if(main._checkResize) {
-		    main._checkResize = false;
-		    setTimeout(function() {
-			main._checkResize = true;
-		    }, 500)
-		}
-	    });
+	        // Watch for resize events and adjust canvas size accordingly.  Use
+	        // a timer to keep from doing it over and over as the user drags
+	        // around the corner of the window.
+	        main._checkResize = true;
+	        $(window).on("resize",function() {
+		        if(main._checkResize) {
+		            main._checkResize = false;
+		            setTimeout(function() {
+			            main._checkResize = true;
+		            }, 500)
+		        }
+            });
+
+            // Handle the delete key on the canvas.
+            this._snabric.handleKeyPress = function (e: KeyboardEvent) {
+                var key = e.keyCode || e.which;
+                if (key == 46) {
+                    var active = this._fCanvas.getActiveGroup() || this._fCanvas.getActiveObject();
+                    if (active != null) {
+                        // Update gadget model.
+                        main._gDataFabricMap.forEach((boardComponent) => {
+                            if (boardComponent.compareFabricObject(active)) {
+                                var componentData = boardComponent.getComponentInstance();
+                                main._scope.gadgetModel.delete_component(componentData.get_name());
+                                main._scope.$applyAsync();
+                            }
+                        });
+                        // Update Ui.
+                        this.remove(active);
+                    }
+                }
+            };
         }
 
 	    private _clearUi() {
