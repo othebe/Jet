@@ -33,20 +33,31 @@ module Jet.Ui {
                     //  objects since we have their reference already.
                     var placedPartMap: { [index: string]: Jet.Model.PlacedPart; } = {}
                     var placedParts = component.getPlacedParts();
-                    
-                    var new_component_name = component.getKeyName();
+
+                    var componentName = component.getKeyName();
                     
                     for (var i = 0; i < placedParts.length; i++) {
                         var placedPart = placedParts[i];
                         placedPartMap[placedPart.getRef()] = new Jet.Model.PlacedPart(
-                            placedPart.getRef(), main._DEFAULT_X, main._DEFAULT_Y, 0, new_component_name);
+                            placedPart.getRef(), main._DEFAULT_X, main._DEFAULT_Y, 0, componentName);
                     }
                     
-                    scope.gadgetModel.add_component(
-                        new_component_name, 
-                        component.getKeyName(), 
-                        placedPartMap
-                    );
+                    // Add component to gadget.
+                    var added: boolean = false;
+                    var componentCtr = 0;
+                    
+                    while (!added) {
+                        try {
+                            scope.gadgetModel.add_component(
+                                componentName + '_' + componentCtr,
+                                component.getKeyName(),
+                                placedPartMap
+                                );
+                            added = true;
+                        } catch (e) {
+                            componentCtr++;
+                        }
+                    }
                 }
             };
         }

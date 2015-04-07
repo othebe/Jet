@@ -12,7 +12,6 @@ module Jet.Ui {
         editGadget(): void;
     }
     
-
     interface IBoardComponentScope extends ng.IScope {
         placedPartData?: Jet.Model.PlacedPart;
         componentData?: Jet.Model.ComponentInstance;
@@ -27,7 +26,9 @@ module Jet.Ui {
         private _boardComponentScope: IBoardComponentScope;
 	    private _nameText: fabric.IText;
         private _ENABLE_RESTRAINTS: boolean = false;
-	    private _displayGroup : fabric.IGroup;
+        private _displayGroup: fabric.IGroup;
+        private _baseHeight: number;
+        private _baseWidth: number;
 	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
@@ -109,6 +110,10 @@ module Jet.Ui {
             // Set initial transformations.
             this._setTranslation(this._position.x, this._position.y);
             this._setRotation(this._rotation);
+
+            // Set base dimensions.
+            this._baseHeight = this._displayGroup.getHeight();
+            this._baseWidth = this._displayGroup.getWidth();
 
             this._setupFabricListeners();
 
@@ -395,14 +400,29 @@ module Jet.Ui {
 
         private _updateBoardSize() {
 	        var effZoom : number = 1.0;
-	        if (this._scope.zoomFactor >= 1.0) {
+	        //if (this._scope.zoomFactor >= 1.0) {
 		        effZoom = this._scope.zoomFactor;
-            }
+            //}
+
+            var fabricCenter = this._fabricCanvas.getCenter();
+            var zoomCenter = new fabric.Point(
+                fabricCenter.top,
+                fabricCenter.left);
+
+            this._fabricCanvas.setHeight(this._dimensions.height); 
+            this._fabricCanvas.setWidth(this._dimensions.width);
     
             this._fabricCanvas.setHeight(this._dimensions.height * effZoom); 
-	        this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
+            this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
+
+            //this._gDataFabricMap.forEach((boardComponent) => {
+            //    var origHeight = 
+            //    boardComponent.getDisplayGroup().setHeight(
+            //    console.log(boardComponent);
+            //});
 	        this._fabricCanvas.setZoom(this._scope.zoomFactor);
-	        this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
+	        //this._fabricCanvas.zoomToPoint(new fabric.Point(0,0), this._scope.zoomFactor);
+            //this._fabricCanvas.zoomToPoint(zoomCenter, this._scope.zoomFactor);
 	    }
 
 	
