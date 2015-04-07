@@ -1,15 +1,35 @@
 ﻿<div class="catalog ui-container fill-height">
-    <div class="header">Component Catalog</div>
+    <div class="header">
+        Component Catalog
+
+        <div class="search-div">
+            <input type="text" ng-model="filterText" placeholder="Search component" />
+        </div>
+
+        <div class="clear"></div>
+    </div>
 
     <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
         <md-content class="md-padding">
             <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="9"
                           md-row-height-gt-md="1:1" md-row-height="fit"
                           md-gutter="12x" md-gutter-gt-sm="8px">
-                <div ng-repeat="catalogModelData in catalogModel.getComponents()">
+                <div ng-repeat="catalogModelData in catalogModel.getComponents() | filter:filterByName">
                     <catalog-entry ng-model="catalogModelData"></catalog-entry>
                 </div>
             </md-grid-list>
         </md-content>
     </md-whiteframe>
 </div>
+
+<style>
+    div.search-div {
+        float: right;
+    }
+
+    div.search-div input {
+        font-style: italic;
+        font-size: 90%;
+        padding: 2px;
+    }
+</style>

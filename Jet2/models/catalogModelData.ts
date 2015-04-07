@@ -1,13 +1,19 @@
 ﻿module Jet.Model {
     // TODO(othebe): Rename to CatalogComponent.
     export class CatalogModelData {
+        // The seach index string can matched to identify this catalog model data.
+        private _searchIndex: string;
+
         constructor(
             private _longName: string,
             private _keyName: string,
             private _price: Number,
             private _documentationUrl: string,
             private _svgUrl: string,
-            private _placedParts: Array<CatalogPlacedPart>) { }
+            private _placedParts: Array<CatalogPlacedPart>)
+        {
+            this._searchIndex = this._longName.toLowerCase();
+        }
 
         public getLongName(): string {
             return this._longName;
@@ -31,6 +37,11 @@
 
         public getPlacedParts(): Array<CatalogPlacedPart> {
             return this._placedParts;
+        }
+
+        // This returns a string that can be used to search for this ctalog component.
+        public getSearchIndex(): string {
+            return this._searchIndex;
         }
     }
 

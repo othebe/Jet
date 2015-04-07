@@ -1,11 +1,27 @@
 ﻿/// <reference path="../directives.ts" />
 
 module Jet.Ui {
+    interface ICatalogScope extends Jet.Application.IApplicationScope {
+        filterByName: (_: Jet.Model.CatalogModelData) => boolean;
+        filterText: string;
+    }
+
     export class Catalog extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/catalog/catalog.html";
 
         constructor(AppContext: AppContext) {
             super(AppContext);
+
+            this.link = function (scope: ICatalogScope) {
+                scope.filterText = "";
+
+                scope.filterByName = function (catalogModelData: Jet.Model.CatalogModelData) {
+                    var searchIndex = catalogModelData.getSearchIndex();
+                    var filterText = scope.filterText.toLowerCase();
+
+                    return searchIndex.indexOf(filterText) == 0;
+                }
+            }
         }
 
         public templateUrl(): string {
