@@ -1,6 +1,7 @@
 ﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
 /// <reference path="public/typings/fabricjs/fabricjs.d.ts" />
 /// <reference path="public/typings/snapsvg/snapsvg.d.ts" />
+/// <reference path="public/typings/angular-material/angular-material.d.ts" />
 /// <reference path="public/libraries/snabric/snabric.d.ts" />
 /// <reference path="common/fabric.d.ts" />
 /// <reference path="application/applicationController.ts" />
@@ -34,7 +35,7 @@
 	// Catalog entry directive.
 	app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
 	// Menu directive.
-	app.directive('menuBar', Jet.Ui.MenuBar.Factory());
+    app.directive('menuBar', Jet.Ui.MenuBar.Factory());
 	// Gadget explorer.
 	app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
 	// Gadget explorer entry.

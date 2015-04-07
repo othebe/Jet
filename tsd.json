@@ -16,6 +16,9 @@
     },
     "snapsvg/snapsvg.d.ts": {
       "commit": "bba34156c1eaad788fa8996f7d30b54c4fce5ffe"
+    },
+    "angular-material/angular-material.d.ts": {
+      "commit": "65ea56c919fd95dcd0ca3c59c9aa5eaa99c86885"
     }
   }
 }

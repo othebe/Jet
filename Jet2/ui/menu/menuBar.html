@@ -6,6 +6,7 @@
             <ul class="submenu">
                 <li class="option">New</li>
                 <li class="option">Import GSpec</li>
+                <li class="option" ng-click="exportGSpec($event)">Export GSpec</li>
             </ul>
         </li>
 
@@ -23,6 +24,8 @@
 
         <div class="clear"></div>
     </ul>
+
+    <export-g-spec></export-g-spec>
 </div>
 
 <style>

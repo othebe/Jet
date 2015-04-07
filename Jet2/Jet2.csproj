@@ -405,6 +405,7 @@
     <Content Include="ui\gadgetExplorer\gadgetExplorer.html" />
     <Content Include="ui\gadgetExplorer\gadgetExplorerEntry.html" />
     <Content Include="ui\gadgetInspector\gadgetInspector.html" />
+    <Content Include="ui\menu\exportGSpec.html" />
     <Content Include="ui\menu\menuBar.html" />
     <Content Include="web.config" />
   </ItemGroup>

@@ -1,0 +1,32 @@
+﻿<md-dialog class="export-gspec" aria-label="Mango (Fruit)">
+    <md-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">GSpec (Export):</md-subheader>
+
+        <div class="dialog-content">
+            <textarea ng-bind="exportGSpec" rows="10" readonly="true"></textarea>
+        </div>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <md-button ng-click="close()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>
+
+<style>
+    .export-gspec {
+        width: 100%;
+    }
+
+    .export-gspec textarea {
+        width: 100%;
+    }
+</style>
+
+<script>
+    var textarea = document.querySelector('.export-gspec textarea');
+    textarea.onclick = function () {
+        textarea.select();
+    }
+</script>
