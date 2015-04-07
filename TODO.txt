@@ -3,7 +3,7 @@ High:
 
 *- LEDs need to be the correct color.
 
-*- It needs to be possible to delete items
+*- It needs to be possible to delete items (DONE)
 
 *- Only one of each component is allowed. (DONE)
 *- DEVON BUG: Renaming does not work. You probably don't want to delete, gadgetModel:154 - this.components[old_name] = this.components[new_name]; is probably null.

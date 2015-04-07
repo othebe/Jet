@@ -10,6 +10,9 @@ module Jet.Ui {
         // TODO (othebe): These should be moved into their own directive since
         // they are not technically part of the board.
         editGadget(): void;
+
+        // Toggle grid.
+        toggleGrid(): void;
     }
     
     interface IBoardComponentScope extends ng.IScope {
@@ -323,7 +326,9 @@ module Jet.Ui {
         private _checkResize: boolean;
         private _dimensions: { width: number; height: number };
 	    private _boardContainer;
-	    private _previouslySelected: fabric.IObject [];
+        private _previouslySelected: fabric.IObject[];
+        private _isGridVisible: boolean;
+        private _gridSize: number = 15;
 	
         constructor(private AppContext: AppContext) {
             super(AppContext);
@@ -395,6 +400,15 @@ module Jet.Ui {
                     var selectable = new BoardSelectable();
                     scope.selectedGadgetComponent.selected = selectable;
                 };
+
+                // Toggle grid.
+                // TODO (othebe): Set an option for toggling grid size.
+                scope.toggleGrid = function () {
+                    main._isGridVisible = !main._isGridVisible;
+                    main._snabric.setGridVisibility(main._isGridVisible, {
+                        tileSize: 15
+                    });
+                };
             }
         }
 
@@ -414,7 +428,13 @@ module Jet.Ui {
             this._fabricCanvas.setHeight(this._dimensions.height * effZoom); 
             this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
 
-	        this._fabricCanvas.setZoom(this._scope.zoomFactor);
+            this._fabricCanvas.setZoom(this._scope.zoomFactor);
+
+            if (this._isGridVisible) {
+                this._snabric.setGridVisibility(true, {
+                    tileSize: this._gridSize
+                });
+            }
 	    }
 
 	
@@ -429,7 +449,11 @@ module Jet.Ui {
             // Initialize fabric canvas.
             this._fabricCanvas = this._snabric.getCanvas();
 	        this._boardContainer = instanceElement.find('.board-container')[0];
-	        main._scope.zoomFactor = 1;
+            main._scope.zoomFactor = 1;
+
+            // Initialize grid to OFF.
+            this._snabric.setGridVisibility(false);
+            this._isGridVisible = false;
 
             // Set background color.
             this._fabricCanvas.setBackgroundColor('rgba(255, 255, 255, 1.0)',
@@ -474,19 +498,6 @@ module Jet.Ui {
 		        }
 		        main._previouslySelected = null;
 	        });
-	    
-	        // Watch for resize events and adjust canvas size accordingly.  Use
-	        // a timer to keep from doing it over and over as the user drags
-	        // around the corner of the window.
-	        main._checkResize = true;
-	        $(window).on("resize",function() {
-		        if(main._checkResize) {
-		            main._checkResize = false;
-		            setTimeout(function() {
-			            main._checkResize = true;
-		            }, 500)
-		        }
-            });
 
             // Handle the delete key on the canvas.
             this._snabric.handleKeyPress = function (e: KeyboardEvent) {
