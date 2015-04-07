@@ -432,6 +432,8 @@ module Jet.Ui {
 
             if (this._isGridVisible) {
                 this._snabric.setGridVisibility(true, {
+                    width: this._dimensions.width,
+                    height: this._dimensions.height,
                     tileSize: this._gridSize
                 });
             }
