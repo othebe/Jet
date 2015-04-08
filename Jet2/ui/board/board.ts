@@ -1,5 +1,6 @@
 ﻿/// <reference path="../directives.ts" />
 
+// TODO (othebe): This file is growing too big. Move private classes into their own files.
 module Jet.Ui {
     interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
@@ -14,12 +15,73 @@ module Jet.Ui {
         // Toggle grid.
         toggleGrid(): void;
     }
+
+
     
     interface IBoardComponentScope extends ng.IScope {
         placedPartData?: Jet.Model.PlacedPart;
         componentData?: Jet.Model.ComponentInstance;
     }
 
+
+    
+    // The PCB represents the actual physical board piece.
+    // TODO (othebe): It would be a good idea to remove the dependency on Fabric by having
+    // an interface for PCB using any graphics object <G>, and an implementation using <fabric.IObject>.
+    class Pcb {
+        // This is the graphics object that can be drawn.
+        private _graphicsObject: fabric.IObject;
+
+        // This is the margin around the PCB.
+        private _marginX: number;
+        private _marginY: number;
+
+        constructor(private _gadgetModel: Jet.Model.GadgetModel) {
+            this._marginX = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
+            this._marginY = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
+
+            this._constructGraphics();
+        }
+
+        // Get the graphics object representing the board.
+        public getGraphics(): fabric.IObject {
+            return this._graphicsObject;
+        }
+
+        // Get the horizontal margin.
+        public getHorizontalMargin() {
+            return this._marginX;
+        }
+
+        // Get the vertical margin.
+        public getVerticalMargin() {
+            return this._marginY;
+        }
+
+        // Determines whether a given graphics object is within the Pcb object.
+        // If allowPartial is true, obj is within the Pcb even it is partially contained.
+        public containsGraphicsObject(obj: fabric.IObject, allowPartial = true): boolean {
+            return false;
+        }
+
+        // Construct the graphics object.
+        // Complex PCB shapes can be added here, but we just use a rectangle for now.
+        private _constructGraphics(): void {
+            var bbox = this._gadgetModel.bounding_box();
+            this._graphicsObject = new fabric.Rect({
+                top: fabric.util.parseUnit(bbox.min_y + 'mm'),
+                left: fabric.util.parseUnit(bbox.min_y + 'mm'),
+                width: fabric.util.parseUnit((bbox.max_x - bbox.min_x) + 'mm'),
+                height: fabric.util.parseUnit((bbox.max_y - bbox.min_y) + 'mm'),
+                fill: Jet.Constants.Board.PCB_COLOR,
+                selectable: false
+            });
+        }
+    }
+
+
+
+    // A board component represents a part that can be placed on the board.
     class BoardComponent {
         private _catalogModelData: Jet.Model.CatalogModelData;
         private _position: { x: number; y: number };
@@ -30,15 +92,14 @@ module Jet.Ui {
 	    private _nameText: fabric.IText;
         private _ENABLE_RESTRAINTS: boolean = false;
         private _displayGroup: fabric.IGroup;
-        private _baseHeight: number;
-        private _baseWidth: number;
 	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
             private _placedPartData: Jet.Model.PlacedPart,
             private _snabricImage: Snabric.IImage,
             private _snabric: Snabric.ISnabric,
-            private _scope: IBoardScope)
+            private _scope: IBoardScope,
+            private _pcb: Pcb)
         {
             var main = this;
 
@@ -113,10 +174,6 @@ module Jet.Ui {
             // Set initial transformations.
             this._setTranslation(this._position.x, this._position.y);
             this._setRotation(this._rotation);
-
-            // Set base dimensions.
-            this._baseHeight = this._displayGroup.getHeight();
-            this._baseWidth = this._displayGroup.getWidth();
 
             this._setupFabricListeners();
 
@@ -288,10 +345,13 @@ module Jet.Ui {
             return !(bbox.top < 0 || bbox.top + bbox.height > canvasHeight);
         }
 
-        // Set translation of image on canvas.
+        // Set translation of image on canvas. This considers the offset of the PCB position.
         private _setTranslation(x: number, y: number) {
-            this.setLeft(x);
-            this.setTop(y);
+            var offsetLeft = this._pcb.getGraphics().left;
+            var offsetTop = this._pcb.getGraphics().top;
+
+            this.setLeft(x + offsetLeft);
+            this.setTop(y + offsetTop);
         }
 
         // Set rotation of image on canvas.
@@ -306,6 +366,8 @@ module Jet.Ui {
         }
     }
 
+
+
     // This represents a selectable board instance.
     class BoardSelectable implements Selectable.ISelectable {
         /** @override */
@@ -316,6 +378,9 @@ module Jet.Ui {
         constructor() { }
     }
 
+
+
+    // This represents the OVERALL board, including the PCB and components.
     export class Board extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
@@ -323,12 +388,10 @@ module Jet.Ui {
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Selectable.ISelectable, BoardComponent>;
 	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
-        private _checkResize: boolean;
-        private _dimensions: { width: number; height: number };
-	    private _boardContainer;
         private _previouslySelected: fabric.IObject[];
         private _isGridVisible: boolean;
         private _gridSize: number = 15;
+        private _pcb: Pcb;
 	
         constructor(private AppContext: AppContext) {
             super(AppContext);
@@ -355,9 +418,9 @@ module Jet.Ui {
                 main._initializeFabric(instanceElement);
 
                 // Initialize dimensions.
-                var bbox = scope.gadgetModel.bounding_box();
-                main._dimensions = { width: 0, height: 0 };
-                main.setDimensions(bbox.max_x - bbox.min_x, bbox.max_y - bbox.min_y);
+                var pcbGraphics = main._pcb.getGraphics();
+                var margin = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
+                main.setDimensions(margin + pcbGraphics.getWidth(), margin + pcbGraphics.getHeight());
 
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
@@ -412,28 +475,39 @@ module Jet.Ui {
             }
         }
 
-        // Set dimensions of the board based on the width and height. The values
+        // Set dimensions of the PCB based on the width and height. The values
         // passed to the function are in mm units.
         public setDimensions(width: number, height: number) {
-            var util: any = fabric.util;
-            this._dimensions.width = util.parseUnit(width + 'mm');
-            this._dimensions.height = util.parseUnit(height + 'mm');
+            var graphicsObj = this._pcb.getGraphics();
+            graphicsObj.setHeight(fabric.util.parseUnit(height + 'mm'));
+            graphicsObj.setWidth(fabric.util.parseUnit(width + 'mm'));
 
             this._updateBoardSize();
         }
 
+        // Updates the UI based on the zoom and PCB dimensions.
         private _updateBoardSize() {
-	        var effZoom = this._scope.zoomFactor;
+            var effZoom = this._scope.zoomFactor;
+
+            var graphicsObj = this._pcb.getGraphics();
+
+            // Get PCB margins.
+            var pcbMarginH = this._pcb.getHorizontalMargin();
+            var pcbMarginV = this._pcb.getVerticalMargin();
+
+            // Calculate canvas dimensions.
+            var width = graphicsObj.getWidth() + (2 * pcbMarginH);
+            var height = graphicsObj.getHeight() + (2 * pcbMarginV);
     
-            this._fabricCanvas.setHeight(this._dimensions.height * effZoom); 
-            this._fabricCanvas.setWidth(this._dimensions.width * effZoom);
+            this._fabricCanvas.setHeight(height * effZoom); 
+            this._fabricCanvas.setWidth(width * effZoom);
 
             this._fabricCanvas.setZoom(this._scope.zoomFactor);
 
             if (this._isGridVisible) {
                 this._snabric.setGridVisibility(true, {
-                    width: this._dimensions.width,
-                    height: this._dimensions.height,
+                    width: width,
+                    height: height,
                     tileSize: this._gridSize
                 });
             }
@@ -450,7 +524,6 @@ module Jet.Ui {
 
             // Initialize fabric canvas.
             this._fabricCanvas = this._snabric.getCanvas();
-	        this._boardContainer = instanceElement.find('.board-container')[0];
             main._scope.zoomFactor = 1;
 
             // Initialize grid to OFF.
@@ -520,6 +593,13 @@ module Jet.Ui {
                     }
                 }
             };
+
+            // Display the PCB.
+            this._pcb = new Pcb(main._scope.gadgetModel);
+            var graphics = this._pcb.getGraphics();
+            graphics.left = this._pcb.getHorizontalMargin();
+            graphics.top = this._pcb.getVerticalMargin();
+            main._snabric.getCanvas().add(graphics);
         }
 
 	    private _clearUi() {
@@ -552,7 +632,7 @@ module Jet.Ui {
             var catalogModelData = this.AppContext.getCatalogModel().getComponent(componentData.keyname);
 
             this._snabric.loadFromUrl(catalogModelData.getSvgUrl(), (sImg) => {
-                var boardComponent = new BoardComponent(componentData, placedPartData, sImg, main._snabric, main._scope);
+                var boardComponent = new BoardComponent(componentData, placedPartData, sImg, main._snabric, main._scope, main._pcb);
                 main._gDataFabricMap.set(placedPartData, boardComponent);
                 main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
                 boardComponent.setTop(placedPartData.xpos);
