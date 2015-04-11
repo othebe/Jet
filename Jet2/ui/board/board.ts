@@ -6,6 +6,7 @@ module Jet.Ui {
         height: Number;
 	    zoomFactor : number;
         Math: any;
+        pcb: Pcb;
 
         // Board options.
         // TODO (othebe): These should be moved into their own directive since
@@ -25,6 +26,7 @@ module Jet.Ui {
 
 
     
+    // A simple, yet fundamental Point class.
     class Point {
         constructor(public x: number, public y: number) { }
 
@@ -69,6 +71,16 @@ module Jet.Ui {
             return this._marginY;
         }
 
+        // Set the horizontal margin.
+        public setHorizontalMargin(margin: number) {
+            this._marginX = margin;
+        }
+
+        // Set the vertical margin.
+        public setVerticalMargin(margin: number) {
+            this._marginY = margin;
+        }
+
         // Determines whether a given graphics object is within the Pcb object.
         // If allowPartial is true, the function returns true even if there obj is partially contained.
         public overlapsObject(obj: fabric.IObject, allowPartial: boolean = true): boolean {
@@ -82,6 +94,11 @@ module Jet.Ui {
             else {
                 throw (Constants.Strings.UNIMPLEMENTED_METHOD);
             }
+        }
+
+        // Determines if there is an intersection between the polygons formed by the Pcb and obj boundaries.
+        public intersectsWithObj(obj: fabric.IObject) {
+            return this._graphicsObject.intersectsWithObject(obj);
         }
 
         // Construct the graphics object.
@@ -160,10 +177,7 @@ module Jet.Ui {
 
         // Initialize graphics.
         private _initializeGraphics() {
-            // Snabric has already rendered the image at this point, so remove
-            // it so we can re-add it as part of a group.
-            // this._fabricImage.remove();
-
+            // Transform around origin.
             this._fabricImage.originX = 'center';
             this._fabricImage.originY = 'center';
 
@@ -258,6 +272,9 @@ module Jet.Ui {
             this._fabricImage.on('moving', function () {
                 main._updateTranslation();
                 main._updateTextTransformation();
+
+                // Check overall board boundary.
+                main._checkBoundary();
             });
 
             // Handle image rotation.
@@ -375,6 +392,22 @@ module Jet.Ui {
         private _updateGraphics() {
             this._fabricCanvas.renderAll();
         }
+
+        // Checks the board canvas boundary. Expands the canvas dimensions if the image exceeds the available space.
+        private _checkBoundary() {
+            if (this._pcb.intersectsWithObj(this._fabricImage)) {
+                var requiredLen = Math.max(this._fabricImage.getWidth(), this._fabricImage.getHeight());
+                var availableLen = Math.max(this._pcb.getHorizontalMargin(), this._pcb.getVerticalMargin());
+
+                // Increase the canvas size.
+                if (requiredLen >= availableLen) {
+                    var dLen = requiredLen - availableLen;
+                    var padding = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
+                    this._pcb.setHorizontalMargin(this._pcb.getHorizontalMargin() + dLen + padding);
+                    this._pcb.setVerticalMargin(this._pcb.getVerticalMargin() + dLen + padding);
+                }
+            }
+        }
     }
 
 
@@ -456,6 +489,13 @@ module Jet.Ui {
                     main.setDimensions(width, height);
                 }, true);
 
+                // Update PCB padding.
+                scope.$watch('pcb.getVerticalMargin()', function () {
+                    main._updateBoardSize();
+                    main._adjustPcbPosition();
+                });
+
+                // Perspective change.
 		        scope.$on("change:perspective", function(name: ng.IAngularEvent,
 							            newPerspective: number) {
 		            main._clearUi();
@@ -514,6 +554,14 @@ module Jet.Ui {
             this._fabricCanvas.setZoom(this._scope.zoomFactor);
 
             this._setGridVisibility(this._isGridVisible);
+        }
+
+        // Adjust PCB position to put it in the middle.
+        private _adjustPcbPosition() {
+            var graphics = this._pcb.getGraphics();
+            graphics.left = this._pcb.getHorizontalMargin();
+            graphics.top = this._pcb.getVerticalMargin();
+            graphics.setCoords();
         }
 
         // Set grid visibility.
@@ -623,11 +671,11 @@ module Jet.Ui {
             };
 
             // Display the PCB.
-            this._pcb = new Pcb(main._scope.gadgetModel);
+            this._scope.pcb = new Pcb(main._scope.gadgetModel);
+            this._pcb = this._scope.pcb;
             var graphics = this._pcb.getGraphics();
-            graphics.left = this._pcb.getHorizontalMargin();
-            graphics.top = this._pcb.getVerticalMargin();
-            main._snabric.getCanvas().add(graphics);
+            this._snabric.getCanvas().add(graphics);
+            this._adjustPcbPosition();
         }
 
 	    private _clearUi() {
