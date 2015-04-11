@@ -226,18 +226,6 @@ module Jet.Ui {
 
             // TODO (othebe): Rotate relative to fImg;
         }
-
-	    public setLeft(x:number) {
-	        this._displayGroup.setLeft(x);
-        }
-
-	    public setTop(x:number) {
-	        this._displayGroup.setTop(x);
-        }
-
-	    public setAngle(x:number) {
-	        this._displayGroup.setAngle(x);
-	    }
 	
         private _setupFabricListeners() {
             var main = this;
@@ -277,6 +265,7 @@ module Jet.Ui {
             return fObj == this._fabricImage || fObj == this._displayGroup;
         }
 
+        // Updates the translation data in the model.
 	    private _updateLocation() {
             var center = this._getCenter();
 
@@ -295,9 +284,9 @@ module Jet.Ui {
                 // Restrain movement if necessary.
                 var restrainMovement = this._position.x != center.x ||
                     this._position.y != center.y;
-                if (restrainMovement) {
-                    this._setTranslation(this._position.x, this._position.y);
-                }
+                //if (restrainMovement) {
+                //    this._setTranslation(this._position.x, this._position.y);
+                //}
             } else {
                 this._position.x = center.x;
                 this._position.y = center.y;
@@ -308,12 +297,14 @@ module Jet.Ui {
             this._scope.$applyAsync();
 	    }
 
+        // Updates the rotation data in the model.
 	    private _updateRotation() {
 	        this._placedPartData.rot = this._displayGroup.getAngle() - Math.floor(this._displayGroup.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
 	        this._nameText.setAngle(-this._displayGroup.getAngle());
             this._scope.$applyAsync();
 	    }
 
+        // Updates both the translation and rotation data in the model based on the actual graphics.
 	    public updateGeometry() {
 	        this._updateRotation();
 	        this._updateLocation();
@@ -321,9 +312,12 @@ module Jet.Ui {
 	
         // Returns the center co-ordinates of the image.
         private _getCenter(): { x: number; y: number } {
+            var offsetLeft = this._pcb.getGraphics().left;
+            var offsetTop = this._pcb.getGraphics().top;
+
             return {
-                x: this._displayGroup.getLeft(),
-                y: this._displayGroup.getTop()
+                x: this._displayGroup.getLeft() - offsetLeft,
+                y: this._displayGroup.getTop() - offsetTop
             };
         }
 
@@ -350,13 +344,13 @@ module Jet.Ui {
             var offsetLeft = this._pcb.getGraphics().left;
             var offsetTop = this._pcb.getGraphics().top;
 
-            this.setLeft(x + offsetLeft);
-            this.setTop(y + offsetTop);
+            this._displayGroup.setLeft(x + offsetLeft);
+            this._displayGroup.setTop(y + offsetTop);
         }
 
         // Set rotation of image on canvas.
         private _setRotation(angle: number) {
-            this.setAngle(angle);
+            this._displayGroup.setAngle(angle);
         }
 
         // Updates the graphics for this board component.
@@ -468,9 +462,7 @@ module Jet.Ui {
                 // TODO (othebe): Set an option for toggling grid size.
                 scope.toggleGrid = function () {
                     main._isGridVisible = !main._isGridVisible;
-                    main._snabric.setGridVisibility(main._isGridVisible, {
-                        tileSize: 15
-                    });
+                    main._setGridVisibility(main._isGridVisible);
                 };
             }
         }
@@ -504,15 +496,27 @@ module Jet.Ui {
 
             this._fabricCanvas.setZoom(this._scope.zoomFactor);
 
-            if (this._isGridVisible) {
-                this._snabric.setGridVisibility(true, {
-                    width: width,
-                    height: height,
-                    tileSize: this._gridSize
-                });
-            }
-	    }
+            this._setGridVisibility(this._isGridVisible);
+        }
 
+        // Set grid visibility.
+        private _setGridVisibility(isVisible: boolean) {
+            var graphicsObj = this._pcb.getGraphics();
+
+            // Get PCB margins.
+            var pcbMarginH = this._pcb.getHorizontalMargin();
+            var pcbMarginV = this._pcb.getVerticalMargin();
+
+            // Calculate canvas dimensions.
+            var width = graphicsObj.getWidth() + (2 * pcbMarginH);
+            var height = graphicsObj.getHeight() + (2 * pcbMarginV);
+
+            this._snabric.setGridVisibility(isVisible, {
+                width: width,
+                height: height,
+                tileSize: this._gridSize
+            });
+        }
 	
         // Initialize FabricJS canvas.
         private _initializeFabric(instanceElement: JQuery) {
@@ -531,7 +535,7 @@ module Jet.Ui {
             this._isGridVisible = false;
 
             // Set background color.
-            this._fabricCanvas.setBackgroundColor('rgba(255, 255, 255, 1.0)',
+            this._fabricCanvas.setBackgroundColor(Constants.Board.WORKSPACE_BG_COLOR,
                 this._fabricCanvas.renderAll.bind(this._fabricCanvas));
 
 	        main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
@@ -568,7 +572,7 @@ module Jet.Ui {
 	        this._fabricCanvas.on('selection:cleared', function() {
 		        if (main._previouslySelected != null) {
 		            for (var i = 0; i < main._previouslySelected.length; i++) {
-			        main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
+			            main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
 		            }
 		        }
 		        main._previouslySelected = null;
@@ -635,9 +639,6 @@ module Jet.Ui {
                 var boardComponent = new BoardComponent(componentData, placedPartData, sImg, main._snabric, main._scope, main._pcb);
                 main._gDataFabricMap.set(placedPartData, boardComponent);
                 main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
-                boardComponent.setTop(placedPartData.xpos);
-                boardComponent.setLeft(placedPartData.ypos);
-                boardComponent.setAngle(placedPartData.rot);
             }); 
         }
 

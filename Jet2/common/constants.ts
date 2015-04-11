@@ -6,5 +6,8 @@ module Jet.Constants {
 
         // This is the default PCB margin.
         export var PCB_MARGIN = '5mm'; 
+
+        // This is the background color for the workspace.
+        export var WORKSPACE_BG_COLOR = '#FFFFFF';
     }
 } 
