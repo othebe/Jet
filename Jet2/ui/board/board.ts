@@ -84,14 +84,11 @@ module Jet.Ui {
     // A board component represents a part that can be placed on the board.
     class BoardComponent {
         private _catalogModelData: Jet.Model.CatalogModelData;
-        private _position: { x: number; y: number };
-        private _rotation: number;
         private _fabricImage: fabric.IImage;
         private _fabricCanvas: fabric.ICanvas;
         private _boardComponentScope: IBoardComponentScope;
 	    private _nameText: fabric.IText;
-        private _ENABLE_RESTRAINTS: boolean = false;
-        private _displayGroup: fabric.IGroup;
+        private _ENABLE_RESTRAINTS: boolean = true;
 	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
@@ -108,19 +105,6 @@ module Jet.Ui {
             this._fabricCanvas = this._snabric.getCanvas();
             this._fabricImage = this._snabric.getFImg(this._snabricImage);
 
-            // Default transformations.
-            var x = 0;
-            var y = 0;
-            var rot = 0;
-
-            if (this._placedPartData != null) {
-                x = x || this._placedPartData.xpos;
-                y = y || this._placedPartData.ypos;
-                rot = rot || this._placedPartData.rot;
-            }
-            this._position = { x: x, y: y };
-            this._rotation = rot;
-
             this._initializeGraphics();
 
             this._boardComponentScope = this._scope.$new(true);
@@ -131,15 +115,12 @@ module Jet.Ui {
             this._boardComponentScope.$watch('placedPartData', function (gadgetModelData: Jet.Model.PlacedPart) {
 			    var x = gadgetModelData.xpos;
 			    var y = gadgetModelData.ypos;
-			    var rot = gadgetModelData.rot;
-						 
-			    if (main._ENABLE_RESTRAINTS) {
-				    // TODO (othebe): Enable restrains once the positioning
-				    // is confirmed.
-			    } else {
-				    main._setTranslation(x, y);
-				    main._setRotation(rot);
-			    }
+                var rot = gadgetModelData.rot;
+
+                // This assumes that the data read from the model is correct.
+                // TODO (othebe): We may need some defensive coding here in case the model has bad transformation data.
+                main._setTranslation(x, y);
+                main._setRotation(rot);
 			}, true);
 	    
             // Watch related gadget model data for changes.
@@ -153,31 +134,37 @@ module Jet.Ui {
         private _initializeGraphics() {
             // Snabric has already rendered the image at this point, so remove
             // it so we can re-add it as part of a group.
-            this._fabricImage.remove();
+            // this._fabricImage.remove();
 
             this._fabricImage.originX = 'center';
             this._fabricImage.originY = 'center';
 
-            this.setText(this._getDisplayName());
-
-            this._displayGroup = new fabric.Group([this._fabricImage, this._nameText]);
-
-            // Set origin point for image to center.
-            this._displayGroup.originX = 'center';
-            this._displayGroup.originY = 'center';
-
             // Lock scaling.
-            this._displayGroup.lockUniScaling = true;
-            this._displayGroup.lockScalingX = true;
-            this._displayGroup.lockScalingY = true;
+            this._fabricImage.lockUniScaling = true;
+            this._fabricImage.lockScalingX = true;
+            this._fabricImage.lockScalingY = true;
+
+            // Default transformations.
+            var x = 0;
+            var y = 0;
+            var rot = 0;
+
+            if (this._placedPartData != null) {
+                x = x || this._placedPartData.xpos;
+                y = y || this._placedPartData.ypos;
+                rot = rot || this._placedPartData.rot;
+            }
 
             // Set initial transformations.
-            this._setTranslation(this._position.x, this._position.y);
-            this._setRotation(this._rotation);
+            this._setTranslation(x, y);
+            this._setRotation(rot);
 
             this._setupFabricListeners();
 
-            this._fabricCanvas.add(this._displayGroup);
+            this._fabricCanvas.add(this._fabricImage);
+
+            this.setText(this._getDisplayName());
+            this._fabricCanvas.add(this._nameText);
 
             this._updateGraphics();
         }
@@ -205,7 +192,8 @@ module Jet.Ui {
                     fill: 'red',
                     fontSize: 20,
                     fontWeight: 'bold',
-                    fontFamily: "Arial, Helvetica, sans-serif"
+                    fontFamily: "Arial, Helvetica, sans-serif",
+                    selectable: false
                 });
                 nameText.originX = 'center';
                 nameText.originY = 'center';
@@ -217,42 +205,42 @@ module Jet.Ui {
 
         // Update transformation for the text.
         private _updateTextTransformation() {
-            var offsetX = 0;
-            var offsetY = 0;
+            // Set text translation.
+            this._nameText.setTop(this._fabricImage.getTop());
+            this._nameText.setLeft(this._fabricImage.getLeft());
 
-            // Set text offset.
-            this._nameText.setTop(offsetY + this._fabricImage.getTop());
-            this._nameText.setLeft(offsetX + this._fabricImage.getLeft());
-
-            // TODO (othebe): Rotate relative to fImg;
+            // Set text rotation.
+            this._nameText.setAngle(this._fabricImage.getAngle());
         }
 	
         private _setupFabricListeners() {
             var main = this;
 
             // Handle image selection.
-            this._displayGroup.on('selected', function () {
+            this._fabricImage.on('selected', function () {
                 main._scope.selectedGadgetComponent.selected = main._placedPartData;
                 main._scope.$applyAsync();
             });
 
-            this._displayGroup.on('modified', function () {
+            this._fabricImage.on('modified', function () {
             });
 
             // Handle image translation.
-            this._displayGroup.on('moving', function () {
-		        main._updateLocation();
+            this._fabricImage.on('moving', function () {
+                main._updateTranslation();
+                main._updateTextTransformation();
             });
 
             // Handle image rotation.
-            this._displayGroup.on('rotating', function () {
+            this._fabricImage.on('rotating', function () {
                 main._updateRotation();
+                main._updateTextTransformation();
                 // TODO (othebe): Enable restriction checking.
             });
         }
 
-        public getDisplayGroup(): fabric.IGroup {
-            return this._displayGroup;
+        public getFabricImage(): fabric.IObject {
+            return this._fabricImage;
         }
 
         // Gets the component instance.
@@ -262,52 +250,53 @@ module Jet.Ui {
 
         // Compares a fabric object with the graphic representation of this object.
         public compareFabricObject(fObj: fabric.IObject): boolean {
-            return fObj == this._fabricImage || fObj == this._displayGroup;
+            return fObj == this._fabricImage;
         }
 
         // Updates the translation data in the model.
-	    private _updateLocation() {
+	    private _updateTranslation() {
             var center = this._getCenter();
+
+            var x = this._fabricImage.getLeft();
+            var y = this._fabricImage.getTop();
 
             // Restrain if enabling boundary checking.
             if (this._ENABLE_RESTRAINTS) {
                 // Check valid horizontal movement.
                 if (this._isValidXPosition()) {
-                    this._position.x = center.x;
+                    x = center.x;
                 }
 
                 // Check valid vertical movement.
                 if (this._isValidYPosition()) {
-                    this._position.y = center.y;
+                    y = center.y;
                 }
 
                 // Restrain movement if necessary.
-                var restrainMovement = this._position.x != center.x ||
-                    this._position.y != center.y;
-                //if (restrainMovement) {
-                //    this._setTranslation(this._position.x, this._position.y);
-                //}
+                var restrainMovement = x != center.x || y != center.y;
+                if (restrainMovement) {
+                    this._setTranslation(x, y);
+                }
             } else {
-                this._position.x = center.x;
-                this._position.y = center.y;
+                x = center.x;
+                y = center.y;
             }
 
-            this._placedPartData.xpos = this._position.x;
-            this._placedPartData.ypos = this._position.y;
+            this._placedPartData.xpos = x;
+            this._placedPartData.ypos = y;
             this._scope.$applyAsync();
 	    }
 
         // Updates the rotation data in the model.
-	    private _updateRotation() {
-	        this._placedPartData.rot = this._displayGroup.getAngle() - Math.floor(this._displayGroup.getAngle()/360.0)*360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
-	        this._nameText.setAngle(-this._displayGroup.getAngle());
+        private _updateRotation() {
+            this._placedPartData.rot = this._fabricImage.getAngle() - Math.floor(this._fabricImage.getAngle() / 360.0) * 360.0; // There's a bug(?) in fabric that can produce rotations > 360 degrees.  This fixes it.
             this._scope.$applyAsync();
 	    }
 
         // Updates both the translation and rotation data in the model based on the actual graphics.
-	    public updateGeometry() {
+	    public updateTransformation() {
 	        this._updateRotation();
-	        this._updateLocation();
+	        this._updateTranslation();
 	    }
 	
         // Returns the center co-ordinates of the image.
@@ -316,15 +305,15 @@ module Jet.Ui {
             var offsetTop = this._pcb.getGraphics().top;
 
             return {
-                x: this._displayGroup.getLeft() - offsetLeft,
-                y: this._displayGroup.getTop() - offsetTop
+                x: this._fabricImage.getLeft() - offsetLeft,
+                y: this._fabricImage.getTop() - offsetTop
             };
         }
 
         // Check valid x position for image.
         // TODO (othebe): Might be incomplete.
         private _isValidXPosition(): boolean {
-            var bbox = this._displayGroup.getBoundingRect();
+            var bbox = this._fabricImage.getBoundingRect();
             var canvasWidth = this._fabricCanvas.getWidth();
 
             return !(bbox.left < 0 || bbox.left + bbox.width > canvasWidth);
@@ -333,7 +322,7 @@ module Jet.Ui {
         // Check valid y position for image.
         // TODO (othebe): Might be incomplete.
         private _isValidYPosition(): boolean {
-            var bbox = this._displayGroup.getBoundingRect();
+            var bbox = this._fabricImage.getBoundingRect();
             var canvasHeight = this._fabricCanvas.getHeight();
 
             return !(bbox.top < 0 || bbox.top + bbox.height > canvasHeight);
@@ -344,19 +333,18 @@ module Jet.Ui {
             var offsetLeft = this._pcb.getGraphics().left;
             var offsetTop = this._pcb.getGraphics().top;
 
-            this._displayGroup.setLeft(x + offsetLeft);
-            this._displayGroup.setTop(y + offsetTop);
+            this._fabricImage.setLeft(x + offsetLeft);
+            this._fabricImage.setTop(y + offsetTop);
         }
 
         // Set rotation of image on canvas.
         private _setRotation(angle: number) {
-            this._displayGroup.setAngle(angle);
+            this._fabricImage.setAngle(angle);
         }
 
         // Updates the graphics for this board component.
         private _updateGraphics() {
             this._fabricCanvas.renderAll();
-
         }
     }
 
@@ -534,6 +522,9 @@ module Jet.Ui {
             this._snabric.setGridVisibility(false);
             this._isGridVisible = false;
 
+            // Disable selection.
+            this._fabricCanvas.selection = false;
+
             // Set background color.
             this._fabricCanvas.setBackgroundColor(Constants.Board.WORKSPACE_BG_COLOR,
                 this._fabricCanvas.renderAll.bind(this._fabricCanvas));
@@ -548,34 +539,38 @@ module Jet.Ui {
                 }
             });
 
-	        this._fabricCanvas.on('selection:created', function() {
-		        if (main._fabricCanvas.getActiveGroup() != null) {
-		            main._fabricCanvas.getActiveGroup().perPixelTargetFind = true;
-		        }
+            this._fabricCanvas.on('selection:created', function () {
+                main._fabricCanvas.discardActiveGroup();
+                // TODO (othebe): Selection disabled for now since there's a lot of bugs to fix here.
+		        //if (main._fabricCanvas.getActiveGroup() != null) {
+		        //    main._fabricCanvas.getActiveGroup().perPixelTargetFind = true;
+		        //}
 	        });
 	    
 	        // Handle group rotation and movement. First, just before the
 	        // selection cleared, grab the list of canvas objects that were
 	        // selected.
+            // TODO (othebe): Needs fixing.
 	        this._fabricCanvas.on('before:selection:cleared', function() {
-		        if (main._fabricCanvas.getActiveGroup() != null) {
-		            main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
-		        } else {
-		            main._previouslySelected = null;
-		        }
+		        //if (main._fabricCanvas.getActiveGroup() != null) {
+		        //    main._previouslySelected = main._fabricCanvas.getActiveGroup().getObjects();
+		        //} else {
+		        //    main._previouslySelected = null;
+		        //}
 	        });
 	    
 	        // Then, after the selection is destroyed, propogate the location
 	        // back to the BoardObject.  We have to do it in two stages,
 	        // because when the object is selected, it's in a group and its
 	        // coordinates are relative to the group's origin.
+            // TODO (othebe): Needs fixing.
 	        this._fabricCanvas.on('selection:cleared', function() {
-		        if (main._previouslySelected != null) {
-		            for (var i = 0; i < main._previouslySelected.length; i++) {
-			            main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateGeometry();
-		            }
-		        }
-		        main._previouslySelected = null;
+		        //if (main._previouslySelected != null) {
+		        //    for (var i = 0; i < main._previouslySelected.length; i++) {
+			    //        main._displayGroupToComponentMap.get(main._previouslySelected[i]).updateTransformation();
+		        //    }
+		        //}
+		        //main._previouslySelected = null;
 	        });
 
             // Handle the delete key on the canvas.
@@ -638,7 +633,7 @@ module Jet.Ui {
             this._snabric.loadFromUrl(catalogModelData.getSvgUrl(), (sImg) => {
                 var boardComponent = new BoardComponent(componentData, placedPartData, sImg, main._snabric, main._scope, main._pcb);
                 main._gDataFabricMap.set(placedPartData, boardComponent);
-                main._displayGroupToComponentMap.set(boardComponent.getDisplayGroup(), boardComponent);
+                main._displayGroupToComponentMap.set(boardComponent.getFabricImage(), boardComponent);
             }); 
         }
 
@@ -646,7 +641,7 @@ module Jet.Ui {
         private _selectComponent(selected: Selectable.ISelectable) {
             var selectedComponent = this._gDataFabricMap.get(selected);
             if (selectedComponent != null) {
-                this._fabricCanvas.setActiveObject(selectedComponent.getDisplayGroup());
+                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
             } else {
                 this._fabricCanvas.discardActiveObject();
             }
