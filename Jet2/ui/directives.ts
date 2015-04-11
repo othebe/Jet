@@ -8,12 +8,12 @@
 
         // Url for rendering UI template.
         public templateUrl(): string {
-            throw new Error('This method is abstract.');
+            throw new Error(Constants.Strings.UNIMPLEMENTED_METHOD);
         }
 
         // Factory method for returning a function that returns a directive.
         static Factory(): (...arguments: any[]) => Directive {
-            throw new Error('This method is abstract.');
+            throw new Error(Constants.Strings.UNIMPLEMENTED_METHOD);
         }
     }
 } 

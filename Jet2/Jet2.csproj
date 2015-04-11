@@ -417,6 +417,7 @@
     <TypeScriptCompile Include="common\ISelectable.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
     <TypeScriptCompile Include="common\fabric.d.ts" />
+    <TypeScriptCompile Include="common\strings.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />
     <TypeScriptCompile Include="models\catalogModel.ts" />
     <TypeScriptCompile Include="models\gadgetModel.ts" />

@@ -25,6 +25,17 @@ module Jet.Ui {
 
 
     
+    class Point {
+        constructor(public x: number, public y: number) { }
+
+        public setXY(x: number, y: number) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+
+    
     // The PCB represents the actual physical board piece.
     // TODO (othebe): It would be a good idea to remove the dependency on Fabric by having
     // an interface for PCB using any graphics object <G>, and an implementation using <fabric.IObject>.
@@ -59,9 +70,18 @@ module Jet.Ui {
         }
 
         // Determines whether a given graphics object is within the Pcb object.
-        // If allowPartial is true, obj is within the Pcb even it is partially contained.
-        public containsGraphicsObject(obj: fabric.IObject, allowPartial = true): boolean {
-            return false;
+        // If allowPartial is true, the function returns true even if there obj is partially contained.
+        public overlapsObject(obj: fabric.IObject, allowPartial: boolean = true): boolean {
+            // TODO (othebe): This check should be made more efficient by combining the checks.
+            if (allowPartial) {
+                return obj.isContainedWithinObject(this._graphicsObject) ||
+                    obj.intersectsWithObject(this._graphicsObject) ||
+                    this._graphicsObject.isContainedWithinObject(obj);
+            }
+            // TODO (othebe): Complete when required using isContainedWithinObject.
+            else {
+                throw (Constants.Strings.UNIMPLEMENTED_METHOD);
+            }
         }
 
         // Construct the graphics object.
@@ -83,12 +103,18 @@ module Jet.Ui {
 
     // A board component represents a part that can be placed on the board.
     class BoardComponent {
+        // This is the catalog model data for this board component.
         private _catalogModelData: Jet.Model.CatalogModelData;
+        // The associated fabric image.
         private _fabricImage: fabric.IImage;
+        // The associated fabric canvas where the image is drawn.
         private _fabricCanvas: fabric.ICanvas;
+        // The scope used by the board directive.
         private _boardComponentScope: IBoardComponentScope;
-	    private _nameText: fabric.IText;
-        private _ENABLE_RESTRAINTS: boolean = true;
+        // The text object displaying the component name.
+        private _nameText: fabric.IText;
+        // The translation for this component. This is relative to the PCB.
+        private _translation: Point;
 	
         constructor(
             private _componentData: Jet.Model.ComponentInstance,
@@ -104,6 +130,7 @@ module Jet.Ui {
 
             this._fabricCanvas = this._snabric.getCanvas();
             this._fabricImage = this._snabric.getFImg(this._snabricImage);
+            this._translation = new Point(0, 0);
 
             this._initializeGraphics();
 
@@ -121,6 +148,7 @@ module Jet.Ui {
                 // TODO (othebe): We may need some defensive coding here in case the model has bad transformation data.
                 main._setTranslation(x, y);
                 main._setRotation(rot);
+                main._updateTextTransformation();
 			}, true);
 	    
             // Watch related gadget model data for changes.
@@ -213,6 +241,7 @@ module Jet.Ui {
             this._nameText.setAngle(this._fabricImage.getAngle());
         }
 	
+        // Setup listeners in Fabric that update the model.
         private _setupFabricListeners() {
             var main = this;
 
@@ -254,37 +283,28 @@ module Jet.Ui {
         }
 
         // Updates the translation data in the model.
-	    private _updateTranslation() {
-            var center = this._getCenter();
+        private _updateTranslation() {
+            this._fabricImage.setCoords();
+            var translation = this._getRelativeTranslation();
 
-            var x = this._fabricImage.getLeft();
-            var y = this._fabricImage.getTop();
+            // Restrict movement and model for an invalid translation.
+            if (!this._isValidTranslation()) {
+                // Restrict canvas image.
+                this._setTranslation(this._translation.x, this._translation.y);
+                this._fabricImage.setCoords();
 
-            // Restrain if enabling boundary checking.
-            if (this._ENABLE_RESTRAINTS) {
-                // Check valid horizontal movement.
-                if (this._isValidXPosition()) {
-                    x = center.x;
-                }
-
-                // Check valid vertical movement.
-                if (this._isValidYPosition()) {
-                    y = center.y;
-                }
-
-                // Restrain movement if necessary.
-                var restrainMovement = x != center.x || y != center.y;
-                if (restrainMovement) {
-                    this._setTranslation(x, y);
-                }
-            } else {
-                x = center.x;
-                y = center.y;
+                // Restrict model.
+                this._placedPartData.xpos = this._translation.x;
+                this._placedPartData.ypos = this._translation.y;
+                this._scope.$applyAsync();
             }
-
-            this._placedPartData.xpos = x;
-            this._placedPartData.ypos = y;
-            this._scope.$applyAsync();
+            // Update model.
+            else {
+                this._translation.setXY(translation.x, translation.y);
+                this._placedPartData.xpos = this._translation.x;
+                this._placedPartData.ypos = this._translation.y;
+                this._scope.$applyAsync();
+            }
 	    }
 
         // Updates the rotation data in the model.
@@ -299,42 +319,51 @@ module Jet.Ui {
 	        this._updateTranslation();
 	    }
 	
-        // Returns the center co-ordinates of the image.
-        private _getCenter(): { x: number; y: number } {
+        // Returns the center co-ordinates of the image relative to the PCB.
+        private _getRelativeTranslation(): Point {
             var offsetLeft = this._pcb.getGraphics().left;
             var offsetTop = this._pcb.getGraphics().top;
 
-            return {
-                x: this._fabricImage.getLeft() - offsetLeft,
-                y: this._fabricImage.getTop() - offsetTop
-            };
+            return new Point(
+                this._fabricImage.getLeft() - offsetLeft,
+                this._fabricImage.getTop() - offsetTop
+            );
         }
 
-        // Check valid x position for image.
-        // TODO (othebe): Might be incomplete.
-        private _isValidXPosition(): boolean {
-            var bbox = this._fabricImage.getBoundingRect();
-            var canvasWidth = this._fabricCanvas.getWidth();
-
-            return !(bbox.left < 0 || bbox.left + bbox.width > canvasWidth);
+        // Check valid coordinates.
+        private _isValidTranslation(): boolean {
+            return this._pcb.overlapsObject(this._fabricImage);
         }
 
-        // Check valid y position for image.
-        // TODO (othebe): Might be incomplete.
-        private _isValidYPosition(): boolean {
-            var bbox = this._fabricImage.getBoundingRect();
-            var canvasHeight = this._fabricCanvas.getHeight();
-
-            return !(bbox.top < 0 || bbox.top + bbox.height > canvasHeight);
-        }
-
-        // Set translation of image on canvas. This considers the offset of the PCB position.
+        // Set translation of image on canvas relative to the PCB. This considers the offset of the PCB position.
         private _setTranslation(x: number, y: number) {
+            // Store previous co-ordinates to revert if the new translation is invalid.
+            var oldLeft = this._fabricImage.getLeft();
+            var oldTop = this._fabricImage.getTop();
+
+            // Calculate offset based on PCB geometry.
             var offsetLeft = this._pcb.getGraphics().left;
             var offsetTop = this._pcb.getGraphics().top;
 
-            this._fabricImage.setLeft(x + offsetLeft);
-            this._fabricImage.setTop(y + offsetTop);
+            // Set new translations.
+            var newLeft = x + offsetLeft;
+            var newTop = y + offsetTop;
+            this._fabricImage.setLeft(newLeft);
+            this._fabricImage.setTop(newTop);
+            this._fabricImage.setCoords();
+
+            // Revert to old translations.
+            if (!this._isValidTranslation()) {
+                this._fabricImage.setLeft(this._translation.x);
+                this._fabricImage.setTop(this._translation.y);
+
+                this._updateTranslation();
+            }
+            // Update to new translations.
+            else {
+                var translation = this._getRelativeTranslation();
+                this._translation.setXY(translation.x, translation.y);
+            }
         }
 
         // Set rotation of image on canvas.
