@@ -4,8 +4,8 @@
     }
 
     export class CatalogModel {
-        private _catalogUrl: string = "public/components.xml";
-        private _imgDir: string = "public/catalog/";
+        private _catalogUrl: string = "public/catalog/components.xml";
+        private _imgDir: string = "public/catalog";
         private _componentMap: ComponentMap = {};
         private _catalogModelData: Array<CatalogModelData> = [];
 
@@ -56,8 +56,8 @@
                             var placedPart = placedParts[j];
 
                             // SVG Url.
-                            var modelPath = placedPart.getAttribute('model2D').split('/');
-                            var svgUrl = this._imgDir + modelPath[modelPath.length - 1];
+                            var modelPath = placedPart.getAttribute('model2D');
+                            var svgUrl = this._imgDir + "/" + modelPath
 
                             // Ref.
                             var ref = placedPart.getAttribute('refdes');
