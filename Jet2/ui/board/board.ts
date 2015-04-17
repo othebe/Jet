@@ -37,7 +37,6 @@ module Jet.Ui {
     }
 
 
-    
     // The PCB represents the actual physical board piece.
     // TODO (othebe): It would be a good idea to remove the dependency on Fabric by having
     // an interface for PCB using any graphics object <G>, and an implementation using <fabric.IObject>.

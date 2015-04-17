@@ -6,19 +6,19 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "angularjs/angular.d.ts": {
-      "commit": "bba34156c1eaad788fa8996f7d30b54c4fce5ffe"
+      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
     },
     "jquery/jquery.d.ts": {
-      "commit": "bba34156c1eaad788fa8996f7d30b54c4fce5ffe"
+      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
     },
     "fabricjs/fabricjs.d.ts": {
-      "commit": "bba34156c1eaad788fa8996f7d30b54c4fce5ffe"
+      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
     },
     "snapsvg/snapsvg.d.ts": {
-      "commit": "bba34156c1eaad788fa8996f7d30b54c4fce5ffe"
+      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
     },
     "angular-material/angular-material.d.ts": {
-      "commit": "65ea56c919fd95dcd0ca3c59c9aa5eaa99c86885"
+      "commit": "ed38db403a56da84731a6f77b545762ee477a45b"
     }
   }
 }
