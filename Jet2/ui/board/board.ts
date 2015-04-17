@@ -240,13 +240,30 @@ module Jet.Ui {
                     fill: 'red',
                     fontSize: 20,
                     fontWeight: 'bold',
-                    fontFamily: "Arial, Helvetica, sans-serif",
-                    selectable: false
+                    fontFamily: "Arial, Helvetica, sans-serif"
                 });
+
+                // Lock scaling.
+                nameText.lockUniScaling = true;
+                nameText.lockScalingX = true;
+                nameText.lockScalingY = true;
+
                 nameText.originX = 'center';
                 nameText.originY = 'center';
                 this._nameText = nameText;
             }
+
+            // Handle clicks on text.
+            this._nameText.on('mousedown', function () {
+                this._fabricCanvas.setActiveObject(this._fabricImage);
+            }.bind(this));
+            
+            // Move the image with the text.
+            this._nameText.on('moving', function () {
+                var translation = this._getRelativeTranslation(this._nameText.getLeft(), this._nameText.getTop());
+                this._setTranslation(translation.x, translation.y);
+                this._fabricImage.fire('moving');
+            }.bind(this));
 
             this._updateTextTransformation();
         }
@@ -313,7 +330,7 @@ module Jet.Ui {
         // Updates the translation data in the model.
         private _updateTranslation() {
             this._fabricImage.setCoords();
-            var translation = this._getRelativeTranslation();
+            var translation = this._getRelativeTranslation(this._fabricImage.getLeft(), this._fabricImage.getTop());
 
             // Restrict movement and model for an invalid translation.
             if (!this._isValidTranslation()) {
@@ -348,13 +365,13 @@ module Jet.Ui {
 	    }
 	
         // Returns the center co-ordinates of the image relative to the PCB.
-        private _getRelativeTranslation(): Point {
+        private _getRelativeTranslation(x: number, y: number): Point {
             var offsetLeft = this._pcb.getGraphics().left;
             var offsetTop = this._pcb.getGraphics().top;
 
             return new Point(
-                this._fabricImage.getLeft() - offsetLeft,
-                this._fabricImage.getTop() - offsetTop
+                x - offsetLeft,
+                y - offsetTop
             );
         }
 
@@ -389,7 +406,7 @@ module Jet.Ui {
             }
             // Update to new translations.
             else {
-                var translation = this._getRelativeTranslation();
+                var translation = this._getRelativeTranslation(this._fabricImage.getLeft(), this._fabricImage.getTop());
                 this._translation.setXY(translation.x, translation.y);
             }
 
