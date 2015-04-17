@@ -22,6 +22,7 @@ module Jet.Ui {
     interface IBoardComponentScope extends ng.IScope {
         placedPartData?: Jet.Model.PlacedPart;
         componentData?: Jet.Model.ComponentInstance;
+        pcb?: Pcb;
     }
 
 
@@ -151,6 +152,7 @@ module Jet.Ui {
             this._initializeGraphics();
 
             this._boardComponentScope = this._scope.$new(true);
+            this._boardComponentScope.pcb = this._pcb;
             this._boardComponentScope.placedPartData = this._placedPartData;
             this._boardComponentScope.componentData = this._componentData;	 
 
@@ -172,6 +174,11 @@ module Jet.Ui {
                 main._nameText.setText(main._getDisplayName());
                 main._updateGraphics();
             }, true);
+
+            // Watch for PCB resizes.
+            this._boardComponentScope.$watch('pcb.getVerticalMargin()', function () {
+                main._alignToPcb();
+            });
         }
 
         // Initialize graphics.
@@ -298,6 +305,11 @@ module Jet.Ui {
             return fObj == this._fabricImage;
         }
 
+        // Aligns the graphics according to the PCB margins.
+        private _alignToPcb() {
+            this._setTranslation(this._placedPartData.xpos, this._placedPartData.ypos);
+        }
+
         // Updates the translation data in the model.
         private _updateTranslation() {
             this._fabricImage.setCoords();
@@ -379,6 +391,11 @@ module Jet.Ui {
             else {
                 var translation = this._getRelativeTranslation();
                 this._translation.setXY(translation.x, translation.y);
+            }
+
+            // Update accompanying text.
+            if (this._nameText != null) {
+                this._updateTextTransformation();
             }
         }
 
