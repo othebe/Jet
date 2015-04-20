@@ -303,6 +303,30 @@ module Jet.Model {
 	        return this.ref;
         }
 
+        public get_xpos() {
+            return parseFloat(this.xpos.toFixed(Jet.Constants.PRECISION));
+        }
+
+        public set_xpos(xpos: number) {
+            this.xpos = xpos;
+        }
+
+        public get_ypos() {
+            return parseFloat(this.ypos.toFixed(Jet.Constants.PRECISION));
+        }
+
+        public set_ypos(ypos: number) {
+            this.ypos = ypos;
+        }
+
+        public get_rot() {
+            return parseFloat(this.rot.toFixed(Jet.Constants.PRECISION));
+        }
+
+        public set_rot(rot: number) {
+            this.rot = rot;
+        }
+
         /** @override */
         public getType(): Selectable.Type {
             return Selectable.Type.PLACED_PART;

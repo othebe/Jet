@@ -1,5 +1,14 @@
 ﻿// This module should hold constant data for the application.
 module Jet.Constants {
+    // Precision points.
+    export var PRECISION = 2;
+
+    // Root events.
+    export module RootEvent {
+        // This sginals that a set of co-ordinates has been restricted.
+        export var RESTRICT_COORDINATES = 'restrict-coorinates';
+    }
+
     export module Board {
         // This is the color of the PCB.
         export var PCB_COLOR = '#78AB46';

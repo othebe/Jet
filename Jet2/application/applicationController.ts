@@ -7,9 +7,11 @@
         gadgetModel: Jet.Model.GadgetModel;
 
         // Currently selected gadget component. Stored in map for nested
-        // directives. Access under 'selected' key.
+        // directives.
+        // 'selected' : Currently selected ISelectable.
+        // 'eagleDisplayMapper' : Eagle <==> Display coordinate mapper.
         // http://jimhoskins.com/2012/12/14/nested-scopes-in-angularjs.html
-        selectedGadgetComponent: { selected: Selectable.ISelectable };
+        selectedGadgetComponent: { selected: Selectable.ISelectable; eagleDisplayMapper: EagleDisplayMapper };
 
         about: string;
 
@@ -27,7 +29,7 @@
 		    private AppContext: AppContext) {
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
-            $scope.selectedGadgetComponent = { selected: null };
+            $scope.selectedGadgetComponent = { selected: null, eagleDisplayMapper: null };
             
             $scope.about = "Gadgetron Jet V2.0";
 

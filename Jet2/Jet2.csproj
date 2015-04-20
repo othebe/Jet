@@ -413,6 +413,7 @@
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="application\applicationController.ts" />
     <TypeScriptCompile Include="common\constants.ts" />
+    <TypeScriptCompile Include="common\eagleDisplayMapper.ts" />
     <TypeScriptCompile Include="common\InitialData.ts" />
     <TypeScriptCompile Include="common\ISelectable.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
@@ -432,6 +433,8 @@
     <TypeScriptCompile Include="public\typings\snapsvg\snapsvg.d.ts" />
     <TypeScriptCompile Include="public\typings\tsd.d.ts" />
     <TypeScriptCompile Include="ui\board\board.ts" />
+    <TypeScriptCompile Include="ui\board\boardComponent.ts" />
+    <TypeScriptCompile Include="ui\board\pcb.ts" />
     <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />
     <TypeScriptCompile Include="ui\catalog\catalog.ts" />
     <TypeScriptCompile Include="ui\componentInspector\componentInspector.ts" />
@@ -442,6 +445,7 @@
     <TypeScriptCompile Include="ui\gadgetExplorer\gadgetExplorerEntry.ts" />
     <TypeScriptCompile Include="ui\gadgetInspector\gadgetInspector.ts" />
     <TypeScriptCompile Include="ui\menu\menuBar.ts" />
+    <TypeScriptCompile Include="common\Point.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="public\libraries\angular-animate\angular-animate.min.js.map" />

@@ -3,6 +3,7 @@
 module Jet.Ui {
     interface IComponentInspectorScope extends Jet.Application.IApplicationScope {
         selected: Selectable.ISelectable;
+        eagleDisplayMapper: EagleDisplayMapper;
         catalogModelData: Jet.Model.CatalogModelData;
     }
 
@@ -17,7 +18,6 @@ module Jet.Ui {
             this.link = function (scope: IComponentInspectorScope) {
                 scope.$watch('selectedGadgetComponent.selected', function () {
                     var selected = scope.selectedGadgetComponent.selected;
-                       
                     if (selected == null) {
                         scope.catalogModelData = null;
                         scope.selected = null;
@@ -31,6 +31,7 @@ module Jet.Ui {
                             var componentInstance = scope.gadgetModel.components[placedPart.component_name];
                             scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
                         }
+                        scope.eagleDisplayMapper = scope.selectedGadgetComponent.eagleDisplayMapper;
                         scope.selected = selected;
                     }
                 }, true);
