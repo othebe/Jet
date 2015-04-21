@@ -21,15 +21,15 @@ module Jet.Ui {
                         return;
                     }
                     else if (scope.selected.getType() == Selectable.Type.COMPONENT_INSTANCE) {
-                        scope.componentData = <Jet.Model.ComponentInstance> scope.selected;
-                        scope.name = scope.componentData.get_name();
+			var component = <Jet.Model.ComponentInstance>scope.selected;
+			scope.componentData = component
                     }
                     else if (scope.selected.getType() == Selectable.Type.PLACED_PART) {
                         var placedPart = <Jet.Model.PlacedPart> scope.selected;
-                        scope.componentData = <Jet.Model.ComponentInstance>
-                        scope.gadgetModel.components[placedPart.component_name];
-                        scope.name = scope.componentData.get_name();
+			scope.componentData = placedPart.get_component_instance();
                     }
+		    //console.log("componentData = " + scope.componentData);
+                    scope.name = scope.componentData.get_name();
                     this._name = scope.name;
                 }.bind(this), true);
 

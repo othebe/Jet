@@ -28,11 +28,11 @@ module Jet.Ui {
                         }
                         else if (selected.getType() == Selectable.Type.PLACED_PART) {
                             var placedPart = <Jet.Model.PlacedPart> selected;
-                            var componentInstance = scope.gadgetModel.components[placedPart.component_name];
+                            var componentInstance = placedPart.get_component_instance();
                             scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
                         }
                         scope.eagleDisplayMapper = scope.selectedGadgetComponent.eagleDisplayMapper;
-                        scope.selected = selected;
+			scope.selected = selected;
                     }
                 }, true);
             };

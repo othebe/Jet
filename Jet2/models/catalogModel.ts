@@ -51,7 +51,7 @@
 
                         placedParts = placedParts[0].getElementsByTagName('placedpart');
 
-                        var placedPartArr: Array<CatalogPlacedPart> = [];
+                        var placedPartsData: {[s:string] : CatalogPlacedPart}= {};
                         for (var j = 0; j < placedParts.length; j++) {
                             var placedPart = placedParts[j];
 
@@ -62,20 +62,20 @@
                             // Ref.
                             var ref = placedPart.getAttribute('refdes');
 
-                            placedPartArr.push(new CatalogPlacedPart(ref, svgUrl));
+                            placedPartsData[ref] = new CatalogPlacedPart(ref, svgUrl);
                         }
 
                         // TODO(othebe): Different img when more than one placed
                         // part is present?
-                        var imgUrl = placedPartArr[0].getSvgUrl();
-
+                        var imgUrl = this._imgDir + "/" + placedParts[0].getAttribute('model2D')
+			
                         var c: CatalogModelData = new CatalogModelData(
                             name,           /** longname */
                             keyname,        /** keyname */
                             price,          /** price */
                             docUrl,         /** documentationUrl */
                             imgUrl,         /** svgUrl */
-                            placedPartArr   /** placedParts */
+                            placedPartsData   /** placedParts */
                         );
                         this._catalogModelData.push(c);
                         this._componentMap[keyname] = c;

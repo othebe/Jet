@@ -7,6 +7,7 @@
 /// <reference path="application/applicationController.ts" />
 /// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/board.ts" />
+/// <reference path="ui/nb/nb.ts"/>
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogEntry/catalogEntry.ts" />
 /// <reference path="ui/componentInspector/componentInspector.ts" />
@@ -36,12 +37,14 @@
 	app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
 	// Menu directive.
     app.directive('menuBar', Jet.Ui.MenuBar.Factory());
-	// Gadget explorer.
+    // Gadget explorer.
 	app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
 	// Gadget explorer entry.
     app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
     // Gadget inspector entry.
     app.directive('gadgetInspector', Jet.Ui.GadgetInspector.Factory());
+	// new Board.
+    app.directive('newboard', Jet.Ui.NB.Factory());
 	// Board.
 	app.directive('board', Jet.Ui.Board.Factory());
 	// Component inspector.

@@ -4,7 +4,7 @@ var tmp;
 module Jet.Ui {
     export interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
-	    zoomFactor : number;
+	zoomFactor : number;
         Math: any;
         pcb: Pcb;
 
@@ -38,7 +38,7 @@ module Jet.Ui {
         private _snabric: Snabric.ISnabric;
         private _fabricCanvas: fabric.ICanvas;
         private _gDataFabricMap: Map<Selectable.ISelectable, BoardComponent>;
-	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
+	private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
         private _previouslySelected: fabric.IObject[];
         private _isGridVisible: boolean;
         private _gridSize: number = 15;
@@ -77,15 +77,15 @@ module Jet.Ui {
                 scope.$watch('gadgetModel.components', function (
                     newComponents: { [index: string]: Jet.Model.ComponentInstance },
                     oldComponents: { [index: string]: Jet.Model.ComponentInstance })
-                {
-                    main._updateUi(scope.gadgetModel);
-                }, true);
+			     {
+				 main._updateUi(scope.gadgetModel);
+			     }, true);
 		
                 scope.$watch('zoomFactor', function (
                     oldValue: number,
                     newValue: number)
                 {
-		            main._updateBoardSize();
+		    main._updateBoardSize();
                 }, true);
 
                 // Update board dimensions.
@@ -103,12 +103,12 @@ module Jet.Ui {
                 });
 
                 // Perspective change.
-		        scope.$on("change:perspective", function(name: ng.IAngularEvent,
-							            newPerspective: number) {
-		            main._clearUi();
-		            main._updateUi(scope.gadgetModel);
-		        });
-
+		scope.$on("change:perspective", function(name: ng.IAngularEvent,
+							 newPerspective: number) {
+		    main._clearUi();
+		    main._updateUi(scope.gadgetModel);
+		});
+		
                 // Watch the selected gadget model data.
                 scope.$watch('selectedGadgetComponent.selected', function () {
                     main._selectComponent(scope.selectedGadgetComponent.selected);

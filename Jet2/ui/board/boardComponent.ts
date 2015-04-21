@@ -232,7 +232,9 @@
             }.bind(this));
             
             // Move the image with the text.
+
             this._nameText.on('moving', function () {
+
                 var translation = this.getRelativeTranslation(this._nameText.getLeft(), this._nameText.getTop());
                 var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, this._placedPartData.get_rot());
                 this._setTranslation(eagleCoords.x, eagleCoords.y);

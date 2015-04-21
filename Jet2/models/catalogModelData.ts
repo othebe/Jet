@@ -10,7 +10,7 @@
             private _price: Number,
             private _documentationUrl: string,
             private _svgUrl: string,
-            private _placedParts: Array<CatalogPlacedPart>)
+            private _placedParts: { [s:string] : CatalogPlacedPart})
         {
             this._searchIndex = this._longName.toLowerCase();
         }
@@ -35,8 +35,11 @@
             return this._svgUrl;
         }
 
-        public getPlacedParts(): Array<CatalogPlacedPart> {
+        public getPlacedParts(): {[s:string] :CatalogPlacedPart} {
             return this._placedParts;
+        }
+        public getPlacedPartByRef(s:string): CatalogPlacedPart {
+            return this._placedParts[s];
         }
 
         // This returns a string that can be used to search for this ctalog component.
@@ -46,7 +49,8 @@
     }
 
     export class CatalogPlacedPart {
-        constructor(private _ref: string, private _svgUrl: string) { }
+        constructor(private _ref: string,
+		    private _svgUrl: string) { }
 
         public getRef(): string {
             return this._ref;

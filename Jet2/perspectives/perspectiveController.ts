@@ -22,6 +22,9 @@ module Jet.Perspective {
             function (scope, appContext) {
                 return new Jet.Perspective.DebugPerspective(scope, appContext);
             },
+            function (scope, appContext) {
+                return new Jet.Perspective.NBPerspective(scope, appContext);
+            },
         ];
 
         constructor(private $scope: IPerspectiveScope, private appContext: AppContext) {

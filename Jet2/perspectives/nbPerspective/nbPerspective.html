@@ -1,0 +1,30 @@
+﻿<div class="fill-height">
+    <div layout="column" style="height:100%">
+        <div flex="67" class="fill-height">
+            <div layout="row" layout-align="space-between center" class="fill-height">
+                <!-- Gadget explorer. -->
+                <gadget-explorer class="fill-height" flex="20"
+                                 gadget-model="gadgetModel"
+                                 selected-gadget-component="selectedGadgetComponent">
+                </gadget-explorer>
+
+                <!-- Board. -->
+                <newboard class="fill-height" flex="80"
+                       catalog-model="catalogModel"
+                       gadget-model="gadgetModel"
+                       selected-gadget-component="selectedGadgetComponent">
+                </newboard>
+
+                <!-- Component inspector. -->
+                <!-- <component-inspector class="fill-height" flex="30"
+                                     gadget-model="gadgetModel"
+                                     catalog-model="catalogModel"
+                                     selected-gadget-component="selectedGadgetComponent">
+                </component-inspector> -->
+            </div>
+        </div>
+        <div flex="33" class="fill-height">
+            <catalog></catalog>
+        </div>
+    </div>
+</div>

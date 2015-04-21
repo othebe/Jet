@@ -26,32 +26,23 @@ module Jet.Ui {
             this.link = function (scope: ICatalogEntryScope) {
                 // Add component to gadget.
                 scope.addComponentToGadget = function () {
+		    // SS: This should probably be routed through the board, so
+		    // the board can decide where to put the newly placed
+		    // parts.
+		    console.log("here")
                     var component = scope.catalogModelData;
-
-                    // TODO(othebe): This should just be made into an array. A
-                    // hash map is pointless since we don't need to look up
-                    //  objects since we have their reference already.
-                    var placedPartMap: { [index: string]: Jet.Model.PlacedPart; } = {}
-                    var placedParts = component.getPlacedParts();
-
-                    var componentName = component.getKeyName();
-                    
-                    for (var i = 0; i < placedParts.length; i++) {
-                        var placedPart = placedParts[i];
-                        placedPartMap[placedPart.getRef()] = new Jet.Model.PlacedPart(
-                            placedPart.getRef(), main._DEFAULT_X, main._DEFAULT_Y, 0, componentName);
-                    }
-                    
                     // Add component to gadget.
                     var added: boolean = false;
                     var componentCtr = 0;
-                    
+		    var componentName = component.getKeyName();
+
                     while (!added) {
                         try {
                             scope.gadgetModel.add_component(
-                                componentName + '_' + componentCtr,
-                                component.getKeyName(),
-                                placedPartMap
+				component,
+				componentName + '_' + componentCtr,
+                                component.getKeyName()
+				//part_locations
                                 );
                             added = true;
                         } catch (e) {
