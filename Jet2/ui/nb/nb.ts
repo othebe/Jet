@@ -45,10 +45,13 @@ module Jet.Ui {
             return Selectable.Type.BOARD;
         };
 
+	public get_id() : number {
+	    return 0;
+	}
         constructor() { }
     }
 
-    class NBComponent{
+    class _NBComponent{
 	private _placedParts : {[s:string] : NBPlacedPart}
 	constructor(private _board : NB,
 		    private _modelData : Jet.Model.ComponentInstance,
@@ -65,9 +68,49 @@ module Jet.Ui {
 	getModelData() {
 	    return this._modelData;
 	}
+	
     }
-    
 
+    interface INBComponentScope extends INBScope {
+	placedPart : Jet.Model.PlacedPart;
+    };
+    
+    export class NBComponent extends Jet.Ui.Directive {
+        private _templateUrl: string = "ui/nb/nbComponent.html";
+        private _scope: INBComponentScope;
+	templateNamespace: string = 'svg';
+	//replace:boolean = true;
+	
+	public templateUrl() {
+            return this._templateUrl;
+        }
+	
+	constructor(private _appContext: AppContext) {
+            super(_appContext);
+
+            this.scope = {
+		placedPart: '=',
+                catalogModel: '=',
+                gadgetModel: '=',
+                selectedGadgetComponent: '='
+            };
+	    
+	    var main = this
+            this.link = function (scope: INBComponentScope, instanceElement: JQuery) {
+		main._scope = scope;
+	    }
+	}
+	public static Factory() {
+            var directive = (AppContext: AppContext) => {
+                return new NBComponent(AppContext);
+            };
+	    
+            return directive;
+        }
+
+	
+    };
+    
     class NBPlacedPart {//implements Selectable.ISelectable {
 	private _svgSnap: Snap.Paper = null;
 	private _svgNode = null;
@@ -102,7 +145,7 @@ module Jet.Ui {
 	}
 	    
 	deconstruct() {
-	    this._board.undisplayPlacedPart(this);
+	    //this._board.undisplayPlacedPart(this);
 	}
     }
 
@@ -123,7 +166,7 @@ module Jet.Ui {
             return this._templateUrl;
         }
 
-	displayPlacedPart(pp: NBPlacedPart) {
+	public displayPlacedPart(pp: NBPlacedPart) {
 	    var snap = pp.getSnap();
 	    var node = pp.getNode();
 	   
@@ -156,44 +199,9 @@ module Jet.Ui {
 	    $(this._container).append(node);
 	}
 	
-	undisplayPlacedPart(pp: NBPlacedPart) {
-	    
-	}
-	
-	private _addComponent(component: Jet.Model.ComponentInstance) {
-	    var catalogData = this.AppContext.getCatalogModel().getComponent(component.keyname);
-	    this._componentMap[component.get_id()] = new NBComponent(this, component, catalogData)
-	}
-	private _removeComponent(component: Jet.Model.ComponentInstance) {
-	    for(var pp in this._componentMap[component.get_id()].getPlacedParts()) {
-		pp.deconstruct()
-	    }
-	    delete this._componentMap[component.get_id()];
-	}
-
-	private _updateComponents(gadgetModel: Jet.Model.GadgetModel) {
-	    var toDelete = {}
-	    for(var c in this._componentMap) {
-		toDelete[c] = true;
-	    }
-	    
-	    for(var ci in gadgetModel.components) {
-		if (this._componentMap[ci.get_id()] == null) {
-		    this._addComponent(ci)
-		} else {
-		    delete toDelete[ci];
-		}
-	    }
-	    for(var d in toDelete) {
-		this._removeComponent(this._componentMap[d].getModelData())
-		delete this._componentMap[d]
-	    }
-	}
 
         constructor(private AppContext: AppContext) {
             super(AppContext);
-
-            var main = this;
 
             this.scope = {
                 catalogModel: '=',
@@ -201,14 +209,15 @@ module Jet.Ui {
                 selectedGadgetComponent: '='
             };
 
+	    var main = this
             this.link = function (scope: INBScope, instanceElement: JQuery) {
+
                 main._scope = scope;
-		
 		scope.$watch('gadgetModel.components',
 			     function (newComponents: { [index: string]: Jet.Model.ComponentInstance },
 				       oldComponents: { [index: string]: Jet.Model.ComponentInstance })
 			     {
-				 main._updateComponents(scope.gadgetModel);
+				 //main._updateComponents(scope.gadgetModel);
 			     }, true);
 		
 		this._container = $("#id-foo")
@@ -216,7 +225,6 @@ module Jet.Ui {
 		console.log(this._container.get(0))
 		console.log(this._container.children().first().get()[0]) //get(0))
 
-		main = this
 		/*
 		  $(svg_elt).mousedown(function(e) {
 		    main.start_mouse = convertPoint(e);
@@ -266,7 +274,6 @@ module Jet.Ui {
 		
 	    }
         }
-
 
         public setDimensions(width: number, height: number) {
         }

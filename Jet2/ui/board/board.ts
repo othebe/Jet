@@ -26,6 +26,9 @@ module Jet.Ui {
             return Selectable.Type.BOARD;
         };
 
+	public get_id() : number {
+	    return 0;
+	}
         constructor() { }
     }
 
@@ -72,7 +75,6 @@ module Jet.Ui {
                 var pcbGraphics = main._pcb.getGraphics();
                 var margin = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
                 main.setDimensions(margin + pcbGraphics.getWidth(), margin + pcbGraphics.getHeight());
-
                 // Watch gadget model for changes.
                 scope.$watch('gadgetModel.components', function (
                     newComponents: { [index: string]: Jet.Model.ComponentInstance },

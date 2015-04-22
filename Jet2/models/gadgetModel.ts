@@ -11,27 +11,27 @@ module Jet.Model {
 	corners: Vertex[] = [new Vertex(-30.0, -30.0), new Vertex(-30.0, 30.0), new Vertex(30.0, -30.0), new Vertex(30.0, 30.0)];
 	
         // Other options
-	faceplate_color: string = "clear-nocolor";
-	backplate_color: string = "clear-nocolor";
-	faceplate_etch: string = "etch-front";
-	backplate_etch: string = "etch-back";
-	front_standoff_height: number = 8.0;
-	back_standoff_height: number = 8.0;
-	pcb_thickness: number = 1.57;
-	faceplate_thickness: number = 3.175;
-	backplate_thickness: number = 3.175;
+	"faceplate-color": string = "clear-nocolor";
+	"backplate-color": string = "clear-nocolor";
+	"faceplate-etch": string = "etch-front";
+	"backplate-etch": string = "etch-back";
+	"front-standoff-height": number = 8.0;
+	"back-standoff-height": number = 8.0;
+	"pcb-thickness": number = 1.57;
+	"faceplate-thickness": number = 3.175;
+	"backplate-thickness": number = 3.175;
 	
 	// Options
 	options: string[] = [
-	    "faceplate_color", 
-	    "backplate_color", 
-	    "faceplate_etch", 
-	    "backplate_etch",
-	    "front_standoff_height",
-	    "back_standoff_height",
-	    "pcb_thickness",
-	    "faceplate_thickness",
-	    "backplate_thickness"
+	    "faceplate-color", 
+	    "backplate-color", 
+	    "faceplate-etch", 
+	    "backplate-etch",
+	    "front-standoff-height",
+	    "back-standoff-height",
+	    "pcb-thickness",
+	    "faceplate-thickness",
+	    "backplate-thickness"
 	];
 
         constructor() {}
@@ -54,7 +54,7 @@ module Jet.Model {
 	
         // Add component. This adds a component of the keyname type. The name must be a unique ID.
         add_component(
-	    component_data: CatalogModelData,
+	    catalog_component: CatalogModelData,
 	    name: string,
             keyname: string
 	) {
@@ -62,10 +62,10 @@ module Jet.Model {
                 throw new Error("Adding component with duplicate name: " + name);
             }
 
-            var component = new ComponentInstance(this, name, keyname);
-	    for (var i in component_data.getPlacedParts()){
-		var ref =component_data.getPlacedParts()[i].getRef()
-		component.add_placed_part(new PlacedPart(this, component, ref, 0, 0, 0))
+            var component = new ComponentInstance(this, catalog_component, name, keyname);
+	    for (var i in catalog_component.getPlacedParts()){
+		var pp = catalog_component.getPlacedParts()[i]
+		component.add_placed_part(new PlacedPart(this, pp, component, pp.getRef(), 0, 0, 0))
 	    }
 
             this.components[name] = component;
@@ -187,8 +187,8 @@ module Jet.Model {
 	    
 	    board.setAttribute("x", (bounding_box.min_x).toString());
 	    board.setAttribute("y", (bounding_box.min_y).toString());
-	    board.setAttribute("w", (bounding_box.max_x - bounding_box.min_x).toString());
-	    board.setAttribute("h", (bounding_box.max_y - bounding_box.min_y).toString());
+	    board.setAttribute("width", (bounding_box.max_x - bounding_box.min_x).toString());
+	    board.setAttribute("height", (bounding_box.max_y - bounding_box.min_y).toString());
 	    Node.appendChild( board );
 	    
 	    var option:string;
@@ -200,11 +200,23 @@ module Jet.Model {
             
             for (var key in this.components) {
                 if (this.components.hasOwnProperty(key)) {
-                    var comp = document.createElement("component");
-		    comp.setAttribute("name", this.components[key].name);
-		    comp.setAttribute("type", this.components[key].keyname);
-                    Node.appendChild(comp);
-		}
+                    	var comp = document.createElement("component");
+			comp.setAttribute("progname", this.components[key].name);
+			comp.setAttribute("type", this.components[key].keyname);
+		
+			for (var pp in this.components[key].placed_parts) {
+				var cpp = this.components[key].placed_parts[pp];
+				var part = document.createElement("placedpart");
+				part.setAttribute("refdes", cpp.ref);
+				part.setAttribute("x", cpp.xpos.toString());
+				part.setAttribute("y", cpp.ypos.toString());
+				part.setAttribute("rotation", cpp.rot.toFixed(0).toString());
+				part.setAttribute("mirrored", "False");
+				comp.appendChild(part);
+			}
+					
+                	Node.appendChild(comp);
+				}
             }
             
 	    XML.appendChild(Node);
@@ -214,7 +226,8 @@ module Jet.Model {
 	
 	make_option (name:string, value:any):HTMLElement {
 	    var option = document.createElement("option");
-	    option.setAttribute(name, value.toString())
+	    option.setAttribute("name", name);
+	    option.setAttribute("value", value.toString());
 	    return option;	
 	}
 
@@ -241,6 +254,7 @@ module Jet.Model {
 	// Basic constructor
 	constructor (
 	    _gadgetModel : GadgetModel,
+	    private _catalog_data: CatalogModelData,
             name: string, 
 	    keyname: string
         ) {
@@ -306,6 +320,7 @@ module Jet.Model {
         
         constructor (
 	    _gadgetModel : GadgetModel,
+	    private _catalog_data: CatalogPlacedPart,
 	    component: ComponentInstance,
             ref: string,
             xpos: number,
@@ -351,6 +366,10 @@ module Jet.Model {
             this.rot = rot;
         }
 
+	public get_catalog_data() :CatalogPlacedPart {
+	    return this._catalog_data;
+	}
+	 
         /** @override */
         public getType(): Selectable.Type {
             return Selectable.Type.PLACED_PART;

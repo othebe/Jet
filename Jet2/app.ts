@@ -20,37 +20,39 @@
 
 (function () {
     var app = angular.module('Jet', ['ngMaterial']);
-	
-	// Application context.
-	app.service('AppContext', AppContext);
+    
+    // Application context.
+    app.service('AppContext', AppContext);
 
 
-	// Application controller.
-	app.controller('AppCtrl', Jet.Application.ApplicationController);
-	// Perspective controller.
-	app.controller('PerspectiveCtrl', Jet.Perspective.PerspectiveController);
+    // Application controller.
+    app.controller('AppCtrl', Jet.Application.ApplicationController);
+    // Perspective controller.
+    app.controller('PerspectiveCtrl', Jet.Perspective.PerspectiveController);
 
 
-	// Catalog directive.
-	app.directive('catalog', Jet.Ui.Catalog.Factory());
-	// Catalog entry directive.
-	app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
-	// Menu directive.
+    // Catalog directive.
+    app.directive('catalog', Jet.Ui.Catalog.Factory());
+    // Catalog entry directive.
+    app.directive('catalogEntry', Jet.Ui.CatalogEntry.Factory());
+    // Menu directive.
     app.directive('menuBar', Jet.Ui.MenuBar.Factory());
     // Gadget explorer.
-	app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
-	// Gadget explorer entry.
+    app.directive('gadgetExplorer', Jet.Ui.GadgetExplorer.Factory());
+    // Gadget explorer entry.
     app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
     // Gadget inspector entry.
     app.directive('gadgetInspector', Jet.Ui.GadgetInspector.Factory());
-	// new Board.
+    // new Board.
     app.directive('newboard', Jet.Ui.NB.Factory());
-	// Board.
-	app.directive('board', Jet.Ui.Board.Factory());
-	// Component inspector.
-	app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
-	// Component name inspector.
-	app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
-	// Component transformation inspector.
-	app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
+    // component in new board.
+    app.directive('nbComponent', Jet.Ui.NBComponent.Factory());
+    // Board.
+    app.directive('board', Jet.Ui.Board.Factory());
+    // Component inspector.
+    app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
+    // Component name inspector.
+    app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
+    // Component transformation inspector.
+    app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
 })();

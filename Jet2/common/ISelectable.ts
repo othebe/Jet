@@ -10,5 +10,6 @@
     export interface ISelectable {
         // Return the type of ISelectable.
         getType(): Type;
+	get_id(): number;
     }
 }
