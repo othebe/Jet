@@ -37,20 +37,6 @@ module Jet.Ui {
         componentData?: Jet.Model.ComponentInstance;
     }
 
-
-    // This represents a selectable board instance.
-    class NBSelectable implements Selectable.ISelectable {
-        /** @override */
-        public getType = function () {
-            return Selectable.Type.BOARD;
-        };
-
-	public get_id() : number {
-	    return 0;
-	}
-        constructor() { }
-    }
-
     class _NBComponent{
 	private _placedParts : {[s:string] : NBPlacedPart}
 	constructor(private _board : NB,

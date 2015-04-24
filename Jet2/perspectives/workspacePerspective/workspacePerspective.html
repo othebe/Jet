@@ -5,14 +5,14 @@
                 <!-- Gadget explorer. -->
                 <gadget-explorer class="fill-height" flex="20"
                                  gadget-model="gadgetModel"
-                                 selected-gadget-component="selectedGadgetComponent">
+                                 selection="selection">
                 </gadget-explorer>
 
                 <!-- Board. -->
                 <board class="fill-height" flex="50"
                        catalog-model="catalogModel"
                        gadget-model="gadgetModel"
-                       selected-gadget-component="selectedGadgetComponent">
+                       selection="selection">
                 </board>
 
                 <!-- Component inspector. -->
@@ -20,14 +20,14 @@
                 <component-inspector class="fill-height" flex="30"
                                      gadget-model="gadgetModel"
                                      catalog-model="catalogModel"
-                                     selected-gadget-component="selectedGadgetComponent"
-                                     ng-if="selectedGadgetComponent.selected != null && selectedGadgetComponent.selected.getType() != Selectable.Type.BOARD">
+                                     selection="selection"
+                                     ng-if="selection.getBoard() == null && selection.getBoardComponents().length > 0">
                 </component-inspector>
 
                 <!-- Gadget inspector. -->
                 <gadget-inspector class="fill-height" flex="30"
                                   gadget-model="gadgetModel"
-                                  ng-if="selectedGadgetComponent.selected == null || selectedGadgetComponent.selected.getType() == Selectable.Type.BOARD">
+                                  ng-if="selection.getBoard() != null || selection.getBoardComponents().length == 0">
                 </gadget-inspector>
             </div>
         </div>

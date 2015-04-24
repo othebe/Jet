@@ -2,7 +2,7 @@
 
 module Jet.Ui {
     interface IComponentInspectorScope extends Jet.Application.IApplicationScope {
-        selected: Selectable.ISelectable;
+        selection: Selection.Manager;
         eagleDisplayMapper: EagleDisplayMapper;
         catalogModelData: Jet.Model.CatalogModelData;
     }
@@ -16,31 +16,12 @@ module Jet.Ui {
             var main = this;
 
             this.link = function (scope: IComponentInspectorScope) {
-                scope.$watch('selectedGadgetComponent.selected', function () {
-                    var selected = scope.selectedGadgetComponent.selected;
-                    if (selected == null) {
-                        scope.catalogModelData = null;
-                        scope.selected = null;
-                    } else {
-                        if (selected.getType() == Selectable.Type.COMPONENT_INSTANCE) {
-                            var componentInstance = <Jet.Model.ComponentInstance> selected;
-                            scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
-                        }
-                        else if (selected.getType() == Selectable.Type.PLACED_PART) {
-                            var placedPart = <Jet.Model.PlacedPart> selected;
-                            var componentInstance = placedPart.get_component_instance();
-                            scope.catalogModelData = scope.catalogModel.getComponent(componentInstance.keyname);
-                        }
-                        scope.eagleDisplayMapper = scope.selectedGadgetComponent.eagleDisplayMapper;
-			scope.selected = selected;
-                    }
-                }, true);
             };
 
             this.scope = {
                 catalogModel: '=',
                 gadgetModel: '=',
-                selectedGadgetComponent: '='
+                selection: '='
             };
         }
 

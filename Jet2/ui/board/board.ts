@@ -4,7 +4,7 @@ var tmp;
 module Jet.Ui {
     export interface IBoardScope extends Jet.Application.IApplicationScope {
         height: Number;
-	zoomFactor : number;
+	    zoomFactor : number;
         Math: any;
         pcb: Pcb;
 
@@ -19,29 +19,14 @@ module Jet.Ui {
 
 
 
-    // This represents a selectable board instance.
-    class BoardSelectable implements Selectable.ISelectable {
-        /** @override */
-        public getType = function () {
-            return Selectable.Type.BOARD;
-        };
-
-	public get_id() : number {
-	    return 0;
-	}
-        constructor() { }
-    }
-
-
-
     // This represents the OVERALL board, including the PCB and components.
     export class Board extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/board/board.html";
         private _scope: IBoardScope;
         private _snabric: Snabric.ISnabric;
         private _fabricCanvas: fabric.ICanvas;
-        private _gDataFabricMap: Map<Selectable.ISelectable, BoardComponent>;
-	private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
+        private _gDataFabricMap: Map<Model.PlacedPart, BoardComponent>;
+	    private _displayGroupToComponentMap: Map<fabric.IObject, BoardComponent>;
         private _previouslySelected: fabric.IObject[];
         private _isGridVisible: boolean;
         private _gridSize: number = 15;
@@ -52,7 +37,7 @@ module Jet.Ui {
 
             var main = this;
             
-            this._gDataFabricMap = new Map<Selectable.ISelectable, BoardComponent>();
+            this._gDataFabricMap = new Map<Model.PlacedPart, BoardComponent>();
             this._displayGroupToComponentMap = new Map<fabric.IObject, BoardComponent>();
 
             this.templateUrl = function () {
@@ -62,7 +47,7 @@ module Jet.Ui {
             this.scope = {
                 catalogModel: '=',
                 gadgetModel: '=',
-                selectedGadgetComponent: '='
+                selection: '='
             };
 
             this.link = function (scope: IBoardScope, instanceElement: JQuery) {
@@ -105,23 +90,32 @@ module Jet.Ui {
                 });
 
                 // Perspective change.
-		scope.$on("change:perspective", function(name: ng.IAngularEvent,
+		        scope.$on("change:perspective", function(name: ng.IAngularEvent,
 							 newPerspective: number) {
-		    main._clearUi();
-		    main._updateUi(scope.gadgetModel);
-		});
-		
-                // Watch the selected gadget model data.
-                scope.$watch('selectedGadgetComponent.selected', function () {
-                    main._selectComponent(scope.selectedGadgetComponent.selected);
+		            main._clearUi();
+		            main._updateUi(scope.gadgetModel);
+                });
+
+                // Watch the selection.
+                scope.$watch('selection', function () {
+                    var boardComponents = [];
+                    var selectedComponents = scope.selection.getBoardComponents();
+
+                    for (var i = 0; i < selectedComponents.length; i++) {
+                        var selectedComponent = selectedComponents[i];
+                        var placedPart = selectedComponent.placedPart;
+
+                        boardComponents.push(main._gDataFabricMap.get(placedPart));
+                    }
+                    main._selectComponent(boardComponents);
                 }, true);
 
                 // Board options.
                 // TODO (othebe): See earlier TODO about moving them into a
                 // separate directive.
                 scope.editGadget = function () {
-                    var selectable = new BoardSelectable();
-                    scope.selectedGadgetComponent.selected = selectable;
+                    var isEditing = (scope.selection.getBoard() == null) ? true : null;
+                    scope.selection.setBoard(isEditing);
                 };
 
                 // Toggle grid.
@@ -218,12 +212,6 @@ module Jet.Ui {
 	        main._scope.Math = Math; // Have to get Math into the scope, so it's visible in the binding.
 		
             // Setup canvas events.
-            this._fabricCanvas.on('mouse:down', function () {
-                if (main._fabricCanvas.getActiveObject() == null) {
-                    main._scope.selectedGadgetComponent.selected = null;
-                    main._scope.$applyAsync();
-                }
-            });
 
             this._fabricCanvas.on('selection:created', function () {
                 main._fabricCanvas.discardActiveGroup();
@@ -324,12 +312,18 @@ module Jet.Ui {
         }
 
         // Select a board component.
-        private _selectComponent(selected: Selectable.ISelectable) {
-            var selectedComponent = this._gDataFabricMap.get(selected);
-            if (selectedComponent != null) {
-                this._fabricCanvas.setActiveObject(selectedComponent.getFabricImage());
-            } else {
+        private _selectComponent(selected: Array<BoardComponent>) {
+            // Discard selection.
+            if (selected.length == 0) {
                 this._fabricCanvas.discardActiveObject();
+            }
+            // Multiple component selection.
+            else if (selected.length > 1) {
+                throw Constants.Strings.UNIMPLEMENTED_METHOD;
+            }
+            // Single selection.
+            else if (selected.length == 1) {
+                this._fabricCanvas.setActiveObject(selected[0].getFabricImage());
             }
         }
 

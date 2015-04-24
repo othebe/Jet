@@ -1,19 +1,85 @@
-﻿<div class="gadget-explorer-entry">
-    <md-item ng-click="toggleSelected()">
+﻿<div class="gadget-explorer-entry" ondblclick="toggleExpand(this)" ng-click="toggleSelectedComponent($event)">
+    <div class="arrow right"></div>
+    <div class="component-instance" ng-class="{selected: isComponentInstanceSelected()}" ng-bind="component.get_name()"></div>
+    <div class="placed-parts" style="display: none;">
+        <div ng-repeat="placedPart in component.get_placed_parts()">
+            <div class="placed-part" ng-class="{selected: isPlacedPartSelected(placedPart)}" ng-click="toggleSelectedPlacedPart(placedPart, $event)">
+                <span class="box"></span>
+                <span ng-bind="placedPart.get_ref()"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <!--<md-item ng-click="toggleSelected()">
         <div ng-class="{selected: isSelected}" ng-bind="partName"></div>
-    </md-item>
-</div>
+    </md-item>-->
+</>
+
+<script>
+    function toggleExpand(elt) {
+        var arrowElt = elt.getElementsByClassName('arrow')[0];
+        var placedParts = elt.getElementsByClassName('placed-parts')[0];
+        var isVisible = !(placedParts.style.display != 'none');
+
+        // Toggle arrow.
+        arrowElt.className = (isVisible) ? 'arrow down' : 'arrow right';
+
+        // Toggle placed parts.
+        placedParts.style.display = (isVisible) ? 'block' : 'none';
+    }
+</script>
 
 <style>
     .gadget-explorer-entry {
         cursor: pointer;
     }
 
-    .gadget-explorer-entry .selected {
+    .gadget-explorer-entry .component-instance.selected {
         background-color: lightblue;
     }
 
-    .gadget-explorer-entry .placed-part .selected {
-        background-color: lightcyan;
+    .gadget-explorer-entry .placed-part.selected {
+        background-color: lightpink;
+    }
+
+    .gadget-explorer-entry .placed-part {
+        padding-left: 40px;
+    }
+
+    /** Box. */
+    .box {
+        border: 3px solid black;
+        float: left;
+        height: 0px;
+        margin-right: 8px;
+        margin-top: 9px;
+        width: 0px;
+    }
+
+    /** Arrows. */
+    .arrow {
+        float: left;
+        margin-left: 5px;
+    }
+
+    .arrow.down {
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid black;
+        height: 0;
+        margin-right: 6px;
+        margin-top: 9px;   
+	    width: 0; 
+    }
+
+    .arrow.right {
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid black;
+        border-top: 5px solid transparent;
+        height: 0;
+        margin-right: 11px;
+        margin-top: 6px;
+	    width: 0;   
     }
 </style>

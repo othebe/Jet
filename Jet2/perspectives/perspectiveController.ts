@@ -1,5 +1,4 @@
 ﻿/// <reference path="../common/appContext.ts" />
-/// <reference path="../common/ISelectable.ts" />
 
 module Jet.Perspective {
     export interface IPerspectiveScope extends ng.IScope {
@@ -31,8 +30,6 @@ module Jet.Perspective {
             var main = this;
 
             var scope = $scope;
-
-            $scope.Selectable = Selectable;
 
             $scope.perspective = this._perspectives[0]($scope, appContext);
 	        $scope.$on("change:perspective", function(name: ng.IAngularEvent, newPerspective: number) {

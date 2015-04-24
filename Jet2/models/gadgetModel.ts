@@ -243,7 +243,7 @@ module Jet.Model {
     }
     
     // Basic component info class
-    export class ComponentInstance implements Selectable.ISelectable {
+    export class ComponentInstance {
 
 	static _currentID : number = 0;
 	private _id: number;
@@ -301,15 +301,10 @@ module Jet.Model {
 	public get_placed_part_count(): number {
             return Object.keys(this.placed_parts).length
 	}
-
-        /** @override */
-        public getType(): Selectable.Type {
-            return Selectable.Type.COMPONENT_INSTANCE;
-        }
     }
     
     // Placed part class
-    export class PlacedPart implements Selectable.ISelectable {
+    export class PlacedPart {
 	static _currentID : number = 0;
 	private _id :number;
         ref: string;
@@ -369,11 +364,7 @@ module Jet.Model {
 	public get_catalog_data() :CatalogPlacedPart {
 	    return this._catalog_data;
 	}
-	 
-        /** @override */
-        public getType(): Selectable.Type {
-            return Selectable.Type.PLACED_PART;
-        }
+
 	public get_component_instance() : ComponentInstance{
 	    return theGadgetModel.get_component_instance_by_id(this._componentID);
 	}

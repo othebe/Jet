@@ -1,18 +1,17 @@
 ﻿<div class="component-inspector fill-height ui-container">
     <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
         <div class="header">Component Explorer</div>
-        <md-content class="fill-height" ng-if="selected != null">
+        <md-content class="fill-height" ng-if="selection.getBoardComponents().length > 0">
             <!-- Data editors. -->
             <component-name-inspector catalog-model="catalogModel"
                                       gadget-model="gadgetModel"
-                                      selected="selected">
+                                      selection="selection">
             </component-name-inspector>
 
             <component-transformation-inspector catalog-model="catalogModel"
                                                 gadget-model="gadgetModel"
                                                 eagle-display-mapper="eagleDisplayMapper"
-                                                selected="selected">
-                >
+                                                selection="selection">
             </component-transformation-inspector>
 
             <md-divider></md-divider>

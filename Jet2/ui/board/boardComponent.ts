@@ -158,8 +158,7 @@
 
             // Handle image selection.
             this._fabricImage.on('selected', function () {
-                main._scope.selectedGadgetComponent.selected = main._placedPartData;
-                main._scope.selectedGadgetComponent.eagleDisplayMapper = main._eagleDisplayMapper;
+                main._scope.selection.selectBoardComponents([new Selection.BoardComponent(main._placedPartData, main._eagleDisplayMapper)]);
                 main._scope.$applyAsync();
             });
 

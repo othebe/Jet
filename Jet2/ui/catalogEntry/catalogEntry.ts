@@ -26,24 +26,22 @@ module Jet.Ui {
             this.link = function (scope: ICatalogEntryScope) {
                 // Add component to gadget.
                 scope.addComponentToGadget = function () {
-		    // SS: This should probably be routed through the board, so
-		    // the board can decide where to put the newly placed
-		    // parts.
-		    console.log("here")
+		        // SS: This should probably be routed through the board, so
+		        // the board can decide where to put the newly placed
+		        // parts.
                     var component = scope.catalogModelData;
                     // Add component to gadget.
                     var added: boolean = false;
                     var componentCtr = 0;
-		    var componentName = component.getKeyName();
+		            var componentName = component.getKeyName();
 
                     while (!added) {
                         try {
                             scope.gadgetModel.add_component(
-				component,
-				componentName + '_' + componentCtr,
-                                component.getKeyName()
-				//part_locations
-                                );
+				                component,
+				                componentName + '_' + componentCtr, component.getKeyName()
+				                //part_locations
+                            );
                             added = true;
                         } catch (e) {
                             componentCtr++;

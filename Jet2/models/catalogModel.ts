@@ -61,7 +61,6 @@
 
                             // Ref.
                             var ref = placedPart.getAttribute('refdes');
-			    console.log(svgUrl)
                             placedPartsData[ref] = new CatalogPlacedPart(ref, svgUrl);
                         }
 

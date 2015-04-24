@@ -22,6 +22,8 @@
     <Content Include="index.html" />
     <Content Include="perspectives\debugPerspective\debugPerspective.css" />
     <Content Include="perspectives\debugPerspective\debugPerspective.html" />
+    <Content Include="perspectives\nbPerspective\nbPerspective.css" />
+    <Content Include="perspectives\nbPerspective\nbPerspective.html" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.css" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
     <Content Include="public\libraries\angular-animate\angular-animate.js" />
@@ -407,6 +409,8 @@
     <Content Include="ui\gadgetInspector\gadgetInspector.html" />
     <Content Include="ui\menu\exportGSpec.html" />
     <Content Include="ui\menu\menuBar.html" />
+    <Content Include="ui\nb\nb.html" />
+    <Content Include="ui\nb\nbComponent.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -415,15 +419,16 @@
     <TypeScriptCompile Include="common\constants.ts" />
     <TypeScriptCompile Include="common\eagleDisplayMapper.ts" />
     <TypeScriptCompile Include="common\InitialData.ts" />
-    <TypeScriptCompile Include="common\ISelectable.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
     <TypeScriptCompile Include="common\fabric.d.ts" />
+    <TypeScriptCompile Include="common\Selection.ts" />
     <TypeScriptCompile Include="common\strings.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />
     <TypeScriptCompile Include="models\catalogModel.ts" />
     <TypeScriptCompile Include="models\gadgetModel.ts" />
     <TypeScriptCompile Include="perspectives\debugPerspective\debugPerspective.ts" />
     <TypeScriptCompile Include="perspectives\IPerspective.ts" />
+    <TypeScriptCompile Include="perspectives\nbPerspective\nbPerspective.ts" />
     <TypeScriptCompile Include="perspectives\perspectiveController.ts" />
     <TypeScriptCompile Include="perspectives\workspacePerspective\workspacePerspective.ts" />
     <TypeScriptCompile Include="public\typings\angularjs\angular-route.d.ts" />
@@ -446,6 +451,7 @@
     <TypeScriptCompile Include="ui\gadgetInspector\gadgetInspector.ts" />
     <TypeScriptCompile Include="ui\menu\menuBar.ts" />
     <TypeScriptCompile Include="common\Point.ts" />
+    <TypeScriptCompile Include="ui\nb\nb.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="public\libraries\angular-animate\angular-animate.min.js.map" />

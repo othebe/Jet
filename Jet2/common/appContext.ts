@@ -1,4 +1,8 @@
-﻿class AppContext {
+﻿// The application context should be the root level storage for Jet data.
+// Although the application scope could be considered to replace the
+// application context, having this data structure live outside the scope
+// allows for data to be shared within different ng- apps.
+class AppContext {
     // Catalog model.
     private _catalogModel: Jet.Model.CatalogModel;
     // Gadget model.
