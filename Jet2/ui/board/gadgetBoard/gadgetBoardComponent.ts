@@ -96,11 +96,7 @@ module Jet.Ui.Board {
 
         // Handle mouse down.
         private _handleMouseDown(e: MouseEvent, scope: IGadgetBoardComponentScope) {
-            var placedPart = scope.boardComponent;
-            var boardComponents = [
-                new Selection.BoardComponent(placedPart, placedPart.get_catalog_data().getEagleDisplayMapper())
-            ];
-            scope.selection.selectBoardComponents(boardComponents);
+            this.setSelected_(scope, true);
         }
 
         /** @override */

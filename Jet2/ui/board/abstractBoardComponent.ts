@@ -47,6 +47,17 @@ module Jet.Ui.Board {
         // Update UI based on placed part data.
         protected updateUi_(scope: IAbstractBoardComponentScope) { }
 
+        // Set selected.
+        protected setSelected_(scope: IAbstractBoardComponentScope, isSelected: boolean) {
+            scope.isSelected = isSelected;
+
+            var placedPart = scope.boardComponent;
+            var boardComponents = [
+                new Selection.BoardComponent(placedPart, placedPart.get_catalog_data().getEagleDisplayMapper())
+            ];
+            scope.selection.selectBoardComponents(boardComponents);
+        }
+
         // Handle mouse movement.
         protected handleMouseMove_(e: MouseEvent) { }
     }
