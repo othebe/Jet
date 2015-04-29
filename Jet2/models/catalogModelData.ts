@@ -10,8 +10,7 @@
             private _price: Number,
             private _documentationUrl: string,
             private _svgUrl: string,
-            private _placedParts: { [s:string] : CatalogPlacedPart})
-        {
+            private _placedParts: { [s: string]: CatalogPlacedPart }) {
             this._searchIndex = this._longName.toLowerCase();
         }
 
@@ -35,10 +34,10 @@
             return this._svgUrl;
         }
 
-        public getPlacedParts(): {[s:string] :CatalogPlacedPart} {
+        public getPlacedParts(): { [s: string]: CatalogPlacedPart } {
             return this._placedParts;
         }
-        public getPlacedPartByRef(s:string): CatalogPlacedPart {
+        public getPlacedPartByRef(s: string): CatalogPlacedPart {
             return this._placedParts[s];
         }
 
@@ -49,8 +48,16 @@
     }
 
     export class CatalogPlacedPart {
-        constructor(private _ref: string,
-		    private _svgUrl: string) { }
+        private _eagleDisplayMapper: EagleDisplayMapper;
+        private _svgData: string;
+
+        constructor(private _ref: string, private _svgUrl: string) {
+            // Read SVG data and set Eagle Display mapper.
+            this._readSvgData(function (svgStr: string) {
+                this._svgData = svgStr;
+                this._setEagleDisplayMapper();
+            }.bind(this));
+        }
 
         public getRef(): string {
             return this._ref;
@@ -58,6 +65,53 @@
 
         public getSvgUrl(): string {
             return this._svgUrl;
+        }
+
+        public getSvgData(): string {
+            return this._svgData;
+        }
+
+        public getEagleDisplayMapper(): EagleDisplayMapper {
+            return this._eagleDisplayMapper;
+        }
+
+        // Sets the eagle display mapper for this placed part.
+        private _setEagleDisplayMapper() {
+            if (this._svgData != null) {
+                var start = this._svgData.indexOf('viewBox="');
+                var end = this._svgData.indexOf('"', start + 9);
+
+                // Incorrect SVG format.
+                if (start < 0 || end < 0) {
+                    console.log(Constants.Strings.VIEWBOX_MISSING(this._svgUrl));
+                    return;
+                }
+
+                var viewBoxStr = this._svgData.substring(start + 9, end);
+                var viewBoxArr = viewBoxStr.split(' ');
+                this._eagleDisplayMapper = new EagleDisplayMapper(
+                    fabric.util.parseUnit(viewBoxArr[3] + 'mm'),   // Image height
+                    fabric.util.parseUnit(viewBoxArr[2] + 'mm'),   // Image width
+                    parseFloat(viewBoxArr[0]),                          // Eagle origin-x
+                    parseFloat(viewBoxArr[1]),                          // Eagle origin-y
+                    EagleDisplayMapper.DisplayOrigin.CENTER,            // Display origin-x
+                    EagleDisplayMapper.DisplayOrigin.CENTER             // Display origin-y
+                    );
+            }
+        }
+
+        // Read SVG data.
+        private _readSvgData(onRead: (svgStr: string) => void) {
+            // Read SVG URL.
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', this._svgUrl);
+            xhr.onreadystatechange = (e: Event) => {
+                var target: any = e.target;
+                if (target.readyState == 4) {
+                    onRead(xhr.response);
+                }
+            };
+            xhr.send();
         }
     }
 }

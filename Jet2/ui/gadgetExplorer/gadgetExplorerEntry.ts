@@ -5,6 +5,9 @@ module Jet.Ui {
         // Component instance.
         component: Model.ComponentInstance;
 
+        // Catalog model data for this component instance.
+        catalogModelData: Model.CatalogModelData;
+
         // Is component instance selected.
         isComponentInstanceSelected: () => boolean;
 
@@ -63,7 +66,9 @@ module Jet.Ui {
                     var boardComponents = [];
                     var placedParts = scope.component.get_placed_parts();
                     for (var i = 0; i < placedParts.length; i++) {
-                        boardComponents.push(new Selection.BoardComponent(placedParts[i], null));
+                        var placedPart = placedParts[i];
+                        var eagleDisplayMapper = scope.catalogModelData.getPlacedPartByRef(placedPart.get_ref()).getEagleDisplayMapper();
+                        boardComponents.push(new Selection.BoardComponent(placedParts[i], eagleDisplayMapper));
                     }
                     scope.selection.selectBoardComponents(boardComponents);
 
@@ -85,32 +90,11 @@ module Jet.Ui {
 
                     main._setDelay();
                 };
-
-                //// Watch for changes to selected gadget component.
-                //scope.$watch('selectedGadgetComponent.selected', function () {
-                //    if (scope.selectedGadgetComponent == null) {
-                //        scope.isSelected = false;
-                //    } else {
-                //        var selected = scope.selectedGadgetComponent.selected;
-                //        var isSelected = (selected != null && selected == scope.placedPart);
-                //        scope.isSelected = isSelected;
-                //    }
-                //}, true);
-
-                //// Toggle selected gadget model data.
-                //scope.toggleSelected = function () {
-                //    var selected = scope.selectedGadgetComponent.selected;
-
-                //    if (selected == scope.placedPart) {
-                //        scope.selectedGadgetComponent.selected = null;
-                //    } else {
-                //        scope.selectedGadgetComponent.selected = scope.placedPart;
-                //    }
-                //}
             };
 
             this.scope = {
                 component: '=',
+                catalogModelData: '=',
                 selection: '='
             };
         }

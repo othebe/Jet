@@ -51,7 +51,7 @@
 
                         placedParts = placedParts[0].getElementsByTagName('placedpart');
 
-                        var placedPartsData: {[s:string] : CatalogPlacedPart}= {};
+                        var placedPartsData: { [s: string]: CatalogPlacedPart } = {};
                         for (var j = 0; j < placedParts.length; j++) {
                             var placedPart = placedParts[j];
 
@@ -67,7 +67,7 @@
                         // TODO(othebe): Different img when more than one placed
                         // part is present?
                         var imgUrl = this._imgDir + "/" + placedParts[0].getAttribute('model2D')
-			
+
                         var c: CatalogModelData = new CatalogModelData(
                             name,           /** longname */
                             keyname,        /** keyname */
@@ -75,33 +75,12 @@
                             docUrl,         /** documentationUrl */
                             imgUrl,         /** svgUrl */
                             placedPartsData   /** placedParts */
-                        );
+                            );
                         this._catalogModelData.push(c);
                         this._componentMap[keyname] = c;
                     }
                 }
             };
-
-            //xhr.open("GET", this._ComponentUrl, true);
-            //xhr.onreadystatechange = (e: Event) => {
-            //    var target : any = e.target;
-            //    if (target.readyState == 4) {
-            //        var components: Array<JSON> = JSON.parse(target.response);
-            //        for (var i = 0; i < components.length; i++) {
-            //            // TODO (othebe): Wrap data in an interface.
-            //            var data : any = components[i];
-            //            var component: CatalogModelData = new CatalogModelData(
-            //                data.longname,
-            //                data.keyname,
-            //                data.price,
-            //                data.componentUrl,
-            //                data.svgUrl
-            //                );
-            //            this._catalogModelData.push(component);
-            //            this._componentMap[data.keyname] = component;
-            //        }
-            //    }
-            //};
             xhr.send();
         }
 

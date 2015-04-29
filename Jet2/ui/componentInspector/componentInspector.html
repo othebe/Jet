@@ -10,11 +10,11 @@
 
             <component-transformation-inspector catalog-model="catalogModel"
                                                 gadget-model="gadgetModel"
-                                                eagle-display-mapper="eagleDisplayMapper"
-                                                selection="selection">
+                                                selection="selection"
+                                                ng-if="selection.getBoardComponents().length == 1">
             </component-transformation-inspector>
 
-            <md-divider></md-divider>
+            <md-divider ng-if="selection.getBoardComponents().length == 1"></md-divider>
 
             <!-- Component Information. -->
             <md-card ng-show="catalogModelData != null">

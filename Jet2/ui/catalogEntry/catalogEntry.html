@@ -32,15 +32,20 @@
     }
 
     div.catalog-entry md-card.white-card div.image img {
-        height: 60%;
-        width: 60%;
+        height: 90%;
+        width: 90%;
     }
 
     div.catalog-entry md-grid-tile-footer.footer {
+        display: none;
         height: auto;
         margin: 0 8px;
         min-height: 48px;
         padding: 8px;
         text-align:center;
+    }
+
+    div.catalog-entry:hover md-grid-tile-footer.footer {
+        display: block;
     }
 </style>

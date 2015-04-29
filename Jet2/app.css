@@ -22,7 +22,6 @@ div.clear {
     height: 100%;
 }
 
-
 /******************************************************************************
  * UI directives.
  */
@@ -34,4 +33,3 @@ div.ui-container .header {
     background-color: #D1DBBD;
     padding: 8px 12px;
 }
-

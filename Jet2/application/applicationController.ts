@@ -21,17 +21,17 @@
         static $inject = ['$rootScope', '$scope', 'AppContext'];
 
         constructor(private $rootScope: ng.IRootScopeService,
-		    private $scope: IApplicationScope,
-		    private AppContext: AppContext) {
+            private $scope: IApplicationScope,
+            private AppContext: AppContext) {
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
             $scope.selection = new Jet.Selection.Manager();
-            
+
             $scope.about = "Gadgetron Jet V2.0";
 
-	        $scope.selectPerspective = function(id:number) {
-		        $rootScope.$broadcast("change:perspective", id);
-	        }
+            $scope.selectPerspective = function (id: number) {
+                $rootScope.$broadcast("change:perspective", id);
+            }
         }
     }
 }

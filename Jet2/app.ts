@@ -6,7 +6,8 @@
 /// <reference path="common/fabric.d.ts" />
 /// <reference path="application/applicationController.ts" />
 /// <reference path="perspectives/perspectiveController.ts" />
-/// <reference path="ui/board/board.ts" />
+/// <reference path="ui/board/gadgetBoard/gadgetBoard.ts" />
+/// <reference path="ui/board/gadgetBoard/gadgetBoardComponent.ts" />
 /// <reference path="ui/nb/nb.ts"/>
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogEntry/catalogEntry.ts" />
@@ -20,16 +21,14 @@
 
 (function () {
     var app = angular.module('Jet', ['ngMaterial']);
-    
+
     // Application context.
     app.service('AppContext', AppContext);
-
 
     // Application controller.
     app.controller('AppCtrl', Jet.Application.ApplicationController);
     // Perspective controller.
     app.controller('PerspectiveCtrl', Jet.Perspective.PerspectiveController);
-
 
     // Catalog directive.
     app.directive('catalog', Jet.Ui.Catalog.Factory());
@@ -43,12 +42,14 @@
     app.directive('gadgetExplorerEntry', Jet.Ui.GadgetExplorerEntry.Factory());
     // Gadget inspector entry.
     app.directive('gadgetInspector', Jet.Ui.GadgetInspector.Factory());
-    // new Board.
+    // New Board.
     app.directive('newboard', Jet.Ui.NB.Factory());
-    // component in new board.
+    // Component in new board.
     app.directive('nbComponent', Jet.Ui.NBComponent.Factory());
-    // Board.
-    app.directive('board', Jet.Ui.Board.Factory());
+    // Gadget board.
+    app.directive('gadgetBoard', Jet.Ui.Board.GadgetBoard.Factory());
+    // Gadget board component.
+    app.directive('gadgetBoardComponent', Jet.Ui.Board.GadgetBoardComponent.Factory());
     // Component inspector.
     app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
     // Component name inspector.

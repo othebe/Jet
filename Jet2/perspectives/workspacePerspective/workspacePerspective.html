@@ -4,16 +4,17 @@
             <div layout="row" layout-align="space-between center" class="fill-height">
                 <!-- Gadget explorer. -->
                 <gadget-explorer class="fill-height" flex="20"
+                                 catalog-model="catalogModel"
                                  gadget-model="gadgetModel"
                                  selection="selection">
                 </gadget-explorer>
 
                 <!-- Board. -->
-                <board class="fill-height" flex="50"
-                       catalog-model="catalogModel"
-                       gadget-model="gadgetModel"
-                       selection="selection">
-                </board>
+                <gadget-board   class="fill-height" flex="50"
+                                catalog-model="catalogModel"
+                                gadget-model="gadgetModel"
+                                selection="selection">
+                </gadget-board>
 
                 <!-- Component inspector. -->
                 <!-- Only shown when there is a component selected. -->

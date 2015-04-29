@@ -6,5 +6,10 @@ module Jet.Constants {
 
         // A name cannot be displayed since multiple components are selected.
         export var MULTIPLE_COMPONENTS_SELECTED = "Multiple components selected.";
+
+        // Viewbox not present for the given SVG.
+        export var VIEWBOX_MISSING = function (svgUrl) {
+            return "The viewbox is missing for: " + svgUrl;
+        };
     }
 } 

@@ -397,7 +397,8 @@
     <Content Include="public\libraries\jquery\src\var\support.js" />
     <Content Include="public\libraries\jquery\src\var\toString.js" />
     <Content Include="public\libraries\jquery\src\wrap.js" />
-    <Content Include="ui\board\board.html" />
+    <Content Include="ui\board\gadgetBoard\gadgetBoard.html" />
+    <Content Include="ui\board\gadgetBoard\gadgetBoardComponent.html" />
     <Content Include="ui\catalogEntry\catalogEntry.html" />
     <Content Include="ui\catalog\catalog.css" />
     <Content Include="ui\catalog\catalog.html" />
@@ -437,9 +438,10 @@
     <TypeScriptCompile Include="public\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="public\typings\snapsvg\snapsvg.d.ts" />
     <TypeScriptCompile Include="public\typings\tsd.d.ts" />
-    <TypeScriptCompile Include="ui\board\board.ts" />
-    <TypeScriptCompile Include="ui\board\boardComponent.ts" />
-    <TypeScriptCompile Include="ui\board\pcb.ts" />
+    <TypeScriptCompile Include="ui\board\abstractBoard.ts" />
+    <TypeScriptCompile Include="ui\board\abstractBoardComponent.ts" />
+    <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoard.ts" />
+    <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardComponent.ts" />
     <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />
     <TypeScriptCompile Include="ui\catalog\catalog.ts" />
     <TypeScriptCompile Include="ui\componentInspector\componentInspector.ts" />

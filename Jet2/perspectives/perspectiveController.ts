@@ -4,7 +4,7 @@ module Jet.Perspective {
     export interface IPerspectiveScope extends ng.IScope {
         // Current perspective.
         perspective: IPerspective;
-        
+
         // Expose Selectable.
         Selectable: any;
     }
