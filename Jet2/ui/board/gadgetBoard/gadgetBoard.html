@@ -2,7 +2,12 @@
     <div layout="column" style="height:100%">
         <md-whiteframe class="md-whiteframe-z1 fill-height board-container" layout="row" layout-align="center" style="overflow: auto; padding: 20px;">            
             <div class="board-container" ng-attr-width="{{boardDimensions.width + 2 * padding}}px" ng-attr-height="{{boardDimensions.height + 2 * padding}}px">
-                <svg ng-attr-width="{{boardDimensions.width + 2 * padding}}px" ng-attr-height="{{boardDimensions.height + 2 *padding}}px">
+                <svg ng-attr-width="{{boardDimensions.width + 2 * padding}}px" 
+                     ng-attr-height="{{boardDimensions.height + 2 *padding}}px"
+                     ng-mousedown="boardTouchHandler.handleMouseDown($event)"
+                     ng-mouseup="boardTouchHandler.handleMouseUp($event)"
+                     ng-mousemove="boardTouchHandler.handleMouseMove($event)">
+
                     <!-- PCB -->
                     <rect class="pcb" 
                           ng-attr-x="{{padding}}px" 

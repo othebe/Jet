@@ -1,9 +1,19 @@
-﻿<g ng-mousedown="handleMouseDown($event)"
+﻿<g class="gadget-board-component" ng-mousedown="handleMouseDown($event)"
    ng-attr-transform="translate({{transformation.x}} {{transformation.y}}) rotate({{transformation.rot}} {{dimensions.x / 2}} {{dimensions.y / 2}})">
 
     <!-- Selection border -->
     <rect ng-if="isSelected" x="0" y="0" ng-attr-width="{{dimensions.x}}" ng-attr-height="{{dimensions.y}}" style="stroke: red; stroke-width: 5px; fill: transparent;" />
 
     <!-- Component image -->
-    <g class="img"></g>
+    <g class="img" ng-class="{selected: isSelected}"></g>
 </g>
+
+<style>
+    g.gadget-board-component g.img {
+        cursor: pointer;
+    }
+
+    g.gadget-board-component g.img.selected {
+        cursor: move;
+    }
+</style>
