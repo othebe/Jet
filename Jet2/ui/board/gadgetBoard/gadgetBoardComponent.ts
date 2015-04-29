@@ -6,6 +6,8 @@ module Jet.Ui.Board {
         dimensions: Point;
         padding: number;
         transformation: Transformation;
+
+        handleMouseDown: (MouseEvent) => void;
     }
 
     class Transformation {
@@ -27,6 +29,8 @@ module Jet.Ui.Board {
 
         /** @override */
         protected onScopeLoaded_(scope: IGadgetBoardComponentScope, instanceElement: JQuery) {
+            scope = <IGadgetBoardComponentScope> scope;
+
             // Render SVG.
             this._render(scope, instanceElement);
 
@@ -35,6 +39,11 @@ module Jet.Ui.Board {
 
             // Set dimensions.
             this._setDimensions(scope);
+
+            // Handle mouse down.
+            scope.handleMouseDown = (e: MouseEvent) => {
+                this._handleMouseDown(e, scope);
+            }
         }
 
         /** @override */
@@ -45,7 +54,7 @@ module Jet.Ui.Board {
 
         // Renders image.
         private _render(scope: IGadgetBoardComponentScope, instanceElement: JQuery) {
-            /* Render helpers. */    
+            /* Render helpers. */
             var _renderImage = function () {
                 instanceElement.find('g.img')[0].innerHTML = scope.boardComponent.get_catalog_data().getSvgData();
             }.bind(this);
@@ -77,14 +86,22 @@ module Jet.Ui.Board {
                 var eaglePoint = new Point(placedPart.get_xpos(), placedPart.get_ypos());
                 var rot = placedPart.get_rot();
                 var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot);
-                var padding = (<IGadgetBoardComponentScope> scope).padding;
+                var padding = scope.padding;
 
-                scope.transformation =
-                    new Transformation(displayPoint.x + padding, displayPoint.y + padding, rot);
+                scope.transformation = new Transformation(displayPoint.x + padding, displayPoint.y + padding, rot);
             } else {
                 throw Constants.Strings.VIEWBOX_MISSING;
             }
-        }        
+        }
+
+        // Handle mouse down.
+        private _handleMouseDown(e: MouseEvent, scope: IGadgetBoardComponentScope) {
+            var placedPart = scope.boardComponent;
+            var boardComponents = [
+                new Selection.BoardComponent(placedPart, placedPart.get_catalog_data().getEagleDisplayMapper())
+            ];
+            scope.selection.selectBoardComponents(boardComponents);
+        }
 
         /** @override */
         public templateUrl() {

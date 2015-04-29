@@ -4,7 +4,6 @@ module Jet.Ui.Board {
     export interface IAbstractBoardComponentScope extends Application.IApplicationScope {
         boardComponent: Model.PlacedPart;
         catalogModel: Model.CatalogModel;
-        handleMouseMove: (e: MouseEvent) => void;
         isSelected: boolean;
         selection: Selection.Manager;
     }
@@ -31,12 +30,6 @@ module Jet.Ui.Board {
                         scope.isSelected = isSelected;
                     }
                 }, true);
-
-                // TODO: Shouldn't be here.
-                // Handle mouse move.
-                scope.handleMouseMove = function(e: MouseEvent) {
-                    main.handleMouseMove_(e);
-                };
 
                 main.onScopeLoaded_(scope, instanceElement);
             };

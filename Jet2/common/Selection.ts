@@ -16,7 +16,6 @@
             this._board = null;
         }
 
-
         /** BOARD COMPONENTS */
 
         // Get selected board components.
@@ -45,7 +44,6 @@
                 }
             }
         }
-
 
         /** BOARD */
         public setBoard(board: any) {
