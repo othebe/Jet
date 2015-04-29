@@ -48,6 +48,17 @@ module Jet.Ui.Board {
         // Call once scope has been loaded.
         protected onScopeLoaded_() { }
 
+        // Translate board component.
+        protected translateBoardComponentBy_(boardComponent: Model.PlacedPart, translation: Point) {
+            boardComponent.set_xpos(boardComponent.get_xpos() + translation.x);
+            boardComponent.set_ypos(boardComponent.get_ypos() + translation.y);
+        }
+
+        // Rotate board component.
+        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotation: number) {
+            boardComponent.set_rot(boardComponent.get_rot() + rotation);
+        }
+
         // Set board dimensions.
         private _getBoardDimensions(gadgetModel: Model.GadgetModel): BoardDimensions {
             var bb = gadgetModel.bounding_box();

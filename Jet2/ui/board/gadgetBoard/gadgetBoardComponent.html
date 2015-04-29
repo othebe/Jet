@@ -2,10 +2,28 @@
    ng-attr-transform="translate({{transformation.x}} {{transformation.y}}) rotate({{transformation.rot}} {{dimensions.x / 2}} {{dimensions.y / 2}})">
 
     <!-- Selection border -->
-    <rect ng-if="isSelected" x="0" y="0" ng-attr-width="{{dimensions.x}}" ng-attr-height="{{dimensions.y}}" style="stroke: red; stroke-width: 5px; fill: transparent;" />
+    <rect ng-if="isSelected"
+          x="0" 
+          y="0" 
+          ng-attr-width="{{dimensions.x}}"
+          ng-attr-height="{{dimensions.y}}"
+          style="stroke: red; stroke-width: 5px; fill: transparent;" />
+
+    <!-- Rotation control -->
+    <rect ng-if="isSelected"
+          ng-attr-x="{{dimensions.x}}"
+          y="-15"
+          width="15"
+          height="15"
+          class="rotate-control"
+          ng-mousedown="componentTouchHandler.handleMouseDown($event, true)"
+          ng-mouseup="componentTouchHandler.handleMouseUp($event, true)"
+          ng-mousemove="componentTouchHandler.handleMouseMove($event, true)" />
 
     <!-- Component image -->
-    <g class="img" ng-class="{selected: isSelected}"></g>
+    <g class="img" ng-class="{selected: isSelected}"
+       ng-mousedown="componentTouchHandler.handleMouseDown($event)"
+       ng-mouseup="componentTouchHandler.handleMouseUp($event)" />
 </g>
 
 <style>
@@ -15,5 +33,12 @@
 
     g.gadget-board-component g.img.selected {
         cursor: move;
+    }
+
+    g.gadget-board-component .rotate-control {
+        cursor: nwse-resize;
+        fill: red;
+        stroke: red;
+        stroke-width: 1px;
     }
 </style>

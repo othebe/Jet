@@ -2,7 +2,7 @@
 
 module Jet.Ui.Board {
     export interface IGadgetBoardScope extends IAbstractBoardScope {
-        boardTouchHandler: BoardTouchHandler;
+        boardTouchHandler: TouchHandler;
         padding: number;
     }
 
@@ -21,25 +21,24 @@ module Jet.Ui.Board {
             scope.padding = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
 
             // Register board touch handler.
-            scope.boardTouchHandler = new BoardTouchHandler(
+            scope.boardTouchHandler = new TouchHandler(
                 null,
                 null,
                 this._onMouseMove.bind(this));
         }
 
         // Handle mouse move.
-        private _onMouseMove(boardTouchHandler: BoardTouchHandler) {
+        private _onMouseMove(touchHandler: TouchHandler) {
             // Translate all selected board components.
             var selectedComponents = this.scope_.selection.getBoardComponents();
             if (selectedComponents.length > 0) {
-                var translation = boardTouchHandler.getTranslation();
+                var translation = touchHandler.getTranslation();
                 if (translation == null) {
                     return;
                 } else {
                     for (var i = 0; i < selectedComponents.length; i++) {
                         var placedPart = selectedComponents[i].placedPart;
-                        placedPart.set_xpos(placedPart.get_xpos() + translation.x);
-                        placedPart.set_ypos(placedPart.get_ypos() + translation.y);
+                        this.translateBoardComponentBy_(placedPart, translation);
                     }
                 }
             }

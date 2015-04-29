@@ -58,7 +58,9 @@ module Jet.Ui.Board {
             scope.selection.selectBoardComponents(boardComponents);
         }
 
-        // Handle mouse movement.
-        protected handleMouseMove_(e: MouseEvent) { }
+        // Rotate board component.
+        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotation: number) {
+            boardComponent.set_rot(boardComponent.get_rot() + rotation);
+        }
     }
 } 

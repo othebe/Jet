@@ -3,11 +3,10 @@
 module Jet.Ui.Board {
     interface IGadgetBoardComponentScope extends IAbstractBoardComponentScope {
         center: Point;
+        componentTouchHandler: TouchHandler;
         dimensions: Point;
         padding: number;
         transformation: Transformation;
-
-        handleMouseDown: (MouseEvent) => void;
     }
 
     class Transformation {
@@ -40,10 +39,18 @@ module Jet.Ui.Board {
             // Set dimensions.
             this._setDimensions(scope);
 
-            // Handle mouse down.
-            scope.handleMouseDown = (e: MouseEvent) => {
-                this._handleMouseDown(e, scope);
-            }
+            scope.componentTouchHandler = new TouchHandler(
+                // Mouse up.
+                null,
+                // Mouse down.
+                (touchHandler: TouchHandler) => {
+                    this._handleMouseDown(scope, touchHandler);
+                },
+                // Mouse move.
+                (touchHandler: TouchHandler) => {
+                    this._handleMouseMove(scope, touchHandler);
+                }
+            );
         }
 
         /** @override */
@@ -95,8 +102,16 @@ module Jet.Ui.Board {
         }
 
         // Handle mouse down.
-        private _handleMouseDown(e: MouseEvent, scope: IGadgetBoardComponentScope) {
+        private _handleMouseDown(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
             this.setSelected_(scope, true);
+        }
+
+        // Handle rotation mouse move.
+        private _handleMouseMove(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
+            // TODO (othebe): This actually handles the rotation control. The control needs to be
+            // placed in a separate directive so this code can live there instead.
+            var origin = new Point(0, 0);
+            var rotation = touchHandler.getRotationAboutPoint(origin);
         }
 
         /** @override */
