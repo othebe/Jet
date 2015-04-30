@@ -52,7 +52,15 @@ module Jet.Ui.Board {
             scope.isSelected = true;
 
             var placedPart = scope.boardComponent;
-            scope.selection.addBoardComponent([placedPart]);
+            scope.selection.addPlacedPart([placedPart]);
+        }
+
+        // Remove from selection.
+        protected removeFromSelected_(scope: IAbstractBoardComponentScope) {
+            scope.isSelected = false;
+
+            var placedPart = scope.boardComponent;
+            scope.selection.removePlacedPart([placedPart]);
         }
 
         // Set selected.
@@ -63,7 +71,7 @@ module Jet.Ui.Board {
             var boardComponents = [
                 placedPart
             ];
-            scope.selection.selectBoardComponents(boardComponents);
+            scope.selection.selectPlacedPart(boardComponents);
         }
 
         // Rotate board component.

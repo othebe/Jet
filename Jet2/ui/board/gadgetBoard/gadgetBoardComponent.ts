@@ -111,6 +111,7 @@ module Jet.Ui.Board {
             }
             // Remove from selection.
             else if (modifier == TouchHandlerEventModifier.SHIFT) {
+                this.removeFromSelected_(scope);
             }
             // Set selection.
             else {

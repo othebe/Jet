@@ -30,27 +30,37 @@
             return components;
         }
 
-        // Select board components.
-        public selectBoardComponents(placedParts: Array<Model.PlacedPart>) {
+        // Select placed part.
+        public selectPlacedPart(placedParts: Array<Model.PlacedPart>) {
             this._placedParts = [];
             for (var i = 0; i < placedParts.length; i++) {
                 this._placedParts.push(placedParts[i]);
             }
         }
 
-        // Add board component to selection.
-        public addBoardComponent(boardComponent: Array<Jet.Model.PlacedPart>) {
-            throw Jet.Constants.Strings.UNIMPLEMENTED_METHOD;
+        // Add placed part to selection.
+        public addPlacedPart(placedParts: Array<Model.PlacedPart>) {
+            for (var i = 0; i < placedParts.length; i++) {
+                var placedPart = placedParts[i];
+                if (this._placedParts.indexOf(placedPart) < 0) {
+                    this._placedParts.push(placedParts[i]);
+                }
+            }
         }
 
-        // Get selected board components by placed part.
-        //public getBoardComponentByPlacedPart(placedPart: Model.PlacedPart): BoardComponent {
-        //    for (var i = 0; i < this._placedParts.length; i++) {
-        //        if (this._placedParts[i].placedPart == placedPart) {
-        //            return this._placedParts[i];
-        //        }
-        //    }
-        //}
+        // Remove placed part from selection.
+        public removePlacedPart(placedParts: Array<Model.PlacedPart>) {
+            var remaining = [];
+            for (var i = 0; i < this._placedParts.length; i++) {
+                var placedPart = this._placedParts[i];
+                if (placedParts.indexOf(placedPart) < 0) {
+                    remaining.push(placedPart);
+                }
+            }
+
+            this._placedParts = remaining;
+        }
+
 
         /** BOARD */
         public setBoard(board: any) {

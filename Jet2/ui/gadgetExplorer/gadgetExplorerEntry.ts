@@ -59,7 +59,7 @@ module Jet.Ui {
                     
                     // Select all placed parts in the component.
                     var placedParts = scope.component.get_placed_parts();
-                    scope.selection.selectBoardComponents(placedParts);
+                    scope.selection.selectPlacedPart(placedParts);
 
                     event.stopPropagation();
 
@@ -71,7 +71,7 @@ module Jet.Ui {
                         return;
                     }
 
-                    scope.selection.selectBoardComponents([
+                    scope.selection.selectPlacedPart([
                         placedPart
                     ]);
 
