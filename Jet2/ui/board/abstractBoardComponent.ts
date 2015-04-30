@@ -47,6 +47,14 @@ module Jet.Ui.Board {
         // Update UI based on placed part data.
         protected updateUi_(scope: IAbstractBoardComponentScope) { }
 
+        // Add to selection.
+        protected addToSelected_(scope: IAbstractBoardComponentScope) {
+            scope.isSelected = true;
+
+            var placedPart = scope.boardComponent;
+            scope.selection.addBoardComponent([placedPart]);
+        }
+
         // Set selected.
         protected setSelected_(scope: IAbstractBoardComponentScope, isSelected: boolean) {
             scope.isSelected = isSelected;
@@ -59,8 +67,18 @@ module Jet.Ui.Board {
         }
 
         // Rotate board component.
-        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotation: number) {
-            boardComponent.set_rot(boardComponent.get_rot() + rotation);
+        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotationDelta: number) {
+            var rot = boardComponent.get_rot();
+            var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
+
+            var currentCoords = eagleDisplayMapper.convertEagleToDisplayPoint(
+                new Point(boardComponent.get_xpos(), boardComponent.get_ypos()), rot);
+            var newCoords = eagleDisplayMapper.convertDisplayToEaglePoint(
+                new Point(currentCoords.x, currentCoords.y), rot + rotationDelta);
+
+            boardComponent.set_xpos(newCoords.x);
+            boardComponent.set_ypos(newCoords.y);
+            boardComponent.set_rot(rot + rotationDelta);
         }
     }
 } 

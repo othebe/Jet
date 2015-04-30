@@ -54,11 +54,6 @@ module Jet.Ui.Board {
             boardComponent.set_ypos(boardComponent.get_ypos() + translation.y);
         }
 
-        // Rotate board component.
-        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotation: number) {
-            boardComponent.set_rot(boardComponent.get_rot() + rotation);
-        }
-
         // Set board dimensions.
         private _getBoardDimensions(gadgetModel: Model.GadgetModel): BoardDimensions {
             var bb = gadgetModel.bounding_box();

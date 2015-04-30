@@ -103,7 +103,19 @@ module Jet.Ui.Board {
 
         // Handle mouse down.
         private _handleMouseDown(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
-            this.setSelected_(scope, true);
+            var modifier = touchHandler.getEventModifier();
+
+            // Add to selection.
+            if (modifier == TouchHandlerEventModifier.CTRL) {
+                this.addToSelected_(scope);
+            }
+            // Remove from selection.
+            else if (modifier == TouchHandlerEventModifier.SHIFT) {
+            }
+            // Set selection.
+            else {
+                this.setSelected_(scope, true);
+            }
         }
 
         // Handle rotation mouse move.
@@ -112,6 +124,10 @@ module Jet.Ui.Board {
             // placed in a separate directive so this code can live there instead.
             var origin = new Point(0, 0);
             var rotation = touchHandler.getRotationAboutPoint(origin);
+
+            if (rotation != null) {
+                this.rotateBoardComponentBy_(scope.boardComponent, rotation);
+            }
         }
 
         /** @override */
