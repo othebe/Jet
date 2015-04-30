@@ -11,12 +11,13 @@
         </li>
 
         <li class="menu-option">
-          View
-	  <ul class="submenu">
-	    <li class="option" ng-click="selectPerspective(0)">Build</li>
-	    <li class="option" ng-click="selectPerspective(1)">Debug</li>
-	    <li class="option" ng-click="selectPerspective(2)">NB</li>
-	  </ul>
+            View
+            <ul class="submenu">
+                <li class="option" ng-click="selectPerspective(0)">Workspace</li>
+                <li class="option" ng-click="selectPerspective(1)">Debug</li>
+                <li class="option" ng-click="selectPerspective(2)">NB</li>
+                <li class="option" ng-click="selectPerspective(3)">Board</li>
+            </ul>
         </li>
 
         <li class="menu-option" ng-click="showAbout()">
@@ -41,30 +42,30 @@
         padding: 8px 12px;
     }
 
-    .menu-option:hover {
-        background-color: #91AA9D;
-    }
+        .menu-option:hover {
+            background-color: #91AA9D;
+        }
 
-    .menu-option:hover > .submenu {
-        display: block;
-    }
+            .menu-option:hover > .submenu {
+                display: block;
+            }
 
-    .menu-option .submenu {
-        background-color: #193441;
-        display: none;
-        margin: 8px 0 0 -12px;
-        position: absolute;
-        z-index: 99;
-    }
+        .menu-option .submenu {
+            background-color: #193441;
+            display: none;
+            margin: 8px 0 0 -12px;
+            position: absolute;
+            z-index: 99;
+        }
 
-    .menu-option .submenu .option {
-        border-bottom: 1px solid #3E606F;
-        padding: 8px 12px;
-    }
+            .menu-option .submenu .option {
+                border-bottom: 1px solid #3E606F;
+                padding: 8px 12px;
+            }
 
-    .menu-option .submenu .option:hover {
-        background-color: #91AA9D;
-    }
+                .menu-option .submenu .option:hover {
+                    background-color: #91AA9D;
+                }
 
     div.menu-bar .bar {
         background-color: #193441;

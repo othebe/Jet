@@ -1,30 +1,37 @@
 ﻿<div class="gadget-board fill-height ui-container">
     <div layout="column" style="height:100%">
         <md-whiteframe class="md-whiteframe-z1 fill-height board-container" layout="row" layout-align="center" style="overflow: auto; padding: 20px;">            
-            <div class="board-container" ng-attr-width="{{boardDimensions.width + 2 * padding}}px" ng-attr-height="{{boardDimensions.height + 2 * padding}}px">
-                <svg ng-attr-width="{{boardDimensions.width + 2 * padding}}px" 
-                     ng-attr-height="{{boardDimensions.height + 2 *padding}}px"
+            <div class="board-container">
+                <svg ng-attr-width="{{(boardDimensions.width + 2 * padding) * (zoom / 100.0)}}px" 
+                     ng-attr-height="{{(boardDimensions.height + 2 *padding) * (zoom / 100.0)}}px"
                      ng-mousedown="boardTouchHandler.handleMouseDown($event)"
                      ng-mouseup="boardTouchHandler.handleMouseUp($event)"
-                     ng-mousemove="boardTouchHandler.handleMouseMove($event)">
+                     ng-mousemove="boardTouchHandler.handleMouseMove($event)"
+                     style="background-color: gray">
 
-                    <!-- PCB -->
-                    <rect class="pcb" 
-                          ng-attr-x="{{padding}}px" 
-                          ng-attr-y="{{padding}}px" 
-                          ng-attr-width="{{boardDimensions.width}}px" 
-                          ng-attr-height="{{boardDimensions.height}}px" />
+                    <!-- Everything inside the board. -->
+                    <g ng-attr-transform="scale({{zoom / 100.0}})">
+                        <!-- PCB -->
+                        <rect class="pcb" 
+                              ng-attr-x="{{padding}}px" 
+                              ng-attr-y="{{padding}}px" 
+                              ng-attr-width="{{boardDimensions.width}}px" 
+                              ng-attr-height="{{boardDimensions.height}}px" />
 
-                    <!-- Board components. -->
-                    <g gadget-board-component   ng-repeat="boardComponent in boardComponents"
-                                                board-component="boardComponent"
-                                                catalog-model="catalogModel"
-                                                selection="selection"
-                                                padding="padding">
+                        <!-- Board components. -->
+                        <g gadget-board-component   ng-repeat="boardComponent in boardComponents"
+                                                    board-component="boardComponent"
+                                                    catalog-model="catalogModel"
+                                                    selection="selection"
+                                                    padding="padding">
+                        </g>
                     </g>
                 </svg>
             </div>
         </md-whiteframe>
+
+        <gadget-board-controls zoom="zoom">
+        </gadget-board-controls>
     </div>
 </div>
 

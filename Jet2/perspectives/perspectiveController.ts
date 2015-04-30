@@ -24,6 +24,9 @@ module Jet.Perspective {
             function (scope, appContext) {
                 return new Jet.Perspective.NBPerspective(scope, appContext);
             },
+            function (scope, appContext) {
+                return new Perspective.BoardPerspective(scope, appContext);
+            }
         ];
 
         constructor(private $scope: IPerspectiveScope, private appContext: AppContext) {
@@ -32,9 +35,9 @@ module Jet.Perspective {
             var scope = $scope;
 
             $scope.perspective = this._perspectives[0]($scope, appContext);
-	        $scope.$on("change:perspective", function(name: ng.IAngularEvent, newPerspective: number) {
-		        scope.perspective = main._perspectives[newPerspective](scope, appContext);
-	        });
-	    }
+            $scope.$on("change:perspective", function (name: ng.IAngularEvent, newPerspective: number) {
+                scope.perspective = main._perspectives[newPerspective](scope, appContext);
+            });
+        }
     }
 }

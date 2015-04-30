@@ -4,6 +4,7 @@ module Jet.Ui.Board {
     export interface IGadgetBoardScope extends IAbstractBoardScope {
         boardTouchHandler: TouchHandler;
         padding: number;
+        zoom: number;
     }
 
     export class GadgetBoard extends AbstractBoard {
@@ -16,6 +17,9 @@ module Jet.Ui.Board {
         /** @override */
         protected onScopeLoaded_() {
             var scope = <IGadgetBoardScope> this.scope_;
+
+            // Set zoom.
+            scope.zoom = Application.InitialData.Board.zoom;
 
             // Register padding.
             scope.padding = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);

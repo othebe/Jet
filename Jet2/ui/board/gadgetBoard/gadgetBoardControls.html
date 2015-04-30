@@ -1,0 +1,24 @@
+﻿<div class="gadget-board-controls">
+    <div class="zoom">
+        <span>Zoom:</span>
+        <span class="button" ng-click="setZoom(zoom + 10)">+</span>
+        <span ng-bind="zoom"></span>%
+        <span class="button" ng-click="setZoom(zoom - 10)">-</span>
+    </div>
+</div>
+
+<style>
+    .gadget-board-controls {
+        margin-top: 10px;
+    }
+
+    .gadget-board-controls .zoom .button {
+        cursor: pointer;
+        margin: 0 5px;
+        padding: 5px;
+    }
+
+    .gadget-board-controls .zoom .button:hover {
+        background-color: #e3e3e3;
+    }
+</style>

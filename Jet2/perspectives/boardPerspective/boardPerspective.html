@@ -1,0 +1,29 @@
+﻿<div class="fill-height">
+    <div layout="column" style="height:100%">
+        <div flex="90"class="fill-height">
+            <div layout="row" layout-align="space-between center" class="fill-height">
+                <!-- Board. -->
+                <gadget-board class="fill-height" flex="70"
+                              catalog-model="catalogModel"
+                              gadget-model="gadgetModel"
+                              selection="selection">
+                </gadget-board>
+
+                <!-- Component inspector. -->
+                <!-- Only shown when there is a component selected. -->
+                <component-inspector class="fill-height" flex="30"
+                                     gadget-model="gadgetModel"
+                                     catalog-model="catalogModel"
+                                     selection="selection"
+                                     ng-if="selection.getBoard() == null && selection.getPlacedParts().length > 0">
+                </component-inspector>
+
+                <!-- Gadget inspector. -->
+                <gadget-inspector class="fill-height" flex="30"
+                                  gadget-model="gadgetModel"
+                                  ng-if="selection.getBoard() != null || selection.getPlacedParts().length == 0">
+                </gadget-inspector>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,12 +13,13 @@ class AppContext {
 
         this._catalogModel = new Jet.Model.CatalogModel();
 
+        var dimensions = InitialData.Board.dimensions;
         this._gadgetModel = new Jet.Model.GadgetModel();
         this._gadgetModel.set_corners([
-            new Jet.Model.Vertex(InitialData.Board.left, InitialData.Board.top),
-            new Jet.Model.Vertex(InitialData.Board.left + InitialData.Board.width, InitialData.Board.top),
-            new Jet.Model.Vertex(InitialData.Board.left + InitialData.Board.width, InitialData.Board.top + InitialData.Board.left + InitialData.Board.height),
-            new Jet.Model.Vertex(InitialData.Board.left, InitialData.Board.top + InitialData.Board.height)
+            new Jet.Model.Vertex(dimensions.left, dimensions.top),
+            new Jet.Model.Vertex(dimensions.left + dimensions.width, dimensions.top),
+            new Jet.Model.Vertex(dimensions.left + dimensions.width, dimensions.top + dimensions.left + dimensions.height),
+            new Jet.Model.Vertex(dimensions.left, dimensions.top + dimensions.height)
         ]);
     }
 
