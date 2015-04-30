@@ -22,13 +22,13 @@
                                      gadget-model="gadgetModel"
                                      catalog-model="catalogModel"
                                      selection="selection"
-                                     ng-if="selection.getBoard() == null && selection.getBoardComponents().length > 0">
+                                     ng-if="selection.getBoard() == null && selection.getPlacedParts().length > 0">
                 </component-inspector>
 
                 <!-- Gadget inspector. -->
                 <gadget-inspector class="fill-height" flex="30"
                                   gadget-model="gadgetModel"
-                                  ng-if="selection.getBoard() != null || selection.getBoardComponents().length == 0">
+                                  ng-if="selection.getBoard() != null || selection.getPlacedParts().length == 0">
                 </gadget-inspector>
             </div>
         </div>

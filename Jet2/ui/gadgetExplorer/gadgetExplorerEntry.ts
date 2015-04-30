@@ -41,20 +41,15 @@ module Jet.Ui {
 
                 // Determine if the component instance is selected.
                 scope.isComponentInstanceSelected = function (): boolean {
-                    var componentInstances = main._getComponentsForParts(scope.selection.getBoardComponents());
+                    var componentInstances = scope.selection.getComponentInstances();
                     return componentInstances.indexOf(scope.component) >= 0;
 
                 };
 
                 // Determine if the placed part is selected.
                 scope.isPlacedPartSelected = function (placedPart: Model.PlacedPart): boolean {
-                    var boardComponents = scope.selection.getBoardComponents();
-                    for (var i = 0; i < boardComponents.length; i++) {
-                        if (boardComponents[i].placedPart == placedPart) {
-                            return true;
-                        }
-                    }
-                    return false;
+                    var placedParts = scope.selection.getPlacedParts();
+                    return placedParts.indexOf(placedPart) >= 0;
                 };
 
                 scope.toggleSelectedComponent = function (event: Event) {
@@ -63,14 +58,8 @@ module Jet.Ui {
                     }
                     
                     // Select all placed parts in the component.
-                    var boardComponents = [];
                     var placedParts = scope.component.get_placed_parts();
-                    for (var i = 0; i < placedParts.length; i++) {
-                        var placedPart = placedParts[i];
-                        var eagleDisplayMapper = scope.catalogModelData.getPlacedPartByRef(placedPart.get_ref()).getEagleDisplayMapper();
-                        boardComponents.push(new Selection.BoardComponent(placedParts[i], eagleDisplayMapper));
-                    }
-                    scope.selection.selectBoardComponents(boardComponents);
+                    scope.selection.selectBoardComponents(placedParts);
 
                     event.stopPropagation();
 
@@ -83,7 +72,7 @@ module Jet.Ui {
                     }
 
                     scope.selection.selectBoardComponents([
-                        new Selection.BoardComponent(placedPart, null)
+                        placedPart
                     ]);
 
                     event.stopPropagation();
@@ -105,20 +94,6 @@ module Jet.Ui {
             setTimeout(function () {
                 this._isDelayed = false;
             }.bind(this), this._CLICK_DELAY);
-        }
-
-        // Get component instances for an array of board components.
-        private _getComponentsForParts(boardComponents: Array<Selection.BoardComponent>): Array<Model.ComponentInstance> {
-            var components = [];
-            for (var i = 0; i < boardComponents.length; i++) {
-                var placedPart = boardComponents[i].placedPart;
-                var component = placedPart.get_component_instance();
-                if (components.indexOf(component) < 0) {
-                    components.push(component);
-                }
-            }
-
-            return components;
         }
 
         public templateUrl(): string {

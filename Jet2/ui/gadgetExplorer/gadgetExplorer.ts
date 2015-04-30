@@ -21,20 +21,6 @@ module Jet.Ui {
                     oldComponents: { [index: string]: Jet.Model.ComponentInstance })
                 {
                 }, true);
-
-                // Watch selection.
-                scope.$watch('selection', function () {
-                    var boardComponents = scope.selection.getBoardComponents();
-                    
-                    // Get placed parts.
-                    var placedParts = [];
-                    for (var i = 0; i < boardComponents.length; i++) {
-                        placedParts.push(boardComponents[i]);
-                    }
-
-                    // Get component instances.
-                    var componentInstances = main._getComponentsForParts(scope.selection.getBoardComponents());
-                }, true);
             }
 
             this.scope = {
@@ -42,20 +28,6 @@ module Jet.Ui {
                 gadgetModel: '=',
                 selection: '='
             };
-        }
-
-        // Get component instances for an array of board components.
-        private _getComponentsForParts(boardComponents: Array<Selection.BoardComponent>): Array<Model.ComponentInstance> {
-            var components = [];
-            for (var i = 0; i < boardComponents.length; i++) {
-                var placedPart = boardComponents[i].placedPart;
-                var component = placedPart.get_component_instance();
-                if (components.indexOf(component) < 0) {
-                    components.push(component);
-                }
-            }
-
-            return components;
         }
 
         public templateUrl(): string {

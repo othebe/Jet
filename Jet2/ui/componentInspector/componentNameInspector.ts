@@ -18,7 +18,7 @@ module Jet.Ui {
             this.link = function (scope: IComponentNameInspectorScope) {
                 scope.$watch('selection', function () {
                     // Check if multiple components are selected.
-                    var components = main._getComponentsForParts(scope.selection.getBoardComponents());
+                    var components = scope.selection.getComponentInstances();
                     if (components.length > 1) {
                         scope.name = Constants.Strings.MULTIPLE_COMPONENTS_SELECTED;
                     } else if (components.length == 1) {
@@ -44,20 +44,6 @@ module Jet.Ui {
                 gadgetModel: '=',
                 selection: '='
             };
-        }
-
-        // Get component instances for an array of board components.
-        private _getComponentsForParts(boardComponents: Array<Selection.BoardComponent>): Array<Model.ComponentInstance> {
-            var components = [];
-            for (var i = 0; i < boardComponents.length; i++) {
-                var placedPart = boardComponents[i].placedPart;
-                var component = placedPart.get_component_instance();
-                if (components.indexOf(component) < 0) {
-                    components.push(component);
-                }
-            }
-
-            return components;
         }
 
         public templateUrl(): string {

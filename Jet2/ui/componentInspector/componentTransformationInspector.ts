@@ -20,12 +20,12 @@ module Jet.Ui {
                 scope.transformation = { translation: new Point(0, 0), rotation: 0 };
 
                 scope.$watch('selection', function () {
-                    var boardComponents = scope.selection.getBoardComponents();
+                    var placedParts = scope.selection.getPlacedParts();
 
                     // Transformations will only be shown if a single board component is selected.
-                    if (boardComponents.length == 1) {
-                        main._placedPart = boardComponents[0].placedPart;
-                        main._eagleDisplayMapper = boardComponents[0].eagleDisplayMapper;
+                    if (placedParts.length == 1) {
+                        main._placedPart = placedParts[0];
+                        main._eagleDisplayMapper = placedParts[0].get_catalog_data().getEagleDisplayMapper();
                         main._setTransformationData(scope);
                     } else {
                         main._placedPart = null;
@@ -51,20 +51,6 @@ module Jet.Ui {
                     main._placedPart.set_rot(rotation);
                 }, true);
             }
-        }
-
-        // Get component instances for an array of board components.
-        private _getComponentsForParts(boardComponents: Array<Selection.BoardComponent>): Array<Model.ComponentInstance> {
-            var components = [];
-            for (var i = 0; i < boardComponents.length; i++) {
-                var placedPart = boardComponents[i].placedPart;
-                var component = placedPart.get_component_instance();
-                if (components.indexOf(component) < 0) {
-                    components.push(component);
-                }
-            }
-
-            return components;
         }
 
         // Sets transformation data from the data model.

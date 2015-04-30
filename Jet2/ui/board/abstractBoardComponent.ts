@@ -26,7 +26,7 @@ module Jet.Ui.Board {
                         return;
                     } else {
                         var placedPart = scope.boardComponent;
-                        var isSelected = scope.selection.getBoardComponentByPlacedPart(placedPart) != null;
+                        var isSelected = scope.selection.getPlacedParts().indexOf(placedPart) >= 0;
                         scope.isSelected = isSelected;
                     }
                 }, true);
@@ -61,7 +61,7 @@ module Jet.Ui.Board {
 
             var placedPart = scope.boardComponent;
             var boardComponents = [
-                new Selection.BoardComponent(placedPart, placedPart.get_catalog_data().getEagleDisplayMapper())
+                placedPart
             ];
             scope.selection.selectBoardComponents(boardComponents);
         }

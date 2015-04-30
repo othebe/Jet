@@ -30,14 +30,14 @@ module Jet.Ui.Board {
         // Handle mouse move.
         private _onMouseMove(touchHandler: TouchHandler) {
             // Translate all selected board components.
-            var selectedComponents = this.scope_.selection.getBoardComponents();
+            var selectedComponents = this.scope_.selection.getPlacedParts();
             if (selectedComponents.length > 0) {
                 var translation = touchHandler.getTranslation();
                 if (translation == null) {
                     return;
                 } else {
                     for (var i = 0; i < selectedComponents.length; i++) {
-                        var placedPart = selectedComponents[i].placedPart;
+                        var placedPart = selectedComponents[i];
                         this.translateBoardComponentBy_(placedPart, translation);
                     }
                 }
