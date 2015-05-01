@@ -20,11 +20,11 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="index.html" />
+    <Content Include="perspectives\boardPerspective\boardPerspective.html" />
     <Content Include="perspectives\debugPerspective\debugPerspective.css" />
     <Content Include="perspectives\debugPerspective\debugPerspective.html" />
     <Content Include="perspectives\nbPerspective\nbPerspective.css" />
     <Content Include="perspectives\nbPerspective\nbPerspective.html" />
-    <Content Include="perspectives\workspacePerspective\workspacePerspective.css" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
     <Content Include="public\libraries\angular-animate\angular-animate.js" />
     <Content Include="public\libraries\angular-animate\angular-animate.min.js" />
@@ -428,6 +428,7 @@
     <TypeScriptCompile Include="models\catalogModelData.ts" />
     <TypeScriptCompile Include="models\catalogModel.ts" />
     <TypeScriptCompile Include="models\gadgetModel.ts" />
+    <TypeScriptCompile Include="perspectives\boardPerspective\boardPerspective.ts" />
     <TypeScriptCompile Include="perspectives\debugPerspective\debugPerspective.ts" />
     <TypeScriptCompile Include="perspectives\IPerspective.ts" />
     <TypeScriptCompile Include="perspectives\nbPerspective\nbPerspective.ts" />

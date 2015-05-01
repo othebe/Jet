@@ -1,9 +1,21 @@
 ﻿<div class="gadget-board-controls">
-    <div class="zoom">
-        <span>Zoom:</span>
-        <span class="button" ng-click="setZoom(zoom + 10)">+</span>
-        <span ng-bind="zoom"></span>%
-        <span class="button" ng-click="setZoom(zoom - 10)">-</span>
+    <div class="left">
+        <div class="zoom">
+            <span>Zoom:</span>
+            <span class="button" ng-click="setZoom(zoom + 10)">+</span>
+            <span ng-bind="zoom"></span>%
+            <span class="button" ng-click="setZoom(zoom - 10)">-</span>
+        </div>
+    </div>
+
+    <div class="right">
+        <div class="left grid control" title="Toggle grid.">
+            <img class="button" src="public/img/grid.svg" />
+        </div>
+
+        <div class="left gadget-inspector control" title="Toggle edit Gadget.">
+            <img class="button" src="public/img/configure.svg" />
+        </div>
     </div>
 </div>
 
@@ -12,13 +24,31 @@
         margin-top: 10px;
     }
 
-    .gadget-board-controls .zoom .button {
+    .gadget-board-controls .control {
+        margin-left: 15px;
+    }
+
+    .gadget-board-controls .left {
+        float: left;
+    }
+
+    .gadget-board-controls .right {
+        float: right;
+    }
+
+    .gadget-board-controls .zoom span.button {
         cursor: pointer;
         margin: 0 5px;
         padding: 5px;
     }
 
-    .gadget-board-controls .zoom .button:hover {
+    .gadget-board-controls .zoom span.button:hover {
         background-color: #e3e3e3;
+    }
+
+    .gadget-board-controls img.button {
+        cursor: pointer;
+        height: 25px;
+        width: 25px;
     }
 </style>
