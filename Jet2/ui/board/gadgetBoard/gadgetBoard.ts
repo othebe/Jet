@@ -4,7 +4,12 @@ module Jet.Ui.Board {
     export interface IGadgetBoardScope extends IAbstractBoardScope {
         boardTouchHandler: TouchHandler;
         padding: number;
+        pcbData: PcbData;
         zoom: number;
+    }
+
+    export class PcbData {
+        constructor(public x: number, public y: number, public width: number, public height: number) { }
     }
 
     export class GadgetBoard extends AbstractBoard {
@@ -29,6 +34,27 @@ module Jet.Ui.Board {
                 null,
                 null,
                 this._onMouseMove.bind(this));
+
+            // Set PCB data.
+            scope.$watch('boardDimensions', function () {
+                scope.pcbData = this._extractPcbData();
+            }.bind(this));
+        }
+
+        // Extract PCB data from the instance element.
+        private _extractPcbData(): PcbData {
+            var scope = <IGadgetBoardScope> this.scope_;
+
+            if (scope.boardDimensions == null) {
+                return;
+            }
+
+            var x = scope.padding;
+            var y = scope.padding;
+            var width = scope.boardDimensions.width;
+            var height = scope.boardDimensions.width;
+
+            return new PcbData(x, y, width, height);
         }
 
         // Handle mouse move.

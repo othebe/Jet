@@ -6,8 +6,7 @@
                      ng-attr-height="{{(boardDimensions.height + 2 *padding) * (zoom / 100.0)}}px"
                      ng-mousedown="boardTouchHandler.handleMouseDown($event)"
                      ng-mouseup="boardTouchHandler.handleMouseUp($event)"
-                     ng-mousemove="boardTouchHandler.handleMouseMove($event)"
-                     style="background-color: gray">
+                     ng-mousemove="boardTouchHandler.handleMouseMove($event)">
 
                     <!-- Everything inside the board. -->
                     <g ng-attr-transform="scale({{zoom / 100.0}})">
@@ -23,7 +22,8 @@
                                                     board-component="boardComponent"
                                                     catalog-model="catalogModel"
                                                     selection="selection"
-                                                    padding="padding">
+                                                    padding="padding"
+                                                    pcb-data="pcbData">
                         </g>
                     </g>
                 </svg>

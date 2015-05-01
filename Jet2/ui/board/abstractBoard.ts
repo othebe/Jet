@@ -16,14 +16,16 @@ module Jet.Ui.Board {
 
     export class AbstractBoard extends Ui.Directive {
         protected scope_: IAbstractBoardScope;
+        protected instanceElement_: JQuery;
 
         constructor(protected AppContext: AppContext) {
             super(AppContext);
 
             var main = this;
 
-            this.link = function (scope: IAbstractBoardScope) {
+            this.link = function (scope: IAbstractBoardScope, instanceElement: JQuery) {
                 main.scope_ = scope;
+                main.instanceElement_ = instanceElement;
                 
                 // Watch for new components in the gadget model.
                 scope.$watch('gadgetModel.get_components()', function () {

@@ -77,6 +77,16 @@
         public getWidth(): number {
             return this._imgWidth;
         }
+
+        // Get display origin X.
+        public getDisplayOriginX(): EagleDisplayMapper.DisplayOrigin {
+            return this._displayOriginX;
+        }
+
+        // Get display origin Y.
+        public getDisplayOriginY(): EagleDisplayMapper.DisplayOrigin {
+            return this._displayOriginY;
+        }
     }
 
     export module EagleDisplayMapper {

@@ -6,11 +6,33 @@ module Jet.Ui.Board {
         componentTouchHandler: TouchHandler;
         dimensions: Point;
         padding: number;
+        pcbData: PcbData;
         transformation: Transformation;
     }
 
+    // This represents an image transformation.
     class Transformation {
-        constructor(public x: number, public y: number, public rot: number) { }
+        public positionFixed: boolean;
+
+        constructor(
+            public x: number, public y: number, public rot: number,
+            private _imgWidth: number, private _imgHeight: number,
+            private _displayOriginX: EagleDisplayMapper.DisplayOrigin,
+            private _displayOriginY: EagleDisplayMapper.DisplayOrigin,
+            private _pcbData: PcbData)
+        {
+            this._checkPosition();
+        }
+
+        // Fix boundaries.
+        private _checkPosition() {
+            if (this._displayOriginX == EagleDisplayMapper.DisplayOrigin.CENTER && this._displayOriginY == EagleDisplayMapper.DisplayOrigin.CENTER) {
+                // TODO (othebe)
+            }
+            else {
+                throw Constants.Strings.UNIMPLEMENTED_METHOD;
+            }
+        }
     }
 
     export class GadgetBoardComponent extends AbstractBoardComponent {
@@ -24,6 +46,7 @@ module Jet.Ui.Board {
 
             // Add extra scope data.
             this.scope.padding = '=';
+            this.scope.pcbData = '=';
         }
 
         /** @override */
@@ -95,7 +118,17 @@ module Jet.Ui.Board {
                 var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot);
                 var padding = scope.padding;
 
-                scope.transformation = new Transformation(displayPoint.x + padding, displayPoint.y + padding, rot);
+                scope.transformation = new Transformation(
+                    displayPoint.x + padding, displayPoint.y + padding, rot,
+                    eagleDisplayMapper.getWidth(), eagleDisplayMapper.getHeight(),
+                    eagleDisplayMapper.getDisplayOriginX(), eagleDisplayMapper.getDisplayOriginY(),
+                    scope.pcbData);
+
+                // If the position was fixed, update the model accordingly.
+                if (scope.transformation.positionFixed) {
+                    // TODO (othebe)
+                }
+                
             } else {
                 throw Constants.Strings.VIEWBOX_MISSING;
             }
