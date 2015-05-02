@@ -61,6 +61,7 @@ module Jet.Ui.Board {
             var bb = gadgetModel.bounding_box();
             var width = fabric.util.parseUnit((bb.max_x - bb.min_x) + Constants.Board.MODEL_UNITS);
             var height = fabric.util.parseUnit((bb.max_y - bb.min_y) + Constants.Board.MODEL_UNITS);
+
             return new BoardDimensions(width, height);
         }
 

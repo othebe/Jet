@@ -115,7 +115,8 @@ module Jet.Ui.Board {
             if (eagleDisplayMapper != null) {
                 var eaglePoint = new Point(placedPart.get_xpos(), placedPart.get_ypos());
                 var rot = placedPart.get_rot();
-                var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot);
+                var boardDimensions = new Point(scope.pcbData.width, scope.pcbData.height);
+                var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot, boardDimensions);
                 var padding = scope.padding;
 
                 scope.transformation = new Transformation(

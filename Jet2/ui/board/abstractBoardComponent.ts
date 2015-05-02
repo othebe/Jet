@@ -76,17 +76,17 @@ module Jet.Ui.Board {
 
         // Rotate board component.
         protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotationDelta: number) {
-            var rot = boardComponent.get_rot();
-            var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
+            //var rot = boardComponent.get_rot();
+            //var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
 
-            var currentCoords = eagleDisplayMapper.convertEagleToDisplayPoint(
-                new Point(boardComponent.get_xpos(), boardComponent.get_ypos()), rot);
-            var newCoords = eagleDisplayMapper.convertDisplayToEaglePoint(
-                new Point(currentCoords.x, currentCoords.y), rot + rotationDelta);
+            //var currentCoords = eagleDisplayMapper.convertEagleToDisplayPoint(
+            //    new Point(boardComponent.get_xpos(), boardComponent.get_ypos()), rot);
+            //var newCoords = eagleDisplayMapper.convertDisplayToEaglePoint(
+            //    new Point(currentCoords.x, currentCoords.y), rot + rotationDelta);
 
-            boardComponent.set_xpos(newCoords.x);
-            boardComponent.set_ypos(newCoords.y);
-            boardComponent.set_rot(rot + rotationDelta);
+            //boardComponent.set_xpos(newCoords.x);
+            //boardComponent.set_ypos(newCoords.y);
+            //boardComponent.set_rot(rot + rotationDelta);
         }
     }
 } 

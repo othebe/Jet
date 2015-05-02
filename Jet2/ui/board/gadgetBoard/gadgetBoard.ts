@@ -52,7 +52,7 @@ module Jet.Ui.Board {
             var x = scope.padding;
             var y = scope.padding;
             var width = scope.boardDimensions.width;
-            var height = scope.boardDimensions.width;
+            var height = scope.boardDimensions.height;
 
             return new PcbData(x, y, width, height);
         }
@@ -66,6 +66,8 @@ module Jet.Ui.Board {
                 if (translation == null) {
                     return;
                 } else {
+                    // Eagle flips the y-axis.
+                    translation.y *= -1;
                     for (var i = 0; i < selectedComponents.length; i++) {
                         var placedPart = selectedComponents[i];
                         this.translateBoardComponentBy_(placedPart, translation);

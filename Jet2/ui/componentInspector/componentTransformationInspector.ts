@@ -40,17 +40,27 @@ module Jet.Ui {
                 scope.$watch('transformation', function () {
                     if (main._eagleDisplayMapper == null) {
                         return;
+                    } else {
+                        main._updateTransformationData(scope);
                     }
-
-                    var translation = new Point(scope.transformation.translation.x, scope.transformation.translation.y);
-                    var rotation = scope.transformation.rotation;
-
-                    var eagleCoords = main._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation);
-                    main._placedPart.set_xpos(eagleCoords.x);
-                    main._placedPart.set_ypos(eagleCoords.y);
-                    main._placedPart.set_rot(rotation);
                 }, true);
             }
+        }
+
+        // Updates transformation in the data model.
+        private _updateTransformationData(scope: IComponentTransformationInspectorScope) {
+            var translation = new Point(scope.transformation.translation.x, scope.transformation.translation.y);
+            var rotation = scope.transformation.rotation;
+
+            var boardBB = scope.gadgetModel.bounding_box();
+            var boardWidth = fabric.util.parseUnit((boardBB.max_x - boardBB.min_x) + Constants.Board.MODEL_UNITS);
+            var boardHeight = fabric.util.parseUnit((boardBB.max_y - boardBB.min_y) + Constants.Board.MODEL_UNITS);
+            var boardDimensions = new Point(boardWidth, boardHeight);
+
+            var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation, boardDimensions);
+            this._placedPart.set_xpos(eagleCoords.x);
+            this._placedPart.set_ypos(eagleCoords.y);
+            this._placedPart.set_rot(rotation);
         }
 
         // Sets transformation data from the data model.
@@ -59,9 +69,15 @@ module Jet.Ui {
                 return;
             }
 
+            // Get board dimensions.
+            var boardBB = scope.gadgetModel.bounding_box();
+            var boardWidth = fabric.util.parseUnit((boardBB.max_x - boardBB.min_x) + Constants.Board.MODEL_UNITS);
+            var boardHeight = fabric.util.parseUnit((boardBB.max_y - boardBB.min_y) + Constants.Board.MODEL_UNITS);
+            var boardDimensions = new Point(boardWidth, boardHeight);
+
             var translation = new Point(this._placedPart.get_xpos(), this._placedPart.get_ypos());
             var rotation = this._placedPart.get_rot();
-            var displayCoords = this._eagleDisplayMapper.convertEagleToDisplayPoint(translation, rotation);
+            var displayCoords = this._eagleDisplayMapper.convertEagleToDisplayPoint(translation, rotation, boardDimensions);
             displayCoords.x = parseFloat(displayCoords.x.toFixed(Jet.Constants.PRECISION));
             displayCoords.y = parseFloat(displayCoords.y.toFixed(Jet.Constants.PRECISION));
 
