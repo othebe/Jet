@@ -63,11 +63,10 @@ module Jet.Ui.Board {
             var selectedComponents = this.scope_.selection.getPlacedParts();
             if (selectedComponents.length > 0) {
                 var translation = touchHandler.getTranslation();
+
                 if (translation == null) {
                     return;
                 } else {
-                    // Eagle flips the y-axis.
-                    translation.y *= -1;
                     for (var i = 0; i < selectedComponents.length; i++) {
                         var placedPart = selectedComponents[i];
                         this.translateBoardComponentBy_(placedPart, translation);

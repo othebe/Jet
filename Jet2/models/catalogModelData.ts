@@ -93,10 +93,8 @@
                     fabric.util.parseUnit(viewBoxArr[3] + Constants.Board.MODEL_UNITS), // Image height
                     fabric.util.parseUnit(viewBoxArr[2] + Constants.Board.MODEL_UNITS), // Image width
                     fabric.util.parseUnit(viewBoxArr[0] + Constants.Board.MODEL_UNITS), // Eagle origin-x
-                    fabric.util.parseUnit(viewBoxArr[1] + Constants.Board.MODEL_UNITS), // Eagle origin-y
-                    EagleDisplayMapper.DisplayOrigin.CENTER,                            // Display origin-x
-                    EagleDisplayMapper.DisplayOrigin.CENTER                             // Display origin-y
-                    );
+                    fabric.util.parseUnit(viewBoxArr[1] + Constants.Board.MODEL_UNITS)  // Eagle origin-y
+                );
             }
         }
 

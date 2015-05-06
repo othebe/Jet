@@ -2,7 +2,6 @@
 
 module Jet.Ui.Board {
     interface IGadgetBoardComponentScope extends IAbstractBoardComponentScope {
-        center: Point;
         componentTouchHandler: TouchHandler;
         dimensions: Point;
         padding: number;
@@ -17,8 +16,6 @@ module Jet.Ui.Board {
         constructor(
             public x: number, public y: number, public rot: number,
             private _imgWidth: number, private _imgHeight: number,
-            private _displayOriginX: EagleDisplayMapper.DisplayOrigin,
-            private _displayOriginY: EagleDisplayMapper.DisplayOrigin,
             private _pcbData: PcbData)
         {
             this._checkPosition();
@@ -26,12 +23,7 @@ module Jet.Ui.Board {
 
         // Fix boundaries.
         private _checkPosition() {
-            if (this._displayOriginX == EagleDisplayMapper.DisplayOrigin.CENTER && this._displayOriginY == EagleDisplayMapper.DisplayOrigin.CENTER) {
-                // TODO (othebe)
-            }
-            else {
-                throw Constants.Strings.UNIMPLEMENTED_METHOD;
-            }
+            // TODO (othebe)
         }
     }
 
@@ -120,9 +112,9 @@ module Jet.Ui.Board {
                 var padding = scope.padding;
 
                 scope.transformation = new Transformation(
-                    displayPoint.x + padding, displayPoint.y + padding, rot,
+                    displayPoint.x + padding,
+                    scope.pcbData.height + displayPoint.y + padding, rot,
                     eagleDisplayMapper.getWidth(), eagleDisplayMapper.getHeight(),
-                    eagleDisplayMapper.getDisplayOriginX(), eagleDisplayMapper.getDisplayOriginY(),
                     scope.pcbData);
 
                 // If the position was fixed, update the model accordingly.

@@ -58,6 +58,7 @@ module Jet.Ui {
             var boardDimensions = new Point(boardWidth, boardHeight);
 
             var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation, boardDimensions);
+
             this._placedPart.set_xpos(eagleCoords.x);
             this._placedPart.set_ypos(eagleCoords.y);
             this._placedPart.set_rot(rotation);
