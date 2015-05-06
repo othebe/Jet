@@ -27,7 +27,7 @@ module Jet.Ui.Board {
             scope.zoom = Application.InitialData.Board.zoom;
 
             // Register padding.
-            scope.padding = fabric.util.parseUnit(Constants.Board.PCB_MARGIN);
+            scope.padding = EagleDisplayMapper.mmToPx(Constants.Board.PCB_MARGIN);
 
             // Register board touch handler.
             scope.boardTouchHandler = new TouchHandler(

@@ -52,15 +52,21 @@ module Jet.Ui.Board {
 
         // Translate board component.
         protected translateBoardComponentBy_(boardComponent: Model.PlacedPart, translation: Point) {
-            boardComponent.set_xpos(boardComponent.get_xpos() + translation.x);
-            boardComponent.set_ypos(boardComponent.get_ypos() + translation.y);
+            // Eagle flips the y-axis.
+            translation.y *= -1;
+
+            var x_mm = boardComponent.get_xpos() + EagleDisplayMapper.pxToMm(translation.x);
+            var y_mm = boardComponent.get_ypos() + EagleDisplayMapper.pxToMm(translation.y);
+
+            boardComponent.set_xpos(x_mm);
+            boardComponent.set_ypos(y_mm);
         }
 
         // Set board dimensions.
         private _getBoardDimensions(gadgetModel: Model.GadgetModel): BoardDimensions {
             var bb = gadgetModel.bounding_box();
-            var width = fabric.util.parseUnit((bb.max_x - bb.min_x) + Constants.Board.MODEL_UNITS);
-            var height = fabric.util.parseUnit((bb.max_y - bb.min_y) + Constants.Board.MODEL_UNITS);
+            var width = EagleDisplayMapper.mmToPx(bb.max_x - bb.min_x);
+            var height = EagleDisplayMapper.mmToPx(bb.max_y - bb.min_y);
 
             return new BoardDimensions(width, height);
         }

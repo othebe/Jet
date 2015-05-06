@@ -53,8 +53,8 @@ module Jet.Ui {
             var rotation = scope.transformation.rotation;
 
             var boardBB = scope.gadgetModel.bounding_box();
-            var boardWidth = fabric.util.parseUnit((boardBB.max_x - boardBB.min_x) + Constants.Board.MODEL_UNITS);
-            var boardHeight = fabric.util.parseUnit((boardBB.max_y - boardBB.min_y) + Constants.Board.MODEL_UNITS);
+            var boardWidth = boardBB.max_x - boardBB.min_x;
+            var boardHeight = boardBB.max_y - boardBB.min_y;
             var boardDimensions = new Point(boardWidth, boardHeight);
 
             var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation, boardDimensions);
@@ -72,8 +72,8 @@ module Jet.Ui {
 
             // Get board dimensions.
             var boardBB = scope.gadgetModel.bounding_box();
-            var boardWidth = fabric.util.parseUnit((boardBB.max_x - boardBB.min_x) + Constants.Board.MODEL_UNITS);
-            var boardHeight = fabric.util.parseUnit((boardBB.max_y - boardBB.min_y) + Constants.Board.MODEL_UNITS);
+            var boardWidth = boardBB.max_x - boardBB.min_x;
+            var boardHeight = boardBB.max_y - boardBB.min_y;
             var boardDimensions = new Point(boardWidth, boardHeight);
 
             var translation = new Point(this._placedPart.get_xpos(), this._placedPart.get_ypos());

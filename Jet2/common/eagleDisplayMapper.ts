@@ -16,7 +16,7 @@
 
             // Based on: EagleCoord + EagleTranslation = DisplayCoord
             tx -= this._eagleOriginX;
-            ty -= this._eagleOriginY;
+            ty += this._eagleOriginY;
 
             // Apply rotation.
             var radians = fabric.util.degreesToRadians(degrees);
@@ -35,7 +35,7 @@
 
             // Based on: EagleCoord + EagleTranslation = DisplayCoord
             tx += this._eagleOriginX;
-            ty += this._eagleOriginY;
+            ty -= this._eagleOriginY;
 
             // Apply rotation.
             var radians = fabric.util.degreesToRadians(degrees);
@@ -55,6 +55,25 @@
         // Get image width.
         public getWidth(): number {
             return this._imgWidth;
+        }
+
+        // Convert pixels to mm.
+        // Adapted from Fabric.js.
+        static pxToMm(px: number): number {
+            /**
+             * Pixel per Inch as a default value set to 96. Can be changed for more realistic conversion.
+             */
+            var DPI = 96;
+            return px * 25.4 / DPI;
+        }
+
+        // Convert mm to pixels.
+        static mmToPx(mm: number): number {
+            /**
+             * Pixel per Inch as a default value set to 96. Can be changed for more realistic conversion.
+             */
+            var DPI = 96;
+            return mm * DPI / 25.4;
         }
     }
 } 

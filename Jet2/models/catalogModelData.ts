@@ -90,10 +90,10 @@
                 var viewBoxStr = this._svgData.substring(start + 9, end);
                 var viewBoxArr = viewBoxStr.split(' ');
                 this._eagleDisplayMapper = new EagleDisplayMapper(
-                    fabric.util.parseUnit(viewBoxArr[3] + Constants.Board.MODEL_UNITS), // Image height
-                    fabric.util.parseUnit(viewBoxArr[2] + Constants.Board.MODEL_UNITS), // Image width
-                    fabric.util.parseUnit(viewBoxArr[0] + Constants.Board.MODEL_UNITS), // Eagle origin-x
-                    fabric.util.parseUnit(viewBoxArr[1] + Constants.Board.MODEL_UNITS)  // Eagle origin-y
+                    parseFloat(viewBoxArr[3]), // Image height
+                    parseFloat(viewBoxArr[2]), // Image width
+                    parseFloat(viewBoxArr[0]), // Eagle origin-x
+                    parseFloat(viewBoxArr[1])  // Eagle origin-y
                 );
             }
         }

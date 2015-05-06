@@ -95,7 +95,9 @@ module Jet.Ui.Board {
             var placedPart = scope.boardComponent;
             var eagleDisplayMapper = placedPart.get_catalog_data().getEagleDisplayMapper();
             if (eagleDisplayMapper != null) {
-                var dimensions = new Point(eagleDisplayMapper.getWidth(), eagleDisplayMapper.getHeight());
+                var imgWidthPx = EagleDisplayMapper.mmToPx(eagleDisplayMapper.getWidth());
+                var imgHeightPx = EagleDisplayMapper.mmToPx(eagleDisplayMapper.getHeight());
+                var dimensions = new Point(imgWidthPx, imgHeightPx);
                 scope.dimensions = dimensions;
             }
         }
@@ -111,9 +113,13 @@ module Jet.Ui.Board {
                 var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot, boardDimensions);
                 var padding = scope.padding;
 
+                // Eagle flips the y-axis.
+                displayPoint.y *= -1;
+
                 scope.transformation = new Transformation(
-                    displayPoint.x + padding,
-                    scope.pcbData.height + displayPoint.y + padding, rot,
+                    EagleDisplayMapper.mmToPx(displayPoint.x) + padding,
+                    EagleDisplayMapper.mmToPx(displayPoint.y) + scope.pcbData.height + padding,
+                    rot,
                     eagleDisplayMapper.getWidth(), eagleDisplayMapper.getHeight(),
                     scope.pcbData);
 
