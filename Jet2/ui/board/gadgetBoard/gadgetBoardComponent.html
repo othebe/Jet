@@ -1,8 +1,7 @@
 ﻿<g class="gadget-board-component" ng-mousedown="handleMouseDown($event)"
    ng-attr-transform="  translate({{transformation.x}} {{transformation.y}})
-                        rotate({{transformation.rot}} {{dimensions.x / 2}} {{dimensions.y / 2}})
+                        rotate({{transformation.rot * -1}} 0 0)
                      ">
-
 
     <!-- Selection border -->
     <rect ng-if="isSelected"
