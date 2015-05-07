@@ -28,9 +28,9 @@ module Jet.Ui.Board {
                 main.instanceElement_ = instanceElement;
                 
                 // Watch for new components in the gadget model.
-                scope.$watch('gadgetModel.get_components()', function () {
-                    main._updateBoardComponents();
-                }, true);
+                //scope.$watch('gadgetModel.get_components()', function () {
+                //    main._updateBoardComponents();
+                //}, true);
 
                 // Update board dimensions.
                 scope.$watch('gadgetModel.corners', function () {
@@ -72,8 +72,8 @@ module Jet.Ui.Board {
         }
 
         // Update the board components with the current set of placed parts.
-        private _updateBoardComponents() {
-            this.scope_.boardComponents = this.scope_.gadgetModel.get_parts();
-        }
+        //private _updateBoardComponents() {
+        //this.scope_.boardComponents = this.scope_.gadgetModel.get_parts();
+        //}
     }
 } 
