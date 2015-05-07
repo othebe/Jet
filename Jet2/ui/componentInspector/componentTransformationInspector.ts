@@ -52,12 +52,7 @@ module Jet.Ui {
             var translation = new Point(scope.transformation.translation.x, scope.transformation.translation.y);
             var rotation = scope.transformation.rotation;
 
-            var boardBB = scope.gadgetModel.bounding_box();
-            var boardWidth = boardBB.max_x - boardBB.min_x;
-            var boardHeight = boardBB.max_y - boardBB.min_y;
-            var boardDimensions = new Point(boardWidth, boardHeight);
-
-            var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation, boardDimensions);
+            var eagleCoords = this._eagleDisplayMapper.convertDisplayToEaglePoint(translation, rotation);
 
             this._placedPart.set_xpos(eagleCoords.x);
             this._placedPart.set_ypos(eagleCoords.y);
@@ -70,15 +65,9 @@ module Jet.Ui {
                 return;
             }
 
-            // Get board dimensions.
-            var boardBB = scope.gadgetModel.bounding_box();
-            var boardWidth = boardBB.max_x - boardBB.min_x;
-            var boardHeight = boardBB.max_y - boardBB.min_y;
-            var boardDimensions = new Point(boardWidth, boardHeight);
-
             var translation = new Point(this._placedPart.get_xpos(), this._placedPart.get_ypos());
             var rotation = this._placedPart.get_rot();
-            var displayCoords = this._eagleDisplayMapper.convertEagleToDisplayPoint(translation, rotation, boardDimensions);
+            var displayCoords = this._eagleDisplayMapper.convertEagleToDisplayPoint(translation, rotation);
             displayCoords.x = parseFloat(displayCoords.x.toFixed(Jet.Constants.PRECISION));
             displayCoords.y = parseFloat(displayCoords.y.toFixed(Jet.Constants.PRECISION));
 

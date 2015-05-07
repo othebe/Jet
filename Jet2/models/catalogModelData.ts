@@ -93,7 +93,9 @@
                     parseFloat(viewBoxArr[3]), // Image height
                     parseFloat(viewBoxArr[2]), // Image width
                     parseFloat(viewBoxArr[0]), // Eagle origin-x
-                    parseFloat(viewBoxArr[1])  // Eagle origin-y
+                    parseFloat(viewBoxArr[1]), // Eagle origin-y
+                    EagleDisplayMapper.DisplayOrigin.CENTER,    // Display origin-x orientation.
+                    EagleDisplayMapper.DisplayOrigin.CENTER     // Display origin-y orientation.
                 );
             }
         }
