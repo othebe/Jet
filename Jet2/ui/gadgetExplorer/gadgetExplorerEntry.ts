@@ -20,6 +20,7 @@ module Jet.Ui {
 
         // Event handlers.
         keyHandler: KeyHandler;
+        touchHandler: TouchHandler;
     }
 
     export class GadgetExplorerEntry extends Jet.Ui.Directive {
@@ -60,32 +61,12 @@ module Jet.Ui {
                     return placedParts.indexOf(placedPart) >= 0;
                 };
 
-                scope.toggleSelectedComponent = function (event: Event) {
-                    if (main._isDelayed) {
-                        return;
-                    }
-                    
-                    // Select all placed parts in the component.
-                    var placedParts = scope.component.get_placed_parts();
-                    scope.selection.selectPlacedPart(placedParts);
-
-                    event.stopPropagation();
-
-                    main._setDelay();
+                scope.toggleSelectedComponent = function (event: MouseEvent) {
+                    main._toggleSelectedComponent(scope, event);
                 };
 
-                scope.toggleSelectedPlacedPart = function (placedPart: Model.PlacedPart, event: Event) {
-                    if (main._isDelayed) {
-                        return;
-                    }
-
-                    scope.selection.selectPlacedPart([
-                        placedPart
-                    ]);
-
-                    event.stopPropagation();
-
-                    main._setDelay();
+                scope.toggleSelectedPlacedPart = function (placedPart: Model.PlacedPart, event: MouseEvent) {
+                    main._toggleSelectedPlacedPart(scope, placedPart, event);
                 };
             };
 
@@ -107,6 +88,87 @@ module Jet.Ui {
                 }
                 this._scope.selection.selectPlacedPart([]);
             }
+        }
+
+        // Toggle selected component.
+        private _toggleSelectedComponent(scope: IGadgetExplorerEntryScope, event: MouseEvent) {
+            if (this._isDelayed) {
+                return;
+            }
+
+            var parts = scope.component.get_placed_parts();
+
+            // Ctrl key modifier.
+            if (event.ctrlKey) {
+                scope.selection.addPlacedPart(parts);
+            }
+
+            // Shift key modifier.
+            else if (event.shiftKey) {
+                var endSelection = false;
+                var selectionComponents = [];
+                var componentNames = scope.gadgetModel.component_names();
+
+                for (var i = 0; i < componentNames.length; i++) {
+                    var componentName = componentNames[i];
+                    var component = scope.gadgetModel.components[componentName];
+
+                    endSelection = (component == scope.component);
+
+                    var placedParts = component.get_placed_parts();
+                    scope.selection.addPlacedPart(placedParts);
+                    
+                    if (endSelection) {
+                        break;
+                    }
+                }
+            }
+
+            // No modifier.
+            else {
+                scope.selection.selectPlacedPart(parts);
+            }
+
+            event.stopPropagation();
+            this._setDelay();
+        }
+
+        // Toggle selected placed part.
+        private _toggleSelectedPlacedPart(scope: IGadgetExplorerEntryScope, placedPart: Model.PlacedPart, event: MouseEvent) {
+            if (this._isDelayed) {
+                return;
+            }
+
+            // Ctrl key modifier.
+            if (event.ctrlKey) {
+                scope.selection.addPlacedPart([placedPart]);
+            }
+
+            // Shift key modifier.
+            else if (event.shiftKey) {
+                var endSelection = false;
+                var component = placedPart.get_component_instance();
+                var otherPlacedParts = component.get_placed_parts();
+
+                for (var i = 0; i < otherPlacedParts.length; i++) {
+                    var otherPlacedPart = otherPlacedParts[i];
+                    endSelection = (otherPlacedPart == placedPart);
+
+                    scope.selection.addPlacedPart([otherPlacedPart]);
+
+                    if (endSelection) {
+                        break;
+                    }
+                }
+            }
+
+            // No modifier.
+            else {
+                scope.selection.selectPlacedPart([placedPart]);
+            }
+
+            event.stopPropagation();
+            this._setDelay();
         }
 
         // Set delay.
