@@ -1,5 +1,5 @@
 ﻿<g class="gadget-board-component" ng-mousedown="handleMouseDown($event)"
-   ng-attr-transform="  translate({{transformation.x - dimensions.x/2}} {{transformation.y - dimensions.y/2}})
+   ng-attr-transform="  translate({{transformation.x - dimensions.x / 2}} {{transformation.y - dimensions.y / 2}})
                         rotate({{transformation.rot * -1}} {{dimensions.x / 2}} {{dimensions.y / 2}})
                      ">
 
@@ -26,6 +26,11 @@
     <g class="img" ng-class="{selected: isSelected}"
        ng-mousedown="componentTouchHandler.handleMouseDown($event)"
        ng-mouseup="componentTouchHandler.handleMouseUp($event)" />
+</g>
+
+<!-- Component text -->
+<g class="text" ng-attr-transform="translate({{transformation.x - dimensions.x / 2 + getHorizontalTextTranslation()}} {{transformation.y}})">
+    <text fill="red">{{boardComponent.get_component_instance().get_name()}}</text>
 </g>
 
 <style>

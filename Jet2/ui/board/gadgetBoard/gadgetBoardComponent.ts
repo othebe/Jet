@@ -4,6 +4,7 @@ module Jet.Ui.Board {
     interface IGadgetBoardComponentScope extends IAbstractBoardComponentScope {
         componentTouchHandler: TouchHandler;
         dimensions: Point;
+        getHorizontalTextTranslation: () => number;
         padding: number;
         pcbData: PcbData;
         transformation: Transformation;
@@ -45,6 +46,8 @@ module Jet.Ui.Board {
         protected onScopeLoaded_(scope: IGadgetBoardComponentScope, instanceElement: JQuery) {
             scope = <IGadgetBoardComponentScope> scope;
 
+            var main = this;
+
             // Render SVG.
             this._render(scope, instanceElement);
 
@@ -54,6 +57,7 @@ module Jet.Ui.Board {
             // Set dimensions.
             this._setDimensions(scope);
 
+            // Set touch handler.
             scope.componentTouchHandler = new TouchHandler(
                 // Mouse up.
                 null,
@@ -66,6 +70,11 @@ module Jet.Ui.Board {
                     this._handleMouseMove(scope, touchHandler);
                 }
             );
+
+            // Set horizontal translation for text.
+            scope.getHorizontalTextTranslation = function () {
+                return main._getHorizontalTextTranslation(scope.dimensions.x, instanceElement);
+            }
         }
 
         /** @override */
@@ -160,6 +169,14 @@ module Jet.Ui.Board {
             if (rotation != null) {
                 this.rotateBoardComponentBy_(scope.boardComponent, rotation);
             }
+        }
+
+        // Get horizontal translation to center text on image.
+        private _getHorizontalTextTranslation(imgWidth: number, instanceElement: JQuery) {
+            var text: any = instanceElement.find('.text text')[0];
+            var textBBox = text.getBBox();
+
+            return (imgWidth - textBBox.width) / 2.0;
         }
 
         /** @override */
