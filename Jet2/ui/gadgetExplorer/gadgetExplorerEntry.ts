@@ -17,6 +17,9 @@ module Jet.Ui {
         // Selection toggles.
         toggleSelectedComponent(event: Event);
         toggleSelectedPlacedPart(placedPart: Model.PlacedPart, event: Event);
+
+        // Event handlers.
+        keyHandler: KeyHandler;
     }
 
     export class GadgetExplorerEntry extends Jet.Ui.Directive {
@@ -34,6 +37,11 @@ module Jet.Ui {
 
             this.link = function (scope: IGadgetExplorerEntryScope) {
                 main._scope = scope;
+
+                scope.keyHandler = new KeyHandler(
+                    null,
+                    main._onKeyDown.bind(main),
+                    null);
 
                 // Watch selection.
                 scope.$watch('selection', function () {
@@ -84,8 +92,21 @@ module Jet.Ui {
             this.scope = {
                 component: '=',
                 catalogModelData: '=',
+                gadgetModel: '=',
                 selection: '='
             };
+        }
+
+        // Handle key down.
+        private _onKeyDown(keyHandler: KeyHandler) {
+            // Handle Delete key.
+            if (keyHandler.getKeyCode() == 46) {
+                var selected = this._scope.selection.getComponentInstances();
+                for (var i = 0; i < selected.length; i++) {
+                    this._scope.gadgetModel.delete_component(selected[i].get_name());
+                }
+                this._scope.selection.selectPlacedPart([]);
+            }
         }
 
         // Set delay.

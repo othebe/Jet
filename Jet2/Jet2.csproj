@@ -445,8 +445,8 @@
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoard.ts" />
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardComponent.ts" />
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardControls.ts" />
-    <TypeScriptCompile Include="ui\board\gadgetBoard\keyHandler.ts" />
-    <TypeScriptCompile Include="ui\board\gadgetBoard\touchHandler.ts" />
+    <TypeScriptCompile Include="ui\keyHandler.ts" />
+    <TypeScriptCompile Include="ui\touchHandler.ts" />
     <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />
     <TypeScriptCompile Include="ui\catalog\catalog.ts" />
     <TypeScriptCompile Include="ui\componentInspector\componentInspector.ts" />

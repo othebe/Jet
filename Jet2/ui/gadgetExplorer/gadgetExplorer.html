@@ -6,6 +6,7 @@
                 <div ng-repeat="componentName in gadgetModel.component_names()">
                     <gadget-explorer-entry component="gadgetModel.components[componentName]"
                                            catalog-model-data="catalogModel.getComponent(gadgetModel.components[componentName].keyname)"
+                                           gadget-model="gadgetModel"
                                            selection="selection">
                     </gadget-explorer-entry>
                 </div>

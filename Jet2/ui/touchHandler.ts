@@ -1,5 +1,5 @@
-﻿module Jet.Ui.Board {
-    // The TouchHandler object is responsible for all mouse related logic on the gadget board.
+﻿module Jet.Ui {
+    // The TouchHandler object is responsible for all mouse related logic.
     export class TouchHandler {
         // Coordinates of original action.
         private _originalCoords: Point;

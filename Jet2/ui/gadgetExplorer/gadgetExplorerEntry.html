@@ -1,4 +1,4 @@
-﻿<div class="gadget-explorer-entry" ondblclick="toggleExpand(this)" ng-click="toggleSelectedComponent($event)">
+﻿<div class="gadget-explorer-entry" tabindex="0" ng-keydown="keyHandler.handleKeyDown($event)" ondblclick="toggleExpand(this)" ng-click="toggleSelectedComponent($event)">
     <div class="arrow right"></div>
     <div class="component-instance" ng-class="{selected: isComponentInstanceSelected()}" ng-bind="component.get_name()"></div>
     <div class="placed-parts" style="display: none;">
@@ -9,12 +9,7 @@
             </div>
         </div>
     </div>
-
-
-    <!--<md-item ng-click="toggleSelected()">
-        <div ng-class="{selected: isSelected}" ng-bind="partName"></div>
-    </md-item>-->
-</>
+</div>
 
 <script>
     function toggleExpand(elt) {

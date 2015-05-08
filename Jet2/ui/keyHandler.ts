@@ -1,5 +1,5 @@
-﻿module Jet.Ui.Board {
-    // The KeyHandler object is responsible for all key related logic on the gadget board.
+﻿module Jet.Ui {
+    // The KeyHandler object is responsible for all key related logic.
     export class KeyHandler {
 
         // Mouse event.
@@ -42,7 +42,7 @@
         // Handle key press.
         public handleKeyPress(e: KeyboardEvent, stopPropagation: boolean = false) {
             this._event = e;
-            console.log(e);
+
             if (this._onKeyPress != null) {
                 this._onKeyPress(this);
             }
