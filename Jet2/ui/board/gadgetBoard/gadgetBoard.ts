@@ -3,6 +3,7 @@
 module Jet.Ui.Board {
     export interface IGadgetBoardScope extends IAbstractBoardScope {
         boardTouchHandler: TouchHandler;
+        boardKeyHandler: KeyHandler;
         padding: number;
         pcbData: PcbData;
         zoom: number;
@@ -34,6 +35,12 @@ module Jet.Ui.Board {
                 null,
                 null,
                 this._onMouseMove.bind(this));
+
+            // Register board key handler.
+            scope.boardKeyHandler = new KeyHandler(
+                null,
+                this._onKeyDown.bind(this),
+                null);
 
             // Set PCB data.
             scope.$watch('boardDimensions', function () {
@@ -71,6 +78,17 @@ module Jet.Ui.Board {
                         var placedPart = selectedComponents[i];
                         this.translateBoardComponentBy_(placedPart, translation);
                     }
+                }
+            }
+        }
+
+        // Handle key down.
+        private _onKeyDown(keyHandler: KeyHandler) {
+            // Handle Delete key.
+            if (keyHandler.getKeyCode() == 46) {
+                var selected = this.getSelectedComponents_();
+                for (var i = 0; i < selected.length; i++) {
+                    this.deleteComponent_(selected[i]);
                 }
             }
         }

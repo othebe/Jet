@@ -26,11 +26,6 @@ module Jet.Ui.Board {
             this.link = function (scope: IAbstractBoardScope, instanceElement: JQuery) {
                 main.scope_ = scope;
                 main.instanceElement_ = instanceElement;
-                
-                // Watch for new components in the gadget model.
-                //scope.$watch('gadgetModel.get_components()', function () {
-                //    main._updateBoardComponents();
-                //}, true);
 
                 // Update board dimensions.
                 scope.$watch('gadgetModel.corners', function () {
@@ -49,6 +44,17 @@ module Jet.Ui.Board {
 
         // Call once scope has been loaded.
         protected onScopeLoaded_() { }
+
+        // Get selected component instances.
+        protected getSelectedComponents_() {
+            return this.scope_.selection.getComponentInstances();
+        }
+
+        // Delete board component.
+        protected deleteComponent_(componentInstance: Model.ComponentInstance) {
+            this.scope_.gadgetModel.delete_component(componentInstance.get_name());
+            this.scope_.selection.selectPlacedPart([]);
+        }
 
         // Translate board component.
         protected translateBoardComponentBy_(boardComponent: Model.PlacedPart, translation: Point) {
@@ -70,10 +76,5 @@ module Jet.Ui.Board {
 
             return new BoardDimensions(width, height);
         }
-
-        // Update the board components with the current set of placed parts.
-        //private _updateBoardComponents() {
-        //this.scope_.boardComponents = this.scope_.gadgetModel.get_parts();
-        //}
     }
 } 
