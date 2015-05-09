@@ -25,6 +25,7 @@ module Jet.Ui.Board {
         protected onScopeLoaded_() {
             var scope = <IGadgetBoardScope> this.scope_;
 
+            // This stores the board components that were clicked.
             scope.clickedParts = [];
 
             // Set zoom.
