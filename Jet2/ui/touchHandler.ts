@@ -70,7 +70,7 @@
             this._event = null;
         }
 
-        // Get the current button.
+        // Get the mouse button.
         public getMouseButton(): number {
             return this._event.which;
         }
