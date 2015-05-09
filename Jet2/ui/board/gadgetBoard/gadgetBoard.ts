@@ -82,6 +82,11 @@ module Jet.Ui.Board {
 
         // Handle mouse move.
         private _onMouseMove(touchHandler: TouchHandler) {
+            // If the left mouse button is not held, do not apply translation.
+            if (touchHandler.getMouseButton() != 1) {
+                return;
+            }
+
             // Translate all selected board components.
             var selectedComponents = this.scope_.selection.getPlacedParts();
             if (selectedComponents.length > 0) {

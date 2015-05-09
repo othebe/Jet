@@ -70,6 +70,11 @@
             this._event = null;
         }
 
+        // Get the current button.
+        public getMouseButton(): number {
+            return this._event.which;
+        }
+
         // Get the key modifier. Currently only handles a single modifier.
         public getEventModifier(): TouchHandlerEventModifier {
             if (this._event.ctrlKey) {
