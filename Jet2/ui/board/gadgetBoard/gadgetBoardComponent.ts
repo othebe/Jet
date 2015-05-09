@@ -2,6 +2,7 @@
 
 module Jet.Ui.Board {
     interface IGadgetBoardComponentScope extends IAbstractBoardComponentScope {
+        clickedParts: Array<Model.PlacedPart>;
         componentTouchHandler: TouchHandler;
         dimensions: Point;
         getHorizontalTextTranslation: () => number;
@@ -38,6 +39,8 @@ module Jet.Ui.Board {
             super(AppContext);
 
             // Add extra scope data.
+            this.scope.clickedParts = '=';
+            this.scope.test = '=';
             this.scope.padding = '=';
             this.scope.pcbData = '=';
         }
@@ -157,6 +160,8 @@ module Jet.Ui.Board {
             else {
                 this.setSelected_(scope, true);
             }
+
+            scope.clickedParts.push(scope.boardComponent);
         }
 
         // Handle rotation mouse move.

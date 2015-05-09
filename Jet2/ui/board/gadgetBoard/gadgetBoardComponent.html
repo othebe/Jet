@@ -29,16 +29,22 @@
 </g>
 
 <!-- Component text -->
-<g class="text" ng-attr-transform="translate({{transformation.x - dimensions.x / 2 + getHorizontalTextTranslation()}} {{transformation.y}})">
+<g class="gadget-board-component text"
+   ng-class="{selected: isSelected}"
+   ng-mousedown="componentTouchHandler.handleMouseDown($event)"
+   ng-mouseup="componentTouchHandler.handleMouseUp($event)"
+   ng-attr-transform="translate({{transformation.x - dimensions.x / 2 + getHorizontalTextTranslation()}} {{transformation.y}})">
     <text fill="red">{{boardComponent.get_component_instance().get_name()}}</text>
 </g>
 
 <style>
-    g.gadget-board-component g.img {
+    g.gadget-board-component g.img,
+    g.gadget-board-component.text {
         cursor: pointer;
     }
 
-    g.gadget-board-component g.img.selected {
+    g.gadget-board-component g.img.selected,
+    g.gadget-board-component.text.selected {
         cursor: move;
     }
 

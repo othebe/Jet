@@ -4,6 +4,7 @@ module Jet.Ui.Board {
     export interface IGadgetBoardScope extends IAbstractBoardScope {
         boardTouchHandler: TouchHandler;
         boardKeyHandler: KeyHandler;
+        clickedParts: Array<Model.PlacedPart>;
         padding: number;
         pcbData: PcbData;
         zoom: number;
@@ -24,6 +25,8 @@ module Jet.Ui.Board {
         protected onScopeLoaded_() {
             var scope = <IGadgetBoardScope> this.scope_;
 
+            scope.clickedParts = [];
+
             // Set zoom.
             scope.zoom = Application.InitialData.Board.zoom;
 
@@ -33,7 +36,7 @@ module Jet.Ui.Board {
             // Register board touch handler.
             scope.boardTouchHandler = new TouchHandler(
                 null,
-                null,
+                this._onMouseDown.bind(this),
                 this._onMouseMove.bind(this));
 
             // Register board key handler.
@@ -62,6 +65,19 @@ module Jet.Ui.Board {
             var height = scope.boardDimensions.height;
 
             return new PcbData(x, y, width, height);
+        }
+
+        // Handle mouse down.
+        private _onMouseDown(touchHandler: TouchHandler) {
+            var scope = <IGadgetBoardScope> this.scope_;
+
+            // If no board components were clicked, deselect everything.
+            if (scope.clickedParts.length == 0) {
+                scope.selection.selectPlacedPart([]);
+            }
+
+            // Reset clicked parts.
+            scope.clickedParts = [];
         }
 
         // Handle mouse move.

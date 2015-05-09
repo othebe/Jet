@@ -27,7 +27,6 @@
 
             if (stopPropagation) {
                 e.stopPropagation();
-                e.cancelBubble = true;
             }
 
             this._lastCoords = new Point(e.clientX, e.clientY);
@@ -47,7 +46,6 @@
 
             if (stopPropagation) {
                 e.stopPropagation();
-                e.cancelBubble = true;
             }
 
             this._lastCoords = new Point(e.clientX, e.clientY);
@@ -65,8 +63,9 @@
 
             if (stopPropagation) {
                 e.stopPropagation();
-                e.cancelBubble = true;
             }
+            e.preventDefault();
+
             this._lastCoords = new Point(e.clientX, e.clientY);
             this._event = null;
         }
