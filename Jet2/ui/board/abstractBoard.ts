@@ -59,13 +59,13 @@ module Jet.Ui.Board {
         // Translate board component.
         protected translateBoardComponentBy_(boardComponent: Model.PlacedPart, translation: Point) {
             // Eagle flips the y-axis.
-            translation.y *= -1;
+            var yTranslation = translation.y * -1;
 
-            var x_mm = boardComponent.get_xpos() + EagleDisplayMapper.pxToMm(translation.x);
-            var y_mm = boardComponent.get_ypos() + EagleDisplayMapper.pxToMm(translation.y);
+            var xMm = boardComponent.get_xpos() + EagleDisplayMapper.pxToMm(translation.x);
+            var yMm = boardComponent.get_ypos() + EagleDisplayMapper.pxToMm(yTranslation);
 
-            boardComponent.set_xpos(x_mm);
-            boardComponent.set_ypos(y_mm);
+            boardComponent.set_xpos(xMm);
+            boardComponent.set_ypos(yMm);
         }
 
         // Set board dimensions.
