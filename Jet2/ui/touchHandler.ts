@@ -1,12 +1,14 @@
 ﻿module Jet.Ui {
     // The TouchHandler object is responsible for all mouse related logic.
     export class TouchHandler {
-        // Coordinates of original action.
-        private _originalCoords: Point;
+        // Coordinates of original touch.
+        private _touchClientCoords: Point;
         // Coordinates of current location.
-        private _currentCoords: Point;
+        private _currentClientCoords: Point;
         // Coordinates of last location.
-        private _lastCoords: Point;
+        private _prevClientCoords: Point;
+        // Client to offset translation.
+        private _clientToOffsetTranslation: Point;
         // Mouse event.
         private _event: MouseEvent;
 
@@ -19,7 +21,7 @@
         // Handle mouse up.
         public handleMouseUp(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._currentCoords = new Point(e.offsetX, e.offsetY);
+            this._currentClientCoords = new Point(e.clientX, e.clientY);
 
             if (this._onMouseUp != null) {
                 this._onMouseUp(this);
@@ -29,16 +31,16 @@
                 e.stopPropagation();
             }
 
-            this._lastCoords = new Point(e.offsetX, e.offsetY);
-            this._originalCoords = null;
+            this._prevClientCoords = new Point(e.clientX, e.clientY);
+            this._touchClientCoords = null;
             this._event = null;
         }
 
         // Handle mouse down.
         public handleMouseDown(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._originalCoords = new Point(e.offsetX, e.offsetY);
-            this._currentCoords = new Point(e.offsetX, e.offsetY);
+            this._touchClientCoords = new Point(e.clientX, e.clientY);
+            this._currentClientCoords = new Point(e.clientX, e.clientY);
 
             if (this._onMouseDown != null) {
                 this._onMouseDown(this);
@@ -48,14 +50,17 @@
                 e.stopPropagation();
             }
 
-            this._lastCoords = new Point(e.offsetX, e.offsetY);
+            this._prevClientCoords = new Point(e.clientX, e.clientY);
             this._event = null;
         }
 
         // Handle mouse move.
         public handleMouseMove(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._currentCoords = new Point(e.offsetX, e.offsetY);
+            this._currentClientCoords = new Point(e.clientX, e.clientY);
+
+            // Set client to offset displacement.
+            this._clientToOffsetTranslation = new Point(e.offsetX - e.clientX, e.offsetY - e.clientY);
 
             if (this._onMouseMove != null) {
                 this._onMouseMove(this);
@@ -66,7 +71,7 @@
             }
             e.preventDefault();
 
-            this._lastCoords = new Point(e.offsetX, e.offsetY);
+            this._prevClientCoords = new Point(e.clientX, e.clientY);
             this._event = null;
         }
 
@@ -86,23 +91,41 @@
         }
 
         // Get original click coordinates.
-        public getOriginalCoordinates(): Point {
-            return this._originalCoords;
+        public getOriginalCoordinates(getOffset: boolean = true): Point {
+            // Return offset coordinates.
+            if (getOffset) {
+                return new Point(
+                    this._touchClientCoords.x + this._clientToOffsetTranslation.x,
+                    this._touchClientCoords.y + this._clientToOffsetTranslation.y);
+            }
+            // Return client coordinates.
+            else {
+                return this._touchClientCoords;
+            }
         }
 
         // Get current coordinates.
-        public getCurrentCoordinates(): Point {
-            return this._currentCoords;
+        public getCurrentCoordinates(getOffset: boolean = true): Point {
+            // Return offset coordinates.
+            if (getOffset) {
+                return new Point(
+                    this._currentClientCoords.x + this._clientToOffsetTranslation.x,
+                    this._currentClientCoords.y + this._clientToOffsetTranslation.y);
+            }
+            // Return client coordinates.
+            else {
+                return this._currentClientCoords;
+            }
         }
 
         // Get translation between current and last coords.
         public getTranslation(): Point {
-            if (this._originalCoords == null) {
+            if (this._touchClientCoords == null) {
                 return null;
             } else {
                 return new Point(
-                    this._currentCoords.x - this._lastCoords.x,
-                    this._currentCoords.y - this._lastCoords.y);
+                    this._currentClientCoords.x - this._prevClientCoords.x,
+                    this._currentClientCoords.y - this._prevClientCoords.y);
             }
         }
 
