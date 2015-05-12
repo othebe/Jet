@@ -47,6 +47,11 @@ module Jet.Ui.Board {
         // Update UI based on placed part data.
         protected updateUi_(scope: IAbstractBoardComponentScope) { }
 
+        // Determines if this is selected.
+        protected isSelected_(scope: IAbstractBoardComponentScope) {
+            return scope.selection.getPlacedParts().indexOf(scope.boardComponent) >= 0;
+        }
+
         // Add to selection.
         protected addToSelected_(scope: IAbstractBoardComponentScope) {
             scope.isSelected = true;

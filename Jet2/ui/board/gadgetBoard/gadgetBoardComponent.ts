@@ -8,6 +8,7 @@ module Jet.Ui.Board {
         getHorizontalTextTranslation: () => number;
         padding: number;
         pcbData: PcbData;
+        setSelectionToSingle: boolean;
         transformation: Transformation;
     }
 
@@ -40,9 +41,9 @@ module Jet.Ui.Board {
 
             // Add extra scope data.
             this.scope.clickedParts = '=';
-            this.scope.test = '=';
             this.scope.padding = '=';
             this.scope.pcbData = '=';
+            this.scope.setSelectionToSingle = '=';
         }
 
         /** @override */
@@ -63,7 +64,9 @@ module Jet.Ui.Board {
             // Set touch handler.
             scope.componentTouchHandler = new TouchHandler(
                 // Mouse up.
-                null,
+                (touchHandler: TouchHandler) => {
+                    this._handleMouseUp(scope, touchHandler);
+                },
                 // Mouse down.
                 (touchHandler: TouchHandler) => {
                     this._handleMouseDown(scope, touchHandler);
@@ -144,6 +147,17 @@ module Jet.Ui.Board {
             }
         }
 
+        // Handle mouse up.
+        private _handleMouseUp(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
+            var modifier = touchHandler.getEventModifier();
+
+            if (modifier == null) {
+                if (scope.setSelectionToSingle) {
+                    this.setSelected_(scope, true);
+                }
+            }
+        }
+
         // Handle mouse down.
         private _handleMouseDown(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
             var modifier = touchHandler.getEventModifier();
@@ -158,7 +172,9 @@ module Jet.Ui.Board {
             }
             // Set selection.
             else {
-                this.setSelected_(scope, true);
+                if (!this.isSelected_(scope)) {
+                    this.setSelected_(scope, true);
+                }
             }
 
             scope.clickedParts.push(scope.boardComponent);

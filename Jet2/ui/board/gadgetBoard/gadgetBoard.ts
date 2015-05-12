@@ -8,6 +8,7 @@ module Jet.Ui.Board {
         padding: number;
         pcbData: PcbData;
         selectionCoords: SelectionCoords;
+        setSelectionToSingle: boolean;
         zoom: number;
     }
 
@@ -54,6 +55,10 @@ module Jet.Ui.Board {
             scope.$watch('boardDimensions', function () {
                 scope.pcbData = this._extractPcbData();
             }.bind(this));
+
+            // This determines if clicking a component should clear the current
+            // selection and only select that component.
+            scope.setSelectionToSingle = true;
         }
 
         // Extract PCB data from the instance element.
@@ -75,6 +80,9 @@ module Jet.Ui.Board {
         // Handle mouse down.
         private _onMouseDown(touchHandler: TouchHandler) {
             var scope = <IGadgetBoardScope> this.scope_;
+
+            // Clear selection unless a move occurs.
+            scope.setSelectionToSingle = true;
 
             // If no board components were clicked, deselect everything.
             if (scope.clickedParts.length == 0) {
@@ -112,6 +120,9 @@ module Jet.Ui.Board {
             var selectedComponents = scope.selection.getPlacedParts();
             if (selectedComponents.length > 0 && selectionCoords.p1 == null) {
                 var translation = touchHandler.getTranslation();
+
+                // Preserve selection due to the move.
+                scope.setSelectionToSingle = false;
 
                 if (translation == null) {
                     return;
