@@ -1,5 +1,40 @@
+This documents the installation process and requirements for Jet V2.
+
+Pre-requirements:
+NodeJs > Typescript, Bower, TSD, Grunt.
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+QUICK SETUP
+
+1. Install NodeJs.
+2. Install Typescript:  `npm install typescript -g`
+3. Install Bower:       `npm install bower -g`
+4. Install TSD:         `npm install tsd -g`
+5. Install Grunt:       `npm install grunt-cli -g`
+6. Run make. 
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+
 Package dependencies:
 npm install
+
+-------------------------------------------------------------------------------
+
+Grunt:
+Grunt takes care of Jet tasks.
+
+Install:
+npm install grunt-cli -g
+
+-------------------------------------------------------------------------------
+
+Typescript:
+Jet requires the Typescript compiler to compile!
+
+Install:
+npm install typescript -g
 
 -------------------------------------------------------------------------------
 
