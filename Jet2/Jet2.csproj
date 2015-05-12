@@ -400,6 +400,7 @@
     <Content Include="ui\board\gadgetBoard\gadgetBoard.html" />
     <Content Include="ui\board\gadgetBoard\gadgetBoardComponent.html" />
     <Content Include="ui\board\gadgetBoard\gadgetBoardControls.html" />
+    <Content Include="ui\board\gadgetBoard\gadgetBoardSelection.html" />
     <Content Include="ui\catalogEntry\catalogEntry.html" />
     <Content Include="ui\catalog\catalog.css" />
     <Content Include="ui\catalog\catalog.html" />
@@ -445,6 +446,7 @@
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoard.ts" />
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardComponent.ts" />
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardControls.ts" />
+    <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoardSelection.ts" />
     <TypeScriptCompile Include="ui\keyHandler.ts" />
     <TypeScriptCompile Include="ui\touchHandler.ts" />
     <TypeScriptCompile Include="ui\catalogEntry\catalogEntry.ts" />

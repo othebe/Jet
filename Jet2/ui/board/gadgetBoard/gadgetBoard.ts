@@ -7,6 +7,7 @@ module Jet.Ui.Board {
         clickedParts: Array<Model.PlacedPart>;
         padding: number;
         pcbData: PcbData;
+        selectionCoords: SelectionCoords;
         zoom: number;
     }
 
@@ -25,6 +26,9 @@ module Jet.Ui.Board {
         protected onScopeLoaded_() {
             var scope = <IGadgetBoardScope> this.scope_;
 
+            // This stores coordinates for a selection.
+            scope.selectionCoords = new SelectionCoords(null, null);
+
             // This stores the board components that were clicked.
             scope.clickedParts = [];
 
@@ -36,7 +40,7 @@ module Jet.Ui.Board {
 
             // Register board touch handler.
             scope.boardTouchHandler = new TouchHandler(
-                null,
+                this._onMouseUp.bind(this),
                 this._onMouseDown.bind(this),
                 this._onMouseMove.bind(this));
 
@@ -75,10 +79,23 @@ module Jet.Ui.Board {
             // If no board components were clicked, deselect everything.
             if (scope.clickedParts.length == 0) {
                 scope.selection.selectPlacedPart([]);
+
+                // Deselection the selection box.
+                scope.selectionCoords.p1 = null;
+                scope.selectionCoords.p2 = null;
             }
 
             // Reset clicked parts.
             scope.clickedParts = [];
+        }
+
+        // Handle mouse up.
+        private _onMouseUp(touchHandler: TouchHandler) {
+            var scope = <IGadgetBoardScope> this.scope_;
+            
+            // Remove the selection box.
+            scope.selectionCoords.p1 = null;
+            scope.selectionCoords.p2 = null;
         }
 
         // Handle mouse move.
@@ -88,9 +105,12 @@ module Jet.Ui.Board {
                 return;
             }
 
+            var scope = <IGadgetBoardScope> this.scope_;
+            var selectionCoords = scope.selectionCoords;
+
             // Translate all selected board components.
-            var selectedComponents = this.scope_.selection.getPlacedParts();
-            if (selectedComponents.length > 0) {
+            var selectedComponents = scope.selection.getPlacedParts();
+            if (selectedComponents.length > 0 && selectionCoords.p1 == null) {
                 var translation = touchHandler.getTranslation();
 
                 if (translation == null) {
@@ -101,6 +121,12 @@ module Jet.Ui.Board {
                         this.translateBoardComponentBy_(placedPart, translation);
                     }
                 }
+            }
+
+            // Create selection area.
+            else {
+                selectionCoords.p1 = touchHandler.getOriginalCoordinates();
+                selectionCoords.p2 = touchHandler.getCurrentCoordinates();
             }
         }
 

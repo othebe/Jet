@@ -19,7 +19,7 @@
         // Handle mouse up.
         public handleMouseUp(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._currentCoords = new Point(e.clientX, e.clientY);
+            this._currentCoords = new Point(e.offsetX, e.offsetY);
 
             if (this._onMouseUp != null) {
                 this._onMouseUp(this);
@@ -29,7 +29,7 @@
                 e.stopPropagation();
             }
 
-            this._lastCoords = new Point(e.clientX, e.clientY);
+            this._lastCoords = new Point(e.offsetX, e.offsetY);
             this._originalCoords = null;
             this._event = null;
         }
@@ -37,8 +37,8 @@
         // Handle mouse down.
         public handleMouseDown(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._originalCoords = new Point(e.clientX, e.clientY);
-            this._currentCoords = new Point(e.clientX, e.clientY);
+            this._originalCoords = new Point(e.offsetX, e.offsetY);
+            this._currentCoords = new Point(e.offsetX, e.offsetY);
 
             if (this._onMouseDown != null) {
                 this._onMouseDown(this);
@@ -48,14 +48,14 @@
                 e.stopPropagation();
             }
 
-            this._lastCoords = new Point(e.clientX, e.clientY);
+            this._lastCoords = new Point(e.offsetX, e.offsetY);
             this._event = null;
         }
 
         // Handle mouse move.
         public handleMouseMove(e: MouseEvent, stopPropagation: boolean = false) {
             this._event = e;
-            this._currentCoords = new Point(e.clientX, e.clientY);
+            this._currentCoords = new Point(e.offsetX, e.offsetY);
 
             if (this._onMouseMove != null) {
                 this._onMouseMove(this);
@@ -66,7 +66,7 @@
             }
             e.preventDefault();
 
-            this._lastCoords = new Point(e.clientX, e.clientY);
+            this._lastCoords = new Point(e.offsetX, e.offsetY);
             this._event = null;
         }
 
@@ -83,6 +83,16 @@
             else if (this._event.shiftKey) {
                 return TouchHandlerEventModifier.SHIFT;
             }
+        }
+
+        // Get original click coordinates.
+        public getOriginalCoordinates(): Point {
+            return this._originalCoords;
+        }
+
+        // Get current coordinates.
+        public getCurrentCoordinates(): Point {
+            return this._currentCoords;
         }
 
         // Get translation between current and last coords.

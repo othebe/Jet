@@ -8,6 +8,7 @@
 /// <reference path="ui/board/gadgetBoard/gadgetBoard.ts" />
 /// <reference path="ui/board/gadgetBoard/gadgetBoardComponent.ts" />
 /// <reference path="ui/board/gadgetBoard/gadgetBoardControls.ts" />
+/// <reference path="ui/board/gadgetBoard/gadgetBoardSelection.ts" />
 /// <reference path="ui/nb/nb.ts"/>
 /// <reference path="ui/catalog/catalog.ts" />
 /// <reference path="ui/catalogEntry/catalogEntry.ts" />
@@ -52,6 +53,8 @@
     app.directive('gadgetBoardComponent', Jet.Ui.Board.GadgetBoardComponent.Factory());
     // Gadget board controls.
     app.directive('gadgetBoardControls', Jet.Ui.Board.GadgetBoardControls.Factory());
+    // Gadget board selection.
+    app.directive('gadgetBoardSelection', Jet.Ui.Board.GadgetBoardSelection.Factory());
     // Component inspector.
     app.directive('componentInspector', Jet.Ui.ComponentInspector.Factory());
     // Component name inspector.
