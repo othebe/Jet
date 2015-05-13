@@ -129,11 +129,28 @@
             }
         }
 
-        // Get rotation about a point between current and last coords.
+        // Get rotation about a point between current and last coords. The angle
+        // is calculated as the rotation between two vectors centered about the
+        // origin.
         public getRotationAboutPoint(origin: Point): number {
-            // TODO (othebe): Need to do.
-            // Calculate angle between the vectors between origin-original and origin-current.
-            return;
+            // Convert current and previous coordinates to offset coordinates.
+            var p1 = new Point(
+                this._prevClientCoords.x + this._clientToOffsetTranslation.x,
+                this._prevClientCoords.y + this._clientToOffsetTranslation.y);
+            var p2 = new Point(
+                this._currentClientCoords.x + this._clientToOffsetTranslation.x,
+                this._currentClientCoords.y + this._clientToOffsetTranslation.y);
+            
+            // Calculate vectors based on the origin.
+            var v1 = new Point(origin.x - p1.x, origin.y - p1.y);
+            var v2 = new Point(origin.x - p2.x, origin.y - p2.y);
+
+            // Calculate angles from horizontal.
+            var angle1 = Math.atan(v1.y / v1.x);
+            var angle2 = Math.atan(v2.y / v2.x);
+
+            // Eagle flips the rotation direction.
+            return (angle2 - angle1) * 180 / Math.PI * -1;
         }
     }
 

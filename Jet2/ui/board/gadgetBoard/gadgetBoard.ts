@@ -7,6 +7,7 @@ module Jet.Ui.Board {
         clickedParts: Array<Model.PlacedPart>;
         padding: number;
         pcbData: PcbData;
+        rotatingComponents: Array<Model.PlacedPart>;
         selectionCoords: SelectionCoords;
         setSelectionToSingle: boolean;
         zoom: number;
@@ -59,6 +60,9 @@ module Jet.Ui.Board {
             // This determines if clicking a component should clear the current
             // selection and only select that component.
             scope.setSelectionToSingle = true;
+
+            // An array of parts that will be rotated.
+            scope.rotatingComponents = [];
         }
 
         // Extract PCB data from the instance element.
@@ -85,7 +89,7 @@ module Jet.Ui.Board {
             scope.setSelectionToSingle = true;
 
             // If no board components were clicked, deselect everything.
-            if (scope.clickedParts.length == 0) {
+            if (scope.clickedParts.length == 0 && scope.rotatingComponents.length == 0) {
                 scope.selection.selectPlacedPart([]);
 
                 // Deselection the selection box.
@@ -104,6 +108,9 @@ module Jet.Ui.Board {
             // Remove the selection box.
             scope.selectionCoords.p1 = null;
             scope.selectionCoords.p2 = null;
+
+            // Cancel rotation mode.
+            scope.rotatingComponents = [];
         }
 
         // Handle mouse move.
@@ -115,10 +122,27 @@ module Jet.Ui.Board {
 
             var scope = <IGadgetBoardScope> this.scope_;
             var selectionCoords = scope.selectionCoords;
+            var selectedComponents = scope.selection.getPlacedParts();
+            var rotatingComponents = scope.rotatingComponents;
+
+            // Rotate board components.
+            if (rotatingComponents.length > 0) {
+                for (var i = 0; i < rotatingComponents.length; i++) {
+                    var component = rotatingComponents[i];
+                    var componentTransformation = GadgetBoardComponent.getDisplayTransformationForComponent(
+                        component, scope.padding, scope.pcbData);
+                    var origin = new Point(
+                        componentTransformation.x + componentTransformation.imgWidth / 2,
+                        componentTransformation.y + componentTransformation.imgHeight / 2);
+                    var rotation = touchHandler.getRotationAboutPoint(origin);
+                    if (rotation != null) {
+                        this.rotateBoardComponentBy_(component, rotation);
+                    }
+                 }
+            }
 
             // Translate all selected board components.
-            var selectedComponents = scope.selection.getPlacedParts();
-            if (selectedComponents.length > 0 && selectionCoords.p1 == null) {
+            else if (selectedComponents.length > 0 && selectionCoords.p1 == null) {
                 var translation = touchHandler.getTranslation();
 
                 // Preserve selection due to the move.

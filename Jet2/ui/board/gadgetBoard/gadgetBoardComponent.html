@@ -1,4 +1,4 @@
-﻿<g class="gadget-board-component" ng-mousedown="handleMouseDown($event)"
+﻿<g class="gadget-board-component"
    ng-attr-transform="  translate({{transformation.x - dimensions.x / 2}} {{transformation.y - dimensions.y / 2}})
                         rotate({{transformation.rot * -1}} {{dimensions.x / 2}} {{dimensions.y / 2}})
                      ">
@@ -18,9 +18,9 @@
           width="15"
           height="15"
           class="rotate-control"
-          ng-mousedown="componentTouchHandler.handleMouseDown($event, true)"
-          ng-mouseup="componentTouchHandler.handleMouseUp($event, true)"
-          ng-mousemove="componentTouchHandler.handleMouseMove($event, true)" />
+          ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+          ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+          ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
 
     <!-- Component image -->
     <g class="img" ng-class="{selected: isSelected}"

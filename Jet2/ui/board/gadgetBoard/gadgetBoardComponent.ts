@@ -8,6 +8,8 @@ module Jet.Ui.Board {
         getHorizontalTextTranslation: () => number;
         padding: number;
         pcbData: PcbData;
+        rotatingComponents: Array<Model.PlacedPart>;
+        rotationTouchHandler: TouchHandler;
         setSelectionToSingle: boolean;
         transformation: Transformation;
     }
@@ -18,7 +20,7 @@ module Jet.Ui.Board {
 
         constructor(
             public x: number, public y: number, public rot: number,
-            private _imgWidth: number, private _imgHeight: number,
+            public imgWidth: number, public imgHeight: number,
             private _pcbData: PcbData)
         {
             this._checkPosition();
@@ -43,6 +45,7 @@ module Jet.Ui.Board {
             this.scope.clickedParts = '=';
             this.scope.padding = '=';
             this.scope.pcbData = '=';
+            this.scope.rotatingComponents = '=';
             this.scope.setSelectionToSingle = '=';
         }
 
@@ -72,10 +75,18 @@ module Jet.Ui.Board {
                     this._handleMouseDown(scope, touchHandler);
                 },
                 // Mouse move.
+                null);
+
+            // Set rotation touch handler.
+            scope.rotationTouchHandler = new TouchHandler(
+                // Mouse up.
+                null,
+                // Mouse down.
                 (touchHandler: TouchHandler) => {
-                    this._handleMouseMove(scope, touchHandler);
-                }
-            );
+                    this._handleRotationMouseDown(scope, touchHandler);
+                },
+                // Mouse move.
+                null);
 
             // Set horizontal translation for text.
             scope.getHorizontalTextTranslation = function () {
@@ -117,33 +128,32 @@ module Jet.Ui.Board {
             }
         }
 
-        // Updates transformation in scope.
-        private _updateTransformation(scope: IGadgetBoardComponentScope) {
-            var placedPart = scope.boardComponent;
-            var eagleDisplayMapper = placedPart.get_catalog_data().getEagleDisplayMapper();
+        public static getDisplayTransformationForComponent(boardComponent: Model.PlacedPart, padding: number, pcbData: PcbData): Transformation {
+            var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
             if (eagleDisplayMapper != null) {
-                var eaglePoint = new Point(placedPart.get_xpos(), placedPart.get_ypos());
-                var rot = placedPart.get_rot();
+                var eaglePoint = new Point(boardComponent.get_xpos(), boardComponent.get_ypos());
+                var rot = boardComponent.get_rot();
                 var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot);
-                var padding = scope.padding;
-
+                
                 // Eagle flips the y-axis.
                 displayPoint.y *= -1;
 
-                scope.transformation = new Transformation(
+                return new Transformation(
                     EagleDisplayMapper.mmToPx(displayPoint.x) + padding,
-                    EagleDisplayMapper.mmToPx(displayPoint.y) + scope.pcbData.height + padding,
+                    EagleDisplayMapper.mmToPx(displayPoint.y) + padding + pcbData.height,
                     rot,
                     eagleDisplayMapper.getWidth(), eagleDisplayMapper.getHeight(),
-                    scope.pcbData);
-
-                // If the position was fixed, update the model accordingly.
-                if (scope.transformation.positionFixed) {
-                    // TODO (othebe)
-                }
-                
+                    pcbData);
             } else {
                 throw Constants.Strings.VIEWBOX_MISSING;
+            }
+        }
+
+        // Updates transformation in scope.
+        private _updateTransformation(scope: IGadgetBoardComponentScope) {
+            var transformation = GadgetBoardComponent.getDisplayTransformationForComponent(scope.boardComponent, scope.padding, scope.pcbData);
+            if (transformation != null) {
+                scope.transformation = transformation;
             }
         }
 
@@ -177,19 +187,14 @@ module Jet.Ui.Board {
                 }
             }
 
-            scope.clickedParts.push(scope.boardComponent);
+            if (scope.clickedParts.indexOf(scope.boardComponent) < 0) {
+                scope.clickedParts.push(scope.boardComponent);
+            }
         }
 
         // Handle rotation mouse move.
-        private _handleMouseMove(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
-            // TODO (othebe): This actually handles the rotation control. The control needs to be
-            // placed in a separate directive so this code can live there instead.
-            var origin = new Point(0, 0);
-            var rotation = touchHandler.getRotationAboutPoint(origin);
-
-            if (rotation != null) {
-                this.rotateBoardComponentBy_(scope.boardComponent, rotation);
-            }
+        private _handleRotationMouseDown(scope: IGadgetBoardComponentScope, touchHandler: TouchHandler) {
+            scope.rotatingComponents.push(scope.boardComponent);
         }
 
         // Get horizontal translation to center text on image.

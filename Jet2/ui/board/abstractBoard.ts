@@ -68,6 +68,21 @@ module Jet.Ui.Board {
             boardComponent.set_ypos(yMm);
         }
 
+        // Rotate board component.
+        protected rotateBoardComponentBy_(boardComponent: Model.PlacedPart, rotation: number) {
+            var rot = boardComponent.get_rot();
+            var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
+
+            var currentCoords = eagleDisplayMapper.convertEagleToDisplayPoint(
+                new Point(boardComponent.get_xpos(), boardComponent.get_ypos()), rot);
+            var newCoords = eagleDisplayMapper.convertDisplayToEaglePoint(
+                new Point(currentCoords.x, currentCoords.y), rot + rotation);
+
+            boardComponent.set_xpos(newCoords.x);
+            boardComponent.set_ypos(newCoords.y);
+            boardComponent.set_rot(rot + rotation);
+        }
+
         // Set board dimensions.
         private _getBoardDimensions(gadgetModel: Model.GadgetModel): BoardDimensions {
             var bb = gadgetModel.bounding_box();
