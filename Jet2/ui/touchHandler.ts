@@ -133,6 +133,13 @@
         // is calculated as the rotation between two vectors centered about the
         // origin.
         public getRotationAboutPoint(origin: Point): number {
+            // Since we are using tangents to calculate angles, we will have
+            // situtation where the angle may incorrectly reach 180 due to zero
+            // or infinite slopes. This value ensures we ignore those faulty
+            // values. Someone with better math knowledge should take a better
+            // stab at this.
+            var threshold = 90;
+
             // Convert current and previous coordinates to offset coordinates.
             var p1 = new Point(
                 this._prevClientCoords.x + this._clientToOffsetTranslation.x,
@@ -150,7 +157,12 @@
             var angle2 = Math.atan(v2.y / v2.x);
 
             // Eagle flips the rotation direction.
-            return (angle2 - angle1) * 180 / Math.PI * -1;
+            var degrees = (angle2 - angle1) * 180 / Math.PI * -1;
+            if (Math.abs(degrees) > threshold) {
+                degrees = 0;
+            }
+
+            return degrees;
         }
     }
 

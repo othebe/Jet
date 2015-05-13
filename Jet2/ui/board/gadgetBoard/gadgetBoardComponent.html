@@ -11,16 +11,44 @@
           ng-attr-height="{{dimensions.y}}"
           style="stroke: red; stroke-width: 5px; fill: transparent;" />
 
-    <!-- Rotation control -->
-    <rect ng-if="isSelected"
-          ng-attr-x="{{dimensions.x}}"
-          y="-15"
-          width="15"
-          height="15"
-          class="rotate-control"
-          ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
-          ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
-          ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+    <!-- Rotation controls -->
+    <g class="rotation-control">
+        <circle ng-if="isSelected"
+                ng-attr-cx="0"
+                cy="0"
+                r="7"
+                class="top-left"
+                ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+                ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+
+        <circle ng-if="isSelected"
+                ng-attr-cx="0"
+                ng-attr-cy="{{dimensions.y}}"
+                r="7"
+                class="bottom-left"
+                ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+                ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+
+        <circle ng-if="isSelected"
+                ng-attr-cx="{{dimensions.x}}"
+                ng-attr-cy="{{dimensions.y}}"
+                r="7"
+                class="bottom-right"
+                ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+                ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+
+        <circle ng-if="isSelected"
+                ng-attr-cx="{{dimensions.x}}"
+                ng-attr-cy="{{0}}"
+                r="7"
+                class="top-right"
+                ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+                ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+    </g>
 
     <!-- Component image -->
     <g class="img" ng-class="{selected: isSelected}"
@@ -53,5 +81,14 @@
         fill: red;
         stroke: red;
         stroke-width: 1px;
+    }
+
+    g.gadget-board-component .rotation-control circle {
+        fill: red;
+        stroke: red;
+    }
+
+    g.gadget-board-component .rotation-control circle {
+        cursor: pointer;
     }
 </style>
