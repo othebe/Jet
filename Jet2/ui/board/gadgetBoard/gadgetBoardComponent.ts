@@ -151,6 +151,13 @@ module Jet.Ui.Board {
 
         // Updates transformation in scope.
         private _updateTransformation(scope: IGadgetBoardComponentScope) {
+            // This block handles instancs where the scope has not been updated yet, such as
+            // when switching perspectives.
+            // TODO (othebe): Can this be solved with $applyAsync?
+            if (scope.boardComponent == null || scope.padding == null || scope.pcbData == null) {
+                scope.transformation = new Transformation(0, 0, 0, 0, 0, null);
+                return;
+            }
             var transformation = GadgetBoardComponent.getDisplayTransformationForComponent(scope.boardComponent, scope.padding, scope.pcbData);
             if (transformation != null) {
                 scope.transformation = transformation;
