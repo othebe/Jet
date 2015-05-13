@@ -84,35 +84,15 @@ module Jet.Ui.Board {
             var boardComponents = scope.gadgetModel.get_parts();
             for (var i = 0; i < boardComponents.length; i++) {
                 var boardComponent = boardComponents[i];
-                var transformation = this._getBoardComponentTransformation(boardComponent, scope.padding, scope.pcbData.height);
-                var centerX = transformation.x + transformation.width / 2;
-                var centerY = transformation.y + transformation.height / 2;
-
+                var transformation = GadgetBoardComponent.getDisplayTransformationForComponent(boardComponent, scope.padding, scope.pcbData);
+                var centerX = transformation.x + transformation.imgWidth / 2;
+                var centerY = transformation.y + transformation.imgHeight / 2;
                 
                 if (centerX >= selectionTransformation.x && centerX <= selectionTransformation.x + selectionTransformation.width &&
                     centerY >= selectionTransformation.y && centerY <= selectionTransformation.y + selectionTransformation.height)
                 {
                     scope.selection.addPlacedPart([boardComponent]);
                 }
-            }
-        }
-
-        // Get tranformation for a board component.
-        private _getBoardComponentTransformation(boardComponent: Model.PlacedPart, padding: number, pcbHeight: number): Transformation {
-            var eagleDisplayMapper = boardComponent.get_catalog_data().getEagleDisplayMapper();
-            if (eagleDisplayMapper != null) {
-                var eaglePoint = new Point(boardComponent.get_xpos(), boardComponent.get_ypos());
-                var rot = boardComponent.get_rot();
-                var displayPoint = eagleDisplayMapper.convertEagleToDisplayPoint(eaglePoint, rot);
-
-                // Eagle flips the y-axis.
-                displayPoint.y *= -1;
-
-                return new Transformation(
-                    EagleDisplayMapper.mmToPx(displayPoint.x) + padding,
-                    EagleDisplayMapper.mmToPx(displayPoint.y) + pcbHeight + padding,
-                    eagleDisplayMapper.getWidth(),
-                    eagleDisplayMapper.getHeight());
             }
         }
 
