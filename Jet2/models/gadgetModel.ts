@@ -55,7 +55,10 @@ module Jet.Model {
         add_component(
             catalog_component: CatalogModelData,
             name: string,
-            keyname: string
+            keyname: string,
+            x_pos: number = 0,
+            y_pos: number = 0,
+            rot: number = 0
             ) {
             if (Object.keys(this.components).indexOf(name) > -1) {
                 throw new Error("Adding component with duplicate name: " + name);
@@ -64,7 +67,7 @@ module Jet.Model {
             var component = new ComponentInstance(this, catalog_component, name, keyname);
             for (var i in catalog_component.getPlacedParts()) {
                 var pp = catalog_component.getPlacedParts()[i]
-                component.add_placed_part(new PlacedPart(this, pp, component, pp.getRef(), 0, 0, 0))
+                component.add_placed_part(new PlacedPart(this, pp, component, pp.getRef(), x_pos, y_pos, rot))
             }
 
             this.components[name] = component;

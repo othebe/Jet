@@ -63,6 +63,9 @@ module Jet.Ui.Board {
 
             // An array of parts that will be rotated.
             scope.rotatingComponents = [];
+
+            // Enable drag-drop.
+            this._enableDragDrop();
         }
 
         // Extract PCB data from the instance element.
@@ -79,6 +82,65 @@ module Jet.Ui.Board {
             var height = scope.boardDimensions.height;
 
             return new PcbData(x, y, width, height);
+        }
+
+        // Enable drag-drop.
+        private _enableDragDrop() {
+            var scope = <IGadgetBoardScope> this.scope_;
+            var elt = this.instanceElement_.find('div')[0];
+
+            // Enable dropzone.
+            elt.ondragover = (e) => {
+                e.preventDefault();
+            };
+
+            // Add component on drop.
+            elt.ondrop = (e) => {
+                var catalogKeyName = e.dataTransfer.getData(Constants.DragDrop.CATALOG_DATA);
+                var catalogData = scope.catalogModel.getComponent(catalogKeyName);
+
+                var placedPart = null;
+                var placedParts = catalogData.getPlacedParts();
+                for (var key in placedParts) {
+                    placedPart = placedParts[key];
+                    if (placedPart != null) {
+                        break;
+                    }
+                }
+
+                if (placedPart == null) {
+                    return;
+                }
+                
+                var offset = this.instanceElement_.offset();
+                var pcbData = scope.pcbData;
+                var margin = EagleDisplayMapper.mmToPx(Constants.Board.PCB_MARGIN);
+                var eagleDisplayMapper = <EagleDisplayMapper> placedPart.getEagleDisplayMapper();
+
+                var displayPoint = new Point(
+                    EagleDisplayMapper.pxToMm(e.offsetX),
+                    EagleDisplayMapper.pxToMm(pcbData.height - e.offsetY));
+                var eagleCoords = eagleDisplayMapper.convertDisplayToEaglePoint(displayPoint, 0);
+
+                // TODO (othebe): Move this logic (also in CatalogEntry) into the GadgetModel.
+                // Add component.
+                var added = false;
+                var componentCtr = 0;
+
+                while (!added) {
+                    try {
+                        scope.gadgetModel.add_component(
+                            catalogData,
+                            catalogKeyName + '_' + componentCtr,
+                            catalogKeyName,
+                            eagleCoords.x,
+                            eagleCoords.y);
+                        added = true;
+                    } catch (e) {
+                        componentCtr++;
+                    }
+                }
+            };
         }
 
         // Handle mouse down.

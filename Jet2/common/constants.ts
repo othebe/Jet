@@ -9,6 +9,13 @@ module Jet.Constants {
         export var RESTRICT_COORDINATES = 'restrict-coorinates';
     }
 
+    // Drag-drop events.
+    export module DragDrop {
+        // This is the data key for a component.
+        export var CATALOG_DATA = 'catalog-data';
+    }
+
+    // Gadget board.
     export module Board {
         // This is the color of the PCB.
         export var PCB_COLOR = '#78AB46';

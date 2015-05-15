@@ -12,10 +12,6 @@ module Jet.Ui {
     export class CatalogEntry extends Jet.Ui.Directive {
         private _templateUrl: string = "ui/catalogEntry/catalogEntry.html";
 
-        // TODO (othebe): Add dynamically to center.
-        private _DEFAULT_X = 100;
-        private _DEFAULT_Y = 100;
-
         private _catalogModelData: Jet.Model.CatalogModelData;
 
         constructor(AppContext: AppContext) {
@@ -23,7 +19,7 @@ module Jet.Ui {
 
             var main = this;
 
-            this.link = function (scope: ICatalogEntryScope) {
+            this.link = function (scope: ICatalogEntryScope, instanceElement: JQuery) {
                 // Add component to gadget.
                 scope.addComponentToGadget = function () {
                     // SS: This should probably be routed through the board, so
@@ -39,15 +35,31 @@ module Jet.Ui {
                         try {
                             scope.gadgetModel.add_component(
                                 component,
-                                componentName + '_' + componentCtr, component.getKeyName()
-                            //part_locations
-                                );
+                                componentName + '_' + componentCtr,
+                                component.getKeyName());
                             added = true;
                         } catch (e) {
                             componentCtr++;
                         }
                     }
-                }
+                };
+
+                // Enable dragging.
+                main._enableDrag(scope, instanceElement.find('div')[0]);
+            };
+        }
+
+        // Enable dragging on element.
+        private _enableDrag(scope: ICatalogEntryScope, elt: HTMLElement) {
+            elt.draggable = true;
+            elt.ondragstart = function (e: any) {
+                // Set ghost.
+                var img = document.createElement('img');
+                img.src = scope.catalogModelData.getSvgUrl();
+                e.dataTransfer.setDragImage(img, 0, 0);
+
+                // Set data.
+                e.dataTransfer.setData(Constants.DragDrop.CATALOG_DATA, scope.catalogModelData.getKeyName());
             };
         }
 
