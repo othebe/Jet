@@ -1,5 +1,9 @@
 ﻿body {
     font-family: 'Segoe UI', sans-serif;
+    cursor: default;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 span {
