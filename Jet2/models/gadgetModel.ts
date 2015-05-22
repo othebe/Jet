@@ -71,6 +71,8 @@ module Jet.Model {
             }
 
             this.components[name] = component;
+            
+            this.check_gspec ();
         }
 
         // Delete a component.
@@ -137,6 +139,9 @@ module Jet.Model {
         get_components() {
             return this.components;
         }
+        
+        
+        
         get_parts(): PlacedPart[] {
             var parts: PlacedPart[] = [];
 
@@ -223,6 +228,18 @@ module Jet.Model {
             XML.appendChild(Node);
 
             return XML.innerHTML;
+        }
+        
+        check_gspec (): any {
+            var gspec = this.get_gspec()
+             
+            $.post("gcheck",
+            {
+              gspec: gspec
+            },
+            function(data,status){
+                alert("Data: " + data + "\nStatus: " + status);
+            });
         }
 
         make_option(name: string, value: any): HTMLElement {
