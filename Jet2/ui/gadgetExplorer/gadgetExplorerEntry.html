@@ -1,27 +1,54 @@
-﻿<div class="gadget-explorer-entry" tabindex="0" ng-keydown="keyHandler.handleKeyDown($event)" ondblclick="toggleExpand(this)" ng-click="toggleSelectedComponent($event)">
-    <div class="arrow right"></div>
-    <div class="component-instance" ng-class="{selected: isComponentInstanceSelected()}" ng-bind="component.get_name()"></div>
-    <div class="placed-parts" style="display: none;">
-        <div ng-repeat="placedPart in component.get_placed_parts()">
-            <div class="placed-part" ng-class="{selected: isPlacedPartSelected(placedPart)}" ng-click="toggleSelectedPlacedPart(placedPart, $event)">
-                <span class="box"></span>
-                <span ng-bind="placedPart.get_ref()"></span>
+﻿<!-- Single placed part. -->
+<div ng-if="component.get_placed_parts().length > 1">
+    <div class="gadget-explorer-entry" tabindex="0" ng-keydown="keyHandler.handleKeyDown($event)" ondblclick="toggleExpand(this)" ng-click="toggleSelectedComponent($event)">
+        <div class="icon">
+            <img class="expanded" src="public/img/folder-open.png" />
+            <img class="closed" src="public/img/folder-closed.png" />
+        </div>
+        <div class="component-instance" ng-class="{selected: isComponentInstanceSelected()}" ng-bind="component.get_name()"></div>
+        <div class="placed-parts" style="display: none;">
+            <div ng-repeat="placedPart in component.get_placed_parts()">
+                <div class="placed-part" ng-class="{selected: isPlacedPartSelected(placedPart)}" ng-click="toggleSelectedPlacedPart(placedPart, $event)">
+                    <div class="icon">
+                        <img src="public/img/file.png" />
+                    </div>
+                    <span ng-bind="placedPart.get_ref()"></span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Multiple placed parts. -->
+<div ng-if="component.get_placed_parts().length < 2">
+    <div class="gadget-explorer-entry" tabindex="0" ng-keydown="keyHandler.handleKeyDown($event)" ng-click="toggleSelectedComponent($event)">
+        <div class="icon">
+            <img src="public/img/file.png" />
+        </div>
+        <div class="component-instance" ng-class="{selected: isComponentInstanceSelected()}" ng-bind="component.get_name()"></div>
+    </div>
+</div>
+
+
+
 <script>
     function toggleExpand(elt) {
-        var arrowElt = elt.getElementsByClassName('arrow')[0];
+        var expandedIcon = elt.getElementsByClassName('expanded')[0];
+        var closedIcon = elt.getElementsByClassName('closed')[0];
         var placedParts = elt.getElementsByClassName('placed-parts')[0];
-        var isVisible = !(placedParts.style.display != 'none');
+        var isExpanded = placedParts.style.display != 'none';
 
-        // Toggle arrow.
-        arrowElt.className = (isVisible) ? 'arrow down' : 'arrow right';
+        // Toggle icons.
+        if (isExpanded) {
+            expandedIcon.style.display = 'none';
+            closedIcon.style.display = 'inline';
+        } else {
+            expandedIcon.style.display = 'inline';
+            closedIcon.style.display = 'none';
+        }
 
         // Toggle placed parts.
-        placedParts.style.display = (isVisible) ? 'block' : 'none';
+        placedParts.style.display = (isExpanded) ? 'none' : 'block';
     }
 </script>
 
@@ -42,39 +69,18 @@
         padding-left: 40px;
     }
 
-    /** Box. */
-    .box {
-        border: 3px solid black;
-        float: left;
-        height: 0px;
-        margin-right: 8px;
-        margin-top: 9px;
-        width: 0px;
-    }
-
-    /** Arrows. */
-    .arrow {
+    .gadget-explorer-entry .icon {
         float: left;
         margin-left: 5px;
+        margin-right: 8px;
     }
 
-    .arrow.down {
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid black;
-        height: 0;
-        margin-right: 6px;
-        margin-top: 9px;   
-	    width: 0; 
+    .gadget-explorer-entry .icon img {
+        height: 15px;
+        width: 15px;
     }
 
-    .arrow.right {
-        border-bottom: 5px solid transparent;
-        border-left: 5px solid black;
-        border-top: 5px solid transparent;
-        height: 0;
-        margin-right: 11px;
-        margin-top: 6px;
-	    width: 0;   
+    .gadget-explorer-entry .icon img.expanded {
+        display: none;
     }
 </style>
