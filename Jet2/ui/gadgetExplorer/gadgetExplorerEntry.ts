@@ -80,8 +80,8 @@ module Jet.Ui {
 
         // Handle key down.
         private _onKeyDown(keyHandler: KeyHandler) {
-            // Handle Delete key.
-            if (keyHandler.getKeyCode() == 46) {
+            // Handle Delete and Backspace key.
+            if (keyHandler.getKeyCode() == 46 || keyHandler.getKeyCode() == 8) {
                 var selected = this._scope.selection.getComponentInstances();
                 for (var i = 0; i < selected.length; i++) {
                     this._scope.gadgetModel.delete_component(selected[i].get_name());

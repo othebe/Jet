@@ -17,6 +17,7 @@
 
             if (this._onKeyUp != null) {
                 this._onKeyUp(this);
+                this._event.preventDefault();
             }
 
             if (stopPropagation) {
@@ -31,6 +32,7 @@
 
             if (this._onKeyDown != null) {
                 this._onKeyDown(this);
+                this._event.preventDefault();
             }
 
             if (stopPropagation) {
@@ -45,6 +47,7 @@
 
             if (this._onKeyPress != null) {
                 this._onKeyPress(this);
+                this._event.preventDefault();
             }
 
             if (stopPropagation) {
