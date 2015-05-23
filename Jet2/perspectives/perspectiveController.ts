@@ -26,6 +26,9 @@ module Jet.Perspective {
             },
             function (scope, appContext) {
                 return new Perspective.BoardPerspective(scope, appContext);
+            },
+            function (scope, appContext) {
+                return new Perspective.MinimalistPerspective(scope, appContext);
             }
         ];
 
@@ -34,10 +37,17 @@ module Jet.Perspective {
 
             var scope = $scope;
 
-            $scope.perspective = this._perspectives[0]($scope, appContext);
             $scope.$on("change:perspective", function (name: ng.IAngularEvent, newPerspective: number) {
                 scope.perspective = main._perspectives[newPerspective](scope, appContext);
             });
+        }
+
+        public static isPerspectiveTouchBased(ndx: number): boolean {
+            // TODO (othebe): This is based on _perspectives. We need to remove the check based on index
+            // positioning inside _perspectives and use typeof instead.
+            var touchBased = [4];
+
+            return touchBased.indexOf(ndx) >= 0;
         }
     }
 }

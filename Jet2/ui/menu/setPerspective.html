@@ -1,0 +1,28 @@
+﻿<md-dialog class="set-perspective" aria-label="Set Perspective">
+    <md-content class="sticky-container">
+        <div class="dialog-content">
+            <md-toolbar class="">
+                <div class="md-toolbar-tools">
+                    <h2 class="md-flex">Set Perspective:</h2>
+                </div>
+            </md-toolbar>
+            <md-radio-group ng-model="perspectiveIndex">
+                <md-radio-button value="0" class="md-primary" ng-click="selectPerspective(0)"> Workspace (Default) </md-radio-button>
+                <md-radio-button value="3" ng-click="selectPerspective(3)"> Board View </md-radio-button>
+                <md-radio-button value="4" ng-click="selectPerspective(4)"> Touch </md-radio-button>
+            </md-radio-group>
+        </div>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <md-button ng-click="close()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>
+
+<style>
+    .set-perspective {
+        width: 100%;
+    }
+</style>

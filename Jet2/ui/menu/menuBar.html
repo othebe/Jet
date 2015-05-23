@@ -1,33 +1,61 @@
 ﻿<div class="menu-bar">
-    <!-- TODO(othebe): Split menu entries and vertical containers into directives. -->
-    <ul class="bar">
-        <li class="menu-option">
-            File
-            <ul class="submenu">
-                <li class="option">New</li>
-                <li class="option">Import GSpec</li>
-                <li class="option" ng-click="exportGSpec($event)">Export GSpec</li>
-            </ul>
-        </li>
+    <!-- TODO(othebe): Categorize perspectives as Touch/Non-touch within scope. -->
 
-        <li class="menu-option">
-            View
-            <ul class="submenu">
-                <li class="option" ng-click="selectPerspective(0)">Workspace</li>
-                <li class="option" ng-click="selectPerspective(1)">Debug</li>
-                <li class="option" ng-click="selectPerspective(2)">NB</li>
-                <li class="option" ng-click="selectPerspective(3)">Board</li>
-            </ul>
-        </li>
+    <!-- Touch. -->
+    <div ng-if="isPerspectiveTouchBased()">
+        <md-toolbar class="main-menu">
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" aria-label="Menu">
+                    <md-icon md-svg-icon="public/img/menu.svg"></md-icon>
+                </md-button>
 
-        <li class="menu-option" ng-click="showAbout()">
-            About
-        </li>
+                <h2 class="title">
+                    Gadgetron JET
+                </h2>
 
-        <div class="clear"></div>
-    </ul>
+                <span flex></span>
 
-    <export-g-spec></export-g-spec>
+                <md-button class="md-icon-button" aria-label="Set Perspective" title="Set Perspective" ng-click="showPerspectives($event)">
+                    <md-icon md-svg-icon="public/img/eye.svg"></md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button" aria-label="Export GSpec" title="Export GSpec" ng-click="exportGSpec($event)">
+                    <md-icon md-svg-icon=" public/img/export.svg" style="color: white;"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+    </div>
+
+    <!-- Non-touch. -->
+    <div ng-if="!isPerspectiveTouchBased()">
+        <ul class="bar">
+            <li class="menu-option">
+                File
+                <ul class="submenu">
+                    <li class="option">New</li>
+                    <li class="option">Import GSpec</li>
+                    <li class="option" ng-click="exportGSpec($event)">Export GSpec</li>
+                </ul>
+            </li>
+
+            <li class="menu-option">
+                View
+                <ul class="submenu">
+                    <li class="option" ng-click="selectPerspective(0)">Workspace</li>
+                    <li class="option" ng-click="selectPerspective(1)">Debug</li>
+                    <li class="option" ng-click="selectPerspective(2)">NB</li>
+                    <li class="option" ng-click="selectPerspective(3)">Board</li>
+                    <li class="option" ng-click="selectPerspective(4)">Touch</li>
+                </ul>
+            </li>
+
+            <li class="menu-option" ng-click="showAbout()">
+                About
+            </li>
+
+            <div class="clear"></div>
+        </ul>
+    </div>
 </div>
 
 <style>
@@ -35,6 +63,17 @@
         font-size: 18px;
     }
 
+    /** Touch */
+    .menu-bar md-toolbar.md-default-theme {
+        background-color: #193441;
+    }
+
+    .menu-bar md-toolbar .title {
+        font-size: 0.8em;
+        margin-left: 5px;
+    }
+
+    /** Non touch. */
     .menu-option {
         color: #FCFFF5;
         cursor: default;

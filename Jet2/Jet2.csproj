@@ -23,6 +23,7 @@
     <Content Include="perspectives\boardPerspective\boardPerspective.html" />
     <Content Include="perspectives\debugPerspective\debugPerspective.css" />
     <Content Include="perspectives\debugPerspective\debugPerspective.html" />
+    <Content Include="perspectives\minimalistPerspective\minimalistPerspective.html" />
     <Content Include="perspectives\nbPerspective\nbPerspective.css" />
     <Content Include="perspectives\nbPerspective\nbPerspective.html" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
@@ -412,6 +413,7 @@
     <Content Include="ui\gadgetInspector\gadgetInspector.html" />
     <Content Include="ui\menu\exportGSpec.html" />
     <Content Include="ui\menu\menuBar.html" />
+    <Content Include="ui\menu\setPerspective.html" />
     <Content Include="ui\nb\nb.html" />
     <Content Include="ui\nb\nbComponent.html" />
     <Content Include="web.config" />
@@ -432,6 +434,7 @@
     <TypeScriptCompile Include="perspectives\boardPerspective\boardPerspective.ts" />
     <TypeScriptCompile Include="perspectives\debugPerspective\debugPerspective.ts" />
     <TypeScriptCompile Include="perspectives\IPerspective.ts" />
+    <TypeScriptCompile Include="perspectives\minimalistPerspective\minimalistPerspective.ts" />
     <TypeScriptCompile Include="perspectives\nbPerspective\nbPerspective.ts" />
     <TypeScriptCompile Include="perspectives\perspectiveController.ts" />
     <TypeScriptCompile Include="perspectives\workspacePerspective\workspacePerspective.ts" />

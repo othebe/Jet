@@ -13,8 +13,8 @@
             <img class="button" src="public/img/grid.svg" />
         </div>
 
-        <div class="left gadget-inspector control" title="Toggle edit Gadget.">
-            <img class="button" src="public/img/configure.svg" ng-click="toggleEditGadget()"/>
+        <div class="left gadget-inspector control" title="Toggle edit Gadget." ng-if="!isPerspectiveTouchBased()">
+            <img class="button" src="public/img/configure.svg" ng-click="toggleEditGadget()" />
         </div>
     </div>
 </div>

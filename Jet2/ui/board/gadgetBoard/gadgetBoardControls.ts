@@ -38,6 +38,7 @@ module Jet.Ui.Board {
             };
 
             this.scope = {
+                isPerspectiveTouchBased: '=',
                 selection: '=',
                 zoom: '='
             };

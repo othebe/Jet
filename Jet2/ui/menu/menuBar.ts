@@ -6,7 +6,13 @@ module Jet.Ui {
         showAbout(): void;
 
         // Export GSpec.
-        exportGSpec(e:any): void;
+        exportGSpec(e: any): void;
+
+        // Select perspective.
+        selectPerspective(ndx: number): void;
+
+        // Show set perspective.
+        showPerspectives(e: any): void;
     }
 
     export class MenuBar extends Jet.Ui.Directive {
@@ -22,6 +28,10 @@ module Jet.Ui {
                     console.log(scope.about);
                 };
 
+                scope.selectPerspective = function (perspectiveNdx) {
+                    scope.perspectiveIndex = perspectiveNdx;
+                };
+
                 // Export GSpec.
                 scope.exportGSpec = function (ev: any) {
                     var _scope = scope;
@@ -31,6 +41,27 @@ module Jet.Ui {
                         targetEvent: ev,
                         controller: (scope, $mdDialog) => {
                             scope.exportGSpec = _scope.gadgetModel.get_gspec();
+
+                            scope.close = function () {
+                                $mdDialog.cancel();
+                            };
+                        }
+                    });
+                };
+
+                // Show perspective.
+                scope.showPerspectives = function (ev: any) {
+                    var _scope = scope;
+                    $mdDialog.show({
+                        templateUrl: 'ui/menu/setPerspective.html',
+                        clickOutsideToClose: false,
+                        targetEvent: ev,
+                        controller: (scope, $mdDialog) => {
+                            scope.perspectiveIndex = _scope.perspectiveIndex;
+
+                            scope.selectPerspective = (perspectiveNdx) => {
+                                _scope.perspectiveIndex = perspectiveNdx;
+                            };
 
                             scope.close = function () {
                                 $mdDialog.cancel();

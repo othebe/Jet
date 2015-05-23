@@ -9,9 +9,14 @@
         // Current UI selection.
         selection: Jet.Selection.Manager;
 
+        // About us!
         about: string;
 
-        selectPerspective(id: number): void;
+        // Perspective index.
+        perspectiveIndex: number;
+
+        // Determines if perspective is touch-based.
+        isPerspectiveTouchBased: () => boolean;
 
         // Determines whether board information is showing.
         showBoardInfo: boolean;
@@ -26,12 +31,17 @@
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
             $scope.selection = new Jet.Selection.Manager();
+            $scope.perspectiveIndex = 4;
 
             $scope.about = "Gadgetron Jet V2.0";
 
-            $scope.selectPerspective = function (id: number) {
-                $rootScope.$broadcast("change:perspective", id);
-            }
+            $scope.isPerspectiveTouchBased = function () {
+                return Perspective.PerspectiveController.isPerspectiveTouchBased($scope.perspectiveIndex);
+            };
+
+            $scope.$watch('perspectiveIndex', function () {
+                $rootScope.$broadcast("change:perspective", $scope.perspectiveIndex);
+            });
         }
     }
 }

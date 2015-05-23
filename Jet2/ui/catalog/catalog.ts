@@ -22,6 +22,11 @@ module Jet.Ui {
                     return searchIndex.indexOf(filterText) == 0;
                 }
             }
+
+            this.scope = {
+                catalogModel: '=',
+                displayMode: '='
+            };
         }
 
         public templateUrl(): string {
