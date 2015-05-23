@@ -21,7 +21,7 @@
 /// <reference path="ui/menu/menuBar.ts" />
 
 (function () {
-    var app = angular.module('Jet', ['ngMaterial']);
+    var app = angular.module('Jet', ['ngMaterial', 'ngTouch']);
 
     // Application context.
     app.service('AppContext', AppContext);

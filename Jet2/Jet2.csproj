@@ -305,6 +305,9 @@
     <Content Include="public\libraries\angular-route\angular-route.js" />
     <Content Include="public\libraries\angular-route\angular-route.min.js" />
     <Content Include="public\libraries\angular-route\index.js" />
+    <Content Include="public\libraries\angular-touch\angular-touch.js" />
+    <Content Include="public\libraries\angular-touch\angular-touch.min.js" />
+    <Content Include="public\libraries\angular-touch\index.js" />
     <Content Include="public\libraries\angular\angular-csp.css" />
     <Content Include="public\libraries\angular\angular.js" />
     <Content Include="public\libraries\angular\angular.min.js" />
@@ -530,6 +533,10 @@
     <Content Include="public\libraries\angular-route\bower.json" />
     <Content Include="public\libraries\angular-route\package.json" />
     <Content Include="public\libraries\angular-route\README.md" />
+    <Content Include="public\libraries\angular-touch\angular-touch.min.js.map" />
+    <Content Include="public\libraries\angular-touch\bower.json" />
+    <Content Include="public\libraries\angular-touch\package.json" />
+    <Content Include="public\libraries\angular-touch\README.md" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
