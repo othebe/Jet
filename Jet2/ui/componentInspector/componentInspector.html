@@ -1,44 +1,25 @@
 ﻿<div class="component-inspector fill-height ui-container">
     <md-whiteframe class="md-whiteframe-z1 fill-height" layout="column" layout-align="left">
         <div class="header">Component Inspector</div>
-        <md-content class="fill-height" ng-if="selection.getPlacedParts().length > 0">
-            <!-- Data editors. -->
-            <component-name-inspector catalog-model="catalogModel"
-                                      gadget-model="gadgetModel"
-                                      selection="selection">
-            </component-name-inspector>
 
-            <component-transformation-inspector catalog-model="catalogModel"
-                                                gadget-model="gadgetModel"
-                                                selection="selection"
-                                                ng-if="selection.getPlacedParts().length == 1">
-            </component-transformation-inspector>
-
-            <md-divider ng-if="selection.getPlacedParts().length == 1"></md-divider>
-
-            <!-- Component Information. -->
-            <md-card ng-show="catalogModelData != null">
-                <div layout="row">
-                    <!-- Component image. -->
-                    <div>
-                        <img ng-src="{{catalogModelData.getSvgUrl()}}" />
-                    </div>
-
-                    <!-- Other information. -->
-                    <div layout="column">
-                        <b>
-                            <span ng-bind="catalogModelData.getKeyName()"></span>
-                            <span ng-bind="about"></span>
-                            <a href="{{catalogModelData.getDocumentationUrl()}}" target="_blank">
-                                <!-- TODO (othebe): Get link icon. -->
-                                <img src="http://1.bp.blogspot.com/-z0Q8pd7Ifhs/UOwtIDT86II/AAAAAAAAAAY/6hDoGHfu8YA/s1600/link-icon.png" style="width:15px;" />
-                            </a>
-                        </b>
-                        <md-divider></md-divider>
-                        <span>Price: $<span ng-bind="catalogModelData.getPrice()"></span></span>
-                    </div>
-                </div>
-            </md-card>
+        <md-content class="fill-height" ng-if="selection.getPlacedParts().length == 0">
+            <div style="padding: 8px 12px;">Select a component on the board to inspects its properties here.</div>
         </md-content>
-    </md-whiteframe>
+
+            <md-content class="fill-height" ng-if="selection.getPlacedParts().length > 0">
+                <!-- Data editors. -->
+                <component-name-inspector catalog-model="catalogModel"
+                                          gadget-model="gadgetModel"
+                                          selection="selection">
+                </component-name-inspector>
+
+                <component-transformation-inspector catalog-model="catalogModel"
+                                                    gadget-model="gadgetModel"
+                                                    selection="selection"
+                                                    ng-if="selection.getPlacedParts().length == 1">
+                </component-transformation-inspector>
+
+                <md-divider ng-if="selection.getPlacedParts().length == 1"></md-divider>
+            </md-content>
+</md-whiteframe>
 </div>

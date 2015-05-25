@@ -3,11 +3,15 @@
         <div class="header">Gadget Explorer</div>
         <md-content class="fill-height">
             <md-list>
-                <div ng-repeat="componentName in gadgetModel.component_names()">
+                <div style="padding: 8px 12px;" ng-if="gadgetModel.component_names().length == 0">
+                    <!-- Some message if no components are in the gadget. -->
+                </div>
+
+                <div ng-if="gadgetModel.component_names().length > 0" ng-repeat="componentName in gadgetModel.component_names()">
                     <gadget-explorer-entry component="gadgetModel.components[componentName]"
-                                           catalog-model-data="catalogModel.getComponent(gadgetModel.components[componentName].keyname)"
-                                           gadget-model="gadgetModel"
-                                           selection="selection">
+                                            catalog-model-data="catalogModel.getComponent(gadgetModel.components[componentName].keyname)"
+                                            gadget-model="gadgetModel"
+                                            selection="selection">
                     </gadget-explorer-entry>
                 </div>
             </md-list>
