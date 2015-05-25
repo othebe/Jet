@@ -32,7 +32,7 @@
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
             $scope.selection = new Jet.Selection.Manager();
-            $scope.perspectiveIndex = 4;
+            $scope.perspectiveIndex = 0;
 
             $scope.about = "Gadgetron Jet V2.0";
 
