@@ -25,6 +25,7 @@ module Jet.Ui {
 
             this.scope = {
                 catalogModel: '=',
+                gadgetModel: '=',
                 displayMode: '='
             };
         }

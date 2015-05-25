@@ -53,7 +53,9 @@
     <!-- Component image -->
     <g class="img" ng-class="{selected: isSelected}"
        ng-mousedown="componentTouchHandler.handleMouseDown($event)"
-       ng-mouseup="componentTouchHandler.handleMouseUp($event)" />
+       ng-mouseup="componentTouchHandler.handleMouseUp($event)"
+       touch-start="componentTouchHandler.handleMouseDown($event)"
+       touch-end="componentTouchHandler.handleMouseUp($event)" />
 </g>
 
 <!-- Component text -->
@@ -61,6 +63,8 @@
    ng-class="{selected: isSelected}"
    ng-mousedown="componentTouchHandler.handleMouseDown($event)"
    ng-mouseup="componentTouchHandler.handleMouseUp($event)"
+   touch-start="componentTouchHandler.handleMouseDown($event)"
+   touch-end="componentTouchHandler.handleMouseUp($event)"
    ng-attr-transform="translate({{transformation.x - dimensions.x / 2 + getHorizontalTextTranslation()}} {{transformation.y}})">
     <text fill="red">{{boardComponent.get_component_instance().get_name()}}</text>
 </g>

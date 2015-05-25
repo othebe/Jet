@@ -56,8 +56,8 @@ module Jet.Model {
             catalog_component: CatalogModelData,
             name: string,
             keyname: string,
-            x_pos: number = 0,
-            y_pos: number = 0,
+            x_pos: number = null,
+            y_pos: number = null,
             rot: number = 0
             ) {
             if (Object.keys(this.components).indexOf(name) > -1) {
@@ -66,7 +66,13 @@ module Jet.Model {
 
             var component = new ComponentInstance(this, catalog_component, name, keyname);
             for (var i in catalog_component.getPlacedParts()) {
-                var pp = catalog_component.getPlacedParts()[i]
+                var pp = catalog_component.getPlacedParts()[i];
+
+                // Set default position to center of gadget.
+                var bbox = this.bounding_box();
+                x_pos = x_pos || (bbox.max_x + bbox.min_x) / 2;
+                y_pos = y_pos || (bbox.max_y + bbox.min_y) / 2;
+
                 component.add_placed_part(new PlacedPart(this, pp, component, pp.getRef(), x_pos, y_pos, rot))
             }
 

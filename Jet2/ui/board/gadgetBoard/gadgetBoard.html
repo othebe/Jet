@@ -6,7 +6,10 @@
                      ng-attr-height="{{(boardDimensions.height + 2 *padding) * (zoom / 100.0)}}px"
                      ng-mousedown="boardTouchHandler.handleMouseDown($event)"
                      ng-mouseup="boardTouchHandler.handleMouseUp($event)"
-                     ng-mousemove="boardTouchHandler.handleMouseMove($event)">
+                     ng-mousemove="boardTouchHandler.handleMouseMove($event)"
+                     touch-start="boardTouchHandler.handleMouseDown($event)"
+                     touch-end="boardTouchHandler.handleMouseUp($event)"
+                     touch-move="boardTouchHandler.handleMouseMove($event)">
 
                     <!-- Everything inside the board. -->
                     <g ng-attr-transform="scale({{zoom / 100.0}})">

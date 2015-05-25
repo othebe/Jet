@@ -27,7 +27,8 @@
 
         constructor(private $rootScope: ng.IRootScopeService,
             private $scope: IApplicationScope,
-            private AppContext: AppContext) {
+            private AppContext: AppContext)
+        {
             $scope.catalogModel = AppContext.getCatalogModel();
             $scope.gadgetModel = AppContext.getGadgetModel();
             $scope.selection = new Jet.Selection.Manager();

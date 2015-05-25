@@ -19,6 +19,7 @@
 /// <reference path="ui/gadgetExplorer/gadgetExplorerEntry.ts" />
 /// <reference path="ui/gadgetInspector/gadgetInspector.ts" />
 /// <reference path="ui/menu/menuBar.ts" />
+/// <reference path="ui/touchHandler.ts" />
 
 (function () {
     var app = angular.module('Jet', ['ngMaterial', 'ngTouch']);
@@ -61,4 +62,9 @@
     app.directive('componentNameInspector', Jet.Ui.ComponentNameInspector.Factory());
     // Component transformation inspector.
     app.directive('componentTransformationInspector', Jet.Ui.ComponentTransformationInspector.Factory());
+
+    // Touch directives.
+    app.directive('touchStart', Jet.Ui.TouchStart.Factory());
+    app.directive('touchEnd', Jet.Ui.TouchEnd.Factory());
+    app.directive('touchMove', Jet.Ui.TouchMove.Factory());
 })();

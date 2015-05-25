@@ -178,10 +178,9 @@ module Jet.Ui.Board {
         // Handle mouse move.
         private _onMouseMove(touchHandler: TouchHandler) {
             // If the left mouse button is not held, do not apply translation.
-            if (touchHandler.getMouseButton() != 1) {
+            if (touchHandler.getMouseButton() != 1 && !touchHandler.isTouch()) {
                 return;
             }
-
             var scope = <IGadgetBoardScope> this.scope_;
             var selectionCoords = scope.selectionCoords;
             var selectedComponents = scope.selection.getPlacedParts();
@@ -200,7 +199,7 @@ module Jet.Ui.Board {
                     if (rotation != null) {
                         this.rotateBoardComponentBy_(component, rotation);
                     }
-                 }
+                }
             }
 
             // Translate all selected board components.
