@@ -24,6 +24,7 @@
     <Content Include="perspectives\debugPerspective\debugPerspective.css" />
     <Content Include="perspectives\debugPerspective\debugPerspective.html" />
     <Content Include="perspectives\minimalistPerspective\minimalistPerspective.html" />
+    <Content Include="perspectives\minimalistPerspective\welcomeToast.html" />
     <Content Include="perspectives\nbPerspective\nbPerspective.css" />
     <Content Include="perspectives\nbPerspective\nbPerspective.html" />
     <Content Include="perspectives\workspacePerspective\workspacePerspective.html" />
@@ -428,7 +429,6 @@
     <TypeScriptCompile Include="common\eagleDisplayMapper.ts" />
     <TypeScriptCompile Include="common\InitialData.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
-    <TypeScriptCompile Include="common\fabric.d.ts" />
     <TypeScriptCompile Include="common\Selection.ts" />
     <TypeScriptCompile Include="common\strings.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />

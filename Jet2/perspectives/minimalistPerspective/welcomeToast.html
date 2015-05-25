@@ -1,0 +1,24 @@
+﻿<md-toast class="welcome-toast">
+    <div flex>
+        <h2>Welcome to JET!</h2>
+        <p>Swipe a component LEFT <em>OR</em> drag it onto the board to get started.</p>
+
+        <md-button ng-click="closeToast()">
+            OK
+        </md-button>
+    </div>
+
+    
+</md-toast>
+
+<style>
+    md-toast.welcome-toast {
+        height: auto;
+        max-height: none;
+    }
+
+    md-toast.welcome-toast button {
+        float: right;
+        margin-bottom: 5px;
+    }
+</style>

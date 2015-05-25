@@ -20,9 +20,9 @@
     export class MinimalistPerspective implements IPerspective {
         private _partialSrc: string = "perspectives/minimalistPerspective/minimalistPerspective.html";
 
-        static $inject = ['$scope', 'AppContext'];
+        static $inject = ['$scope', 'AppContext', '$mdToast'];
 
-        constructor(private $scope: IPerspectiveScope, private AppContext: AppContext) {
+        constructor(private $scope: IPerspectiveScope, private AppContext: AppContext, private $mdToast: ng.material.MDToastService) {
             var scope = <IMinimalistPerspectiveScope> ($scope);
 
             // Submenu choices.
@@ -35,11 +35,28 @@
             scope.selectSubmenu = function (submenuChoice: string) {
                 scope.submenuChoice = submenuChoice;
             };
+
+            // Toast stuff.
+            this._showToast(scope, $mdToast);
         }
 
         // Get partial source.
         public getPartialSrc(): string {
             return this._partialSrc;
+        }
+
+        // Show welcome toast.
+        private _showToast(scope: IMinimalistPerspectiveScope, $mdToast: ng.material.MDToastService) {
+            $mdToast.show({
+                controller: (scope, $mdToast) => {
+                    scope.closeToast = function () {
+                        $mdToast.hide();
+                    };
+                },
+                templateUrl: 'perspectives/minimalistPerspective/welcomeToast.html',
+                hideDelay: 5000,
+                position: 'bottom right'
+            });
         }
     }
 } 
