@@ -2,7 +2,6 @@
 /// <reference path="public/typings/fabricjs/fabricjs.d.ts" />
 /// <reference path="public/typings/snapsvg/snapsvg.d.ts" />
 /// <reference path="public/typings/angular-material/angular-material.d.ts" />
-/// <reference path="common/fabric.d.ts" />
 /// <reference path="application/applicationController.ts" />
 /// <reference path="perspectives/perspectiveController.ts" />
 /// <reference path="ui/board/gadgetBoard/gadgetBoard.ts" />
