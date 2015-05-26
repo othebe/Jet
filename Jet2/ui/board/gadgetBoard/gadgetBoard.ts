@@ -114,12 +114,12 @@ module Jet.Ui.Board {
                 
                 var offset = this.instanceElement_.offset();
                 var pcbData = scope.pcbData;
-                var margin = EagleDisplayMapper.mmToPx(Constants.Board.PCB_MARGIN);
+                var margin = Constants.Board.PCB_MARGIN;
                 var eagleDisplayMapper = <EagleDisplayMapper> placedPart.getEagleDisplayMapper();
 
                 var displayPoint = new Point(
-                    EagleDisplayMapper.pxToMm(e.offsetX),
-                    EagleDisplayMapper.pxToMm(pcbData.height - e.offsetY));
+                    EagleDisplayMapper.pxToMm(e.offsetX) - margin + eagleDisplayMapper.getWidth() / 2,
+                    EagleDisplayMapper.pxToMm(pcbData.height - e.offsetY) + margin - eagleDisplayMapper.getHeight() / 2);
                 var eagleCoords = eagleDisplayMapper.convertDisplayToEaglePoint(displayPoint, 0);
 
                 // TODO (othebe): Move this logic (also in CatalogEntry) into the GadgetModel.
