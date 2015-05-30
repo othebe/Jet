@@ -185,13 +185,18 @@ module Jet.Model {
             return Object.keys(this.components);
         }
 
+        // Import a GSpec via string.
+        import_gspec_string(gspec_string: string, catalog: CatalogModel) {
+            throw Constants.Strings.UNIMPLEMENTED_METHOD;
+        }
+
         get_gspec(): string {
             var XML = document.createElement("div");
             var Node = document.createElement("gadgetlayout");
             Node.setAttribute("version", "1.1");
 
             var name = document.createElement("name")
-            name.innerText = "Gadget Name"
+            name.innerText = "Gadget Name";
             Node.appendChild(name);
 
             var board = document.createElement("board")

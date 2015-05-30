@@ -1,0 +1,29 @@
+﻿<md-dialog class="set-perspective" aria-label="File">
+    <md-content class="sticky-container">
+        <div class="dialog-content">
+            <md-toolbar class="">
+                <div class="md-toolbar-tools">
+                    <h2 class="md-flex">File</h2>
+                </div>
+            </md-toolbar>
+
+            <md-radio-group>
+                <md-radio-button value="0"> New Gadget </md-radio-button>
+                <md-radio-button value="1" ng-click="importGSpec($event)"> Import GSpec </md-radio-button>
+                <md-radio-button value="2" ng-click="exportGSpec($event)"> Export GSpec </md-radio-button>
+            </md-radio-group>
+        </div>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <md-button ng-click="close()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>
+
+<style>
+    .set-perspective {
+        width: 100%;
+    }
+</style>

@@ -416,7 +416,9 @@
     <Content Include="ui\gadgetExplorer\gadgetExplorerEntry.html" />
     <Content Include="ui\gadgetInspector\gadgetInspector.html" />
     <Content Include="ui\menu\exportGSpec.html" />
+    <Content Include="ui\menu\importGSpec.html" />
     <Content Include="ui\menu\menuBar.html" />
+    <Content Include="ui\menu\options.html" />
     <Content Include="ui\menu\setPerspective.html" />
     <Content Include="ui\nb\nb.html" />
     <Content Include="ui\nb\nbComponent.html" />

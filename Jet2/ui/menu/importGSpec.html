@@ -1,0 +1,37 @@
+﻿<md-dialog class="import-gspec" aria-label="Import GSpec">
+    <md-content class="sticky-container">
+        <md-subheader class="md-sticky-no-effect">GSpec (Import):</md-subheader>
+
+        <div class="dialog-content">
+            <textarea ng-model="importStr" rows="10" placeholder="Enter GSPEC here."></textarea>
+        </div>
+    </md-content>
+
+    <div class="md-actions" layout="row">
+        <span class="import-status" ng-bind="importStatus" ng-class="{error:!importSuccess, success:importSuccess}">There was an error.</span>
+
+        <md-button ng-click="import()">
+            Import
+        </md-button>
+        <md-button ng-click="close()">
+            Close
+        </md-button>
+    </div>
+</md-dialog>
+
+<style>
+    .import-gspec {
+        width: 100%;
+    }
+
+        .import-gspec textarea {
+            width: 100%;
+        }
+
+    .import-gspec .import-status.error {
+        color: red;
+    }
+    .import-gspec .import-status.success {
+        color: green;
+    }
+</style>

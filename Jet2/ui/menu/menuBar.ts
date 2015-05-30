@@ -5,11 +5,17 @@ module Jet.Ui {
         // Show about dialog.
         showAbout(): void;
 
+        /* *************** */
+        /** Action buttons */
+        /* *************** */
+        // Import GSpec.
+        importGSpec(e: any): void;
         // Export GSpec.
         exportGSpec(e: any): void;
-
         // Select perspective.
         selectPerspective(ndx: number): void;
+        // Show more options.
+        showOptions(e: any): void;
 
         // Show set perspective.
         showPerspectives(e: any): void;
@@ -30,6 +36,36 @@ module Jet.Ui {
 
                 scope.selectPerspective = function (perspectiveNdx) {
                     scope.perspectiveIndex = perspectiveNdx;
+                };
+
+                // Import GSpec.
+                scope.importGSpec = function (ev: any) {
+                    var _scope = scope;
+                    $mdDialog.show({
+                        templateUrl: 'ui/menu/importGSpec.html',
+                        clickOutsideToClose: false,
+                        targetEvent: ev,
+                        controller: (scope, $mdDialog) => {
+                            scope.importStr = "";
+                            scope.importStatus = "";
+                            scope.importSuccess = false;
+
+                            scope.import = function () {
+                                try {
+                                    _scope.gadgetModel.import_gspec_string(scope.importStr, _scope.catalogModel);
+                                    scope.importStatus = Constants.Strings.GSPEC_IMPORT_SUCCESS;
+                                    scope.importSuccess = true;
+                                } catch (exception) {
+                                    scope.importStatus = exception;
+                                    scope.importSuccess = false;
+                                }
+                            };
+
+                            scope.close = function () {
+                                $mdDialog.cancel();
+                            };
+                        }
+                    });
                 };
 
                 // Export GSpec.
@@ -61,6 +97,29 @@ module Jet.Ui {
 
                             scope.selectPerspective = (perspectiveNdx) => {
                                 _scope.perspectiveIndex = perspectiveNdx;
+                            };
+
+                            scope.close = function () {
+                                $mdDialog.cancel();
+                            };
+                        }
+                    });
+                };
+
+                // Show more options.
+                scope.showOptions = function (ev: any) {
+                    var _scope = scope;
+                    $mdDialog.show({
+                        templateUrl: 'ui/menu/options.html',
+                        clickOutsideToClose: true,
+                        targetEvent: ev,
+                        controller: (scope, $mdDialog) => {
+                            scope.importGSpec = function (e) {
+                                _scope.importGSpec(e);
+                            };
+
+                            scope.exportGSpec = function (e) {
+                                _scope.exportGSpec(e);
                             };
 
                             scope.close = function () {

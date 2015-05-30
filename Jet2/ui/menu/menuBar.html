@@ -5,7 +5,7 @@
     <div ng-if="isPerspectiveTouchBased()">
         <md-toolbar class="main-menu">
             <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" aria-label="Menu">
+                <md-button class="md-icon-button" aria-label="Menu" ng-click="showOptions($event)">
                     <md-icon md-svg-icon="public/img/menu.svg"></md-icon>
                 </md-button>
 
@@ -33,7 +33,7 @@
                 File
                 <ul class="submenu">
                     <li class="option">New</li>
-                    <li class="option">Import GSpec</li>
+                    <li class="option" ng-click="importGSpec($event)">Import GSpec</li>
                     <li class="option" ng-click="exportGSpec($event)">Export GSpec</li>
                 </ul>
             </li>

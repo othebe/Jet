@@ -1,6 +1,9 @@
 ﻿// This contains the strings used within the application.
 module Jet.Constants {
     export module Strings {
+        // A GSpec string has been imported succesfully.
+        export var GSPEC_IMPORT_SUCCESS = "GSpec imported succesfully.";
+
         // A method that needs to be implemented, either as a TODO, or abstraction.
         export var UNIMPLEMENTED_METHOD = "This method needs to be implemented.";
 
