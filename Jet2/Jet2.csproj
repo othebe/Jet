@@ -34,6 +34,9 @@
     <Content Include="public\libraries\angular-aria\angular-aria.js" />
     <Content Include="public\libraries\angular-aria\angular-aria.min.js" />
     <Content Include="public\libraries\angular-aria\index.js" />
+    <Content Include="public\libraries\angular-cookies\angular-cookies.js" />
+    <Content Include="public\libraries\angular-cookies\angular-cookies.min.js" />
+    <Content Include="public\libraries\angular-cookies\index.js" />
     <Content Include="public\libraries\angular-material\angular-material.css" />
     <Content Include="public\libraries\angular-material\angular-material.js" />
     <Content Include="public\libraries\angular-material\angular-material.min.css" />
@@ -303,9 +306,6 @@
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.js" />
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.min.css" />
     <Content Include="public\libraries\angular-material\modules\js\whiteframe\whiteframe.min.js" />
-    <Content Include="public\libraries\angular-route\angular-route.js" />
-    <Content Include="public\libraries\angular-route\angular-route.min.js" />
-    <Content Include="public\libraries\angular-route\index.js" />
     <Content Include="public\libraries\angular-touch\angular-touch.js" />
     <Content Include="public\libraries\angular-touch\angular-touch.min.js" />
     <Content Include="public\libraries\angular-touch\index.js" />
@@ -431,6 +431,7 @@
     <TypeScriptCompile Include="common\eagleDisplayMapper.ts" />
     <TypeScriptCompile Include="common\InitialData.ts" />
     <TypeScriptCompile Include="common\appContext.ts" />
+    <TypeScriptCompile Include="common\saveStateManager.ts" />
     <TypeScriptCompile Include="common\Selection.ts" />
     <TypeScriptCompile Include="common\strings.ts" />
     <TypeScriptCompile Include="models\catalogModelData.ts" />
@@ -443,12 +444,11 @@
     <TypeScriptCompile Include="perspectives\nbPerspective\nbPerspective.ts" />
     <TypeScriptCompile Include="perspectives\perspectiveController.ts" />
     <TypeScriptCompile Include="perspectives\workspacePerspective\workspacePerspective.ts" />
-    <TypeScriptCompile Include="public\typings\angularjs\angular-route.d.ts" />
+    <TypeScriptCompile Include="public\typings\angularjs\angular-cookies.d.ts" />
     <TypeScriptCompile Include="public\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="public\typings\fabricjs\fabricjs.d.ts" />
     <TypeScriptCompile Include="public\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="public\typings\snapsvg\snapsvg.d.ts" />
-    <TypeScriptCompile Include="public\typings\tsd.d.ts" />
     <TypeScriptCompile Include="ui\board\abstractBoard.ts" />
     <TypeScriptCompile Include="ui\board\abstractBoardComponent.ts" />
     <TypeScriptCompile Include="ui\board\gadgetBoard\gadgetBoard.ts" />
@@ -539,6 +539,10 @@
     <Content Include="public\libraries\angular-touch\bower.json" />
     <Content Include="public\libraries\angular-touch\package.json" />
     <Content Include="public\libraries\angular-touch\README.md" />
+    <Content Include="public\libraries\angular-cookies\angular-cookies.min.js.map" />
+    <Content Include="public\libraries\angular-cookies\bower.json" />
+    <Content Include="public\libraries\angular-cookies\package.json" />
+    <Content Include="public\libraries\angular-cookies\README.md" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

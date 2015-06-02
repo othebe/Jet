@@ -41,7 +41,7 @@
             return this._placedParts[s];
         }
 
-        // This returns a string that can be used to search for this ctalog component.
+        // This returns a string that can be used to search for this catalog component.
         public getSearchIndex(): string {
             return this._searchIndex;
         }
@@ -51,11 +51,15 @@
         private _eagleDisplayMapper: EagleDisplayMapper;
         private _svgData: string;
 
-        constructor(private _ref: string, private _svgUrl: string) {
+        constructor(private _ref: string, private _svgUrl: string, private _onLoad = null) {
             // Read SVG data and set Eagle Display mapper.
             this._readSvgData(function (svgStr: string) {
                 this._svgData = svgStr;
                 this._setEagleDisplayMapper();
+
+                if (_onLoad != null) {
+                    _onLoad.apply();
+                }
             }.bind(this));
         }
 

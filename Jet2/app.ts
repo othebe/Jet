@@ -1,4 +1,5 @@
 ﻿/// <reference path="public/typings/angularjs/angular.d.ts" />
+/// <reference path="public/typings/angularjs/angular-cookies.d.ts" />
 /// <reference path="public/typings/fabricjs/fabricjs.d.ts" />
 /// <reference path="public/typings/snapsvg/snapsvg.d.ts" />
 /// <reference path="public/typings/angular-material/angular-material.d.ts" />
@@ -21,7 +22,7 @@
 /// <reference path="ui/touchHandler.ts" />
 
 (function () {
-    var app = angular.module('Jet', ['ngMaterial', 'ngTouch']);
+    var app = angular.module('Jet', ['ngCookies', 'ngMaterial', 'ngTouch']);
 
     // Application context.
     app.service('AppContext', AppContext);

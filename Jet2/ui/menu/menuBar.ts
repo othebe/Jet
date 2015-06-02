@@ -8,6 +8,8 @@ module Jet.Ui {
         /* *************** */
         /** Action buttons */
         /* *************** */
+        // New gadget.
+        newGadget(e: any): void;
         // Import GSpec.
         importGSpec(e: any): void;
         // Export GSpec.
@@ -29,13 +31,18 @@ module Jet.Ui {
 
             var main = this;
 
-            this.link = function (scope: IMenuBarScope) {                
+            this.link = function (scope: IMenuBarScope) {     
                 scope.showAbout = function () {
                     console.log(scope.about);
                 };
 
                 scope.selectPerspective = function (perspectiveNdx) {
                     scope.perspectiveIndex = perspectiveNdx;
+                };
+
+                // New gadget.
+                scope.newGadget = function (ev: any) {
+                    scope.resetGadget();
                 };
 
                 // Import GSpec.

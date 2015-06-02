@@ -14,14 +14,16 @@ module Jet.Ui {
             var main = this;
 
             this.link = function (scope: IGadgetInspectorScope) {
-                // Board dimensions.
-                var bbox = scope.gadgetModel.bounding_box();
-                scope.board = {
-                    top: bbox.min_y,
-                    left: bbox.min_x,
-                    width: bbox.max_x - bbox.min_x,
-                    height: bbox.max_y - bbox.min_y
-                };
+                scope.$watch('gadgetModel', function () {
+                    // Board dimensions.
+                    var bbox = scope.gadgetModel.bounding_box();
+                    scope.board = {
+                        top: bbox.min_y,
+                        left: bbox.min_x,
+                        width: bbox.max_x - bbox.min_x,
+                        height: bbox.max_y - bbox.min_y
+                    };
+                }, true);
 
                 scope.$watch('board', function () {
                     var board = scope.board;

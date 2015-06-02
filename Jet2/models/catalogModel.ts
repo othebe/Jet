@@ -8,6 +8,7 @@
         private _imgDir: string = "public/catalog";
         private _componentMap: ComponentMap = {};
         private _catalogModelData: Array<CatalogModelData> = [];
+        private _isLoaded = false;
 
         constructor() {
             this._readComponents();
@@ -15,6 +16,8 @@
 
         // Read catalog component data from external resource.
         private _readComponents() {
+            var placedPartsToLoad: number = 0;
+
             this._catalogModelData = [];
             var xhr = new XMLHttpRequest();
 
@@ -52,6 +55,7 @@
                         placedParts = placedParts[0].getElementsByTagName('placedpart');
 
                         var placedPartsData: { [s: string]: CatalogPlacedPart } = {};
+                        placedPartsToLoad += placedParts.length;
                         for (var j = 0; j < placedParts.length; j++) {
                             var placedPart = placedParts[j];
 
@@ -61,7 +65,7 @@
 
                             // Ref.
                             var ref = placedPart.getAttribute('refdes');
-                            placedPartsData[ref] = new CatalogPlacedPart(ref, svgUrl);
+                            placedPartsData[ref] = new CatalogPlacedPart(ref, svgUrl, onPlacedPartLoad.bind(this));
                         }
 
                         // TODO(othebe): Different img when more than one placed
@@ -82,6 +86,14 @@
                 }
             };
             xhr.send();
+
+            var onPlacedPartLoad = function () {
+                placedPartsToLoad--;
+
+                if (placedPartsToLoad == 0) {
+                    this._isLoaded = true;
+                }
+            }
         }
 
         // Get catalog model data.
@@ -92,6 +104,11 @@
         // Lookup catalog model data by keyname.
         public getComponent(keyname: string): CatalogModelData {
             return this._componentMap[keyname];
+        }
+
+        // Determine if catalog is loaded.
+        public isLoaded() {
+            return this._isLoaded;
         }
     }
 }

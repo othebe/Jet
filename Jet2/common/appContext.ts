@@ -7,8 +7,10 @@ class AppContext {
     private _catalogModel: Jet.Model.CatalogModel;
     // Gadget model.
     private _gadgetModel: Jet.Model.GadgetModel;
+    // Save state manager.
+    private _saveStateManager: Jet.SaveStateManager;
 
-    constructor() {
+    constructor($cookieStore: ng.cookies.ICookiesService) {
         var InitialData = Jet.Application.InitialData;
 
         this._catalogModel = new Jet.Model.CatalogModel();
@@ -21,6 +23,8 @@ class AppContext {
             new Jet.Model.Vertex(dimensions.left + dimensions.width, dimensions.top + dimensions.left + dimensions.height),
             new Jet.Model.Vertex(dimensions.left, dimensions.top + dimensions.height)
         ]);
+
+        this._saveStateManager = new Jet.SaveStateManager($cookieStore);
     }
 
     getCatalogModel(): Jet.Model.CatalogModel {
@@ -29,5 +33,9 @@ class AppContext {
 
     getGadgetModel(): Jet.Model.GadgetModel {
         return this._gadgetModel;
+    }
+
+    getSaveStateManager(): Jet.SaveStateManager {
+        return this._saveStateManager;
     }
 }
