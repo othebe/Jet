@@ -121,6 +121,10 @@ module Jet.Ui {
                         clickOutsideToClose: true,
                         targetEvent: ev,
                         controller: (scope, $mdDialog) => {
+                            scope.newGadget = function (e) {
+                                _scope.resetGadget();
+                            };
+
                             scope.importGSpec = function (e) {
                                 _scope.importGSpec(e);
                             };
