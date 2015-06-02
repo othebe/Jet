@@ -12,42 +12,65 @@
           style="stroke: red; stroke-width: 5px; fill: transparent;" />
 
     <!-- Rotation controls -->
-    <g class="rotation-control">
-        <circle ng-if="isSelected"
-                ng-attr-cx="0"
+    <g class="rotation-control touch" ng-if="isSelected && isPerspectiveTouchBased">
+        <circle ng-attr-cx="{{dimensions.x / 2}}"
+                ng-attr-cy="{{dimensions.y / 2}}"
+                ng-attr-r="{{boundingRadius + 25}}"
+                ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+                ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)"
+                touch-start="rotationTouchHandler.handleMouseDown($event)"
+                touch-end="rotationTouchHandler.handleMouseUp($event)" />
+
+        <rect ng-attr-x="{{dimensions.x / 2}}"
+              ng-attr-y="{{dimensions.y / 2 - boundingRadius - 30}}"
+              width="10"
+              height="10"
+              ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
+              ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
+              ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+    </g>
+
+    <g class="rotation-control" ng-if="isSelected && !isPerspectiveTouchBased">
+        <circle ng-attr-cx="0"
                 cy="0"
                 r="7"
                 class="top-left"
                 ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
                 ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
-                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)"
+                touch-start="rotationTouchHandler.handleMouseDown($event)"
+                touch-end="rotationTouchHandler.handleMouseUp($event)" />
 
-        <circle ng-if="isSelected"
-                ng-attr-cx="0"
+        <circle ng-attr-cx="0"
                 ng-attr-cy="{{dimensions.y}}"
                 r="7"
                 class="bottom-left"
                 ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
                 ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
-                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)"
+                touch-start="rotationTouchHandler.handleMouseDown($event)"
+                touch-end="rotationTouchHandler.handleMouseUp($event)" />
 
-        <circle ng-if="isSelected"
-                ng-attr-cx="{{dimensions.x}}"
+        <circle ng-attr-cx="{{dimensions.x}}"
                 ng-attr-cy="{{dimensions.y}}"
                 r="7"
                 class="bottom-right"
                 ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
                 ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
-                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)"
+                touch-start="rotationTouchHandler.handleMouseDown($event)"
+                touch-end="rotationTouchHandler.handleMouseUp($event)" />
 
-        <circle ng-if="isSelected"
-                ng-attr-cx="{{dimensions.x}}"
+        <circle ng-attr-cx="{{dimensions.x}}"
                 ng-attr-cy="{{0}}"
                 r="7"
                 class="top-right"
                 ng-mousedown="rotationTouchHandler.handleMouseDown($event)"
                 ng-mouseup="rotationTouchHandler.handleMouseUp($event)"
-                ng-mousemove="rotationTouchHandler.handleMouseMove($event)" />
+                ng-mousemove="rotationTouchHandler.handleMouseMove($event)"
+                touch-start="rotationTouchHandler.handleMouseDown($event)"
+                touch-end="rotationTouchHandler.handleMouseUp($event)" />
     </g>
 
     <!-- Component image -->
@@ -80,19 +103,23 @@
         cursor: move;
     }
 
-    g.gadget-board-component .rotate-control {
-        cursor: nwse-resize;
-        fill: red;
-        stroke: red;
-        stroke-width: 1px;
-    }
-
-    g.gadget-board-component .rotation-control circle {
-        fill: red;
-        stroke: red;
-    }
-
     g.gadget-board-component .rotation-control circle {
         cursor: pointer;
+        fill: red;
+        stroke: red;
+        stroke-width: 2px;
+    }
+
+    g.gadget-board-component .rotation-control.touch circle {
+        cursor: pointer;
+        fill: transparent;
+        stroke: red;
+        stroke-width: 2px;
+    }
+
+    g.gadget-board-component .rotation-control rect {
+        cursor: pointer;
+        fill: red;
+        stroke: red;
     }
 </style>

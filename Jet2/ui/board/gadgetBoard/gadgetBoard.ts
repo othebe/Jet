@@ -66,6 +66,9 @@ module Jet.Ui.Board {
 
             // Enable drag-drop.
             this._enableDragDrop();
+            
+            // Disable scroll movement.
+            this._disableTouchScrolling();
         }
 
         // Extract PCB data from the instance element.
@@ -82,6 +85,18 @@ module Jet.Ui.Board {
             var height = scope.boardDimensions.height;
 
             return new PcbData(x, y, width, height);
+        }
+
+        // Disable touch scroll movement.
+        private _disableTouchScrolling() {
+            var boardContainerSelector = 'div.board-container';
+            var boardContainer = this.instanceElement_.find(boardContainerSelector);
+            if (boardContainer.length == 0) {
+                throw Constants.Strings.REQUIRED_ELEMENT_MISSING(boardContainerSelector);
+            }
+            boardContainer.on('touchmove', function (e) {
+                e.preventDefault();
+            });
         }
 
         // Enable drag-drop.

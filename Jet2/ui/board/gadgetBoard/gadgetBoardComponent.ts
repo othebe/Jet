@@ -2,6 +2,7 @@
 
 module Jet.Ui.Board {
     interface IGadgetBoardComponentScope extends IAbstractBoardComponentScope {
+        boundingRadius: number;
         clickedParts: Array<Model.PlacedPart>;
         componentTouchHandler: TouchHandler;
         dimensions: Point;
@@ -43,6 +44,7 @@ module Jet.Ui.Board {
 
             // Add extra scope data.
             this.scope.clickedParts = '=';
+            this.scope.isPerspectiveTouchBased = '=';
             this.scope.padding = '=';
             this.scope.pcbData = '=';
             this.scope.rotatingComponents = '=';
@@ -92,6 +94,9 @@ module Jet.Ui.Board {
             scope.getHorizontalTextTranslation = function () {
                 return main._getHorizontalTextTranslation(scope.dimensions.x, instanceElement);
             }
+
+            // Calculate bounding radius.
+            scope.boundingRadius = Math.sqrt(scope.dimensions.x * scope.dimensions.x + scope.dimensions.y * scope.dimensions.y) / 2;
         }
 
         /** @override */

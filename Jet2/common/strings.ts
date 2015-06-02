@@ -14,5 +14,10 @@ module Jet.Constants {
         export var VIEWBOX_MISSING = function (svgUrl) {
             return "The viewbox is missing for: " + svgUrl;
         };
+
+        // Required HTML element not found.
+        export var REQUIRED_ELEMENT_MISSING = function (querySelector) {
+            return "Required element missing: " + querySelector;
+        };
     }
 } 
