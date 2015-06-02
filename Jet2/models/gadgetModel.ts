@@ -34,6 +34,18 @@ module Jet.Model {
         ];
 
         constructor() { }
+        
+        set_option_defaults (): void {
+            this["faceplate-color"] = "clear-nocolor";
+            this["backplate-color"] = "clear-nocolor";
+            this["faceplate-etch"] = "etch-front";
+            this["backplate-etch"] = "etch-back";
+            this["front-standoff-height"] = 8.0;
+            this["back-standoff-height"] = 8.0;
+            this["pcb-thickness"] = 1.57;
+            this["faceplate-thickness"] = 3.175;
+            this["backplate-thickness"] = 3.175;
+        }
 
         set_option(name: string, value: any) {
             if (this.options.indexOf(name) > -1) {
@@ -187,7 +199,70 @@ module Jet.Model {
 
         // Import a GSpec via string.
         import_gspec_string(gspec_string: string, catalog: CatalogModel) {
-            throw Constants.Strings.UNIMPLEMENTED_METHOD;
+            ComponentInstance._currentID = 0;
+            PlacedPart._currentID = 0;
+            
+            var xmlDoc: any = $.parseXML(gspec_string);
+            var $xml: any = $(xmlDoc);
+
+            this.set_option_defaults();
+            this.components = {};
+          
+            // gadget name
+            //this.name = $xml.find("name").text();
+        
+            // options
+            var option_nodes: [any] = $xml.find("option");
+        
+            //var options: { [index: string]: string; }   = {};
+            for (var index = 0; index < option_nodes.length; index += 1) {
+                //options[ $(option_nodes[index]).attr("name") ] = $(option_nodes[index]).attr("value");
+                this.set_option($(option_nodes[index]).attr("name"), $(option_nodes[index]).attr("value"));
+                //console.log("Adding option:",$(option_nodes[index]).attr("name"),$(option_nodes[index]).attr("value"));
+            }
+        
+            // board size
+            var board_stuff: any = $xml.find("board")
+            var x: number = parseFloat($(board_stuff).attr("x"));
+            var y: number = parseFloat($(board_stuff).attr("y"));
+            var w: number = parseFloat($(board_stuff).attr("width"));
+            var h: number = parseFloat($(board_stuff).attr("height"));
+        
+            
+        
+        
+        
+            // components
+            var components: [any] = $xml.find("component");
+            //console.log(components)
+            
+            for (var index = 0; index < components.length; index += 1) {
+                
+                var comp_name: string = $(components[index]).attr("progname");
+                var comp_key: string = $(components[index]).attr("type");
+                
+                
+                this.add_component(catalog.getComponent(comp_key), comp_name, comp_key, 0, 0, 0);
+
+                //console.log(index);
+                //console.log(components[index]);
+                //console.log(this.components[comp_name]);
+                var pps: any = $(components[index]).find("placedpart");
+                //console.log(pps);
+            
+                for (var pp_index = 0; pp_index < pps.length; pp_index += 1){
+                    var ref: string = $(pps[pp_index]).attr("refdes");
+                    var pp_x: number = parseFloat($(pps[pp_index]).attr("x"))-x;
+                    var pp_y: number = parseFloat($(pps[pp_index]).attr("y"))-y;
+                    var pp_r: number = parseFloat($(pps[pp_index]).attr("rotation"));
+                    var mirrored: string = $(pps[pp_index]).attr("mirrored");
+                    this.move_placed_part(comp_name, ref, pp_x, pp_y, pp_r);
+                }
+            }
+            
+            x = 0;
+            y = 0;
+            this.corners = [new Vertex(x, y), new Vertex(x, y+h), new Vertex(x+w, y), new Vertex(x+w, y+h)];
         }
 
         get_gspec(): string {
