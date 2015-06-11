@@ -50,6 +50,11 @@ module Jet.Ui.Board {
             this.scope.rotatingComponents = '=';
             this.scope.setSelectionToSingle = '=';
         }
+        
+        /** @override */
+        protected updateDisplay_(scope: IGadgetBoardComponentScope) {
+            this._updateTransformation(scope);
+        }
 
         /** @override */
         protected onScopeLoaded_(scope: IGadgetBoardComponentScope, instanceElement: JQuery) {

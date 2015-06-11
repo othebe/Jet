@@ -22,6 +22,7 @@
 
                         <!-- Board components. -->
                         <g gadget-board-component ng-repeat="boardComponent in gadgetModel.get_parts()"
+                           gadget-model="gadgetModel"
                            board-component="boardComponent"
                            catalog-model="catalogModel"
                            clicked-parts="clickedParts"

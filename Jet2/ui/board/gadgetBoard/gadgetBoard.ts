@@ -200,7 +200,9 @@ module Jet.Ui.Board {
             var selectionCoords = scope.selectionCoords;
             var selectedComponents = scope.selection.getPlacedParts();
             var rotatingComponents = scope.rotatingComponents;
-
+            
+            var zoomFactor = scope.zoom / 100
+            
             // Rotate board components.
             if (rotatingComponents.length > 0) {
                 for (var i = 0; i < rotatingComponents.length; i++) {
@@ -220,7 +222,9 @@ module Jet.Ui.Board {
             // Translate all selected board components.
             else if (selectedComponents.length > 0 && selectionCoords.p1 == null) {
                 var translation = touchHandler.getTranslation();
-
+                //console.log(translation);
+                translation.x = translation.x / zoomFactor;
+                translation.y = translation.y / zoomFactor;
                 // Preserve selection due to the move.
                 scope.setSelectionToSingle = false;
 
@@ -238,6 +242,11 @@ module Jet.Ui.Board {
             else {
                 selectionCoords.p1 = touchHandler.getOriginalCoordinates();
                 selectionCoords.p2 = touchHandler.getCurrentCoordinates();
+                
+                selectionCoords.p1.x = selectionCoords.p1.x / zoomFactor;
+                selectionCoords.p1.y = selectionCoords.p1.y / zoomFactor;
+                selectionCoords.p2.x = selectionCoords.p2.x / zoomFactor;
+                selectionCoords.p2.y = selectionCoords.p2.y / zoomFactor;
             }
         }
 

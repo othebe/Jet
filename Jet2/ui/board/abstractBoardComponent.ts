@@ -30,16 +30,24 @@ module Jet.Ui.Board {
                         scope.isSelected = isSelected;
                     }
                 }, true);
+                
+                
+                scope.$watch('gadgetModel.corners', function () {
+                    main.updateDisplay_(scope);
+                }, true);
 
                 main.onScopeLoaded_(scope, instanceElement);
             };
 
             this.scope = {
+                gadgetModel: '=',
                 boardComponent: '=',
                 catalogModel: '=',
                 selection: '='
             };
         }
+        
+        protected updateDisplay_(scope: IAbstractBoardComponentScope) { }
 
         // Call once scope has been loaded.
         protected onScopeLoaded_(scope: IAbstractBoardComponentScope, instanceElement: JQuery) { }
